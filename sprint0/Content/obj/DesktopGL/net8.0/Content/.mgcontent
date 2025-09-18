@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Profile>Reach</Profile>
+  <Platform>DesktopGL</Platform>
+  <Config />
+  <SourceFiles>
+    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/sprint0/Content/Font/File.spritefont</File>
+    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/sprint0/Content/MarioSpritesIMG/StandingRightMario.bmp</File>
+    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/sprint0/Content/MarioSpritesIMG/WalkingRightMario1.bmp</File>
+    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/sprint0/Content/MarioSpritesIMG/WalkingRightMario2.bmp</File>
+    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/sprint0/Content/MarioSpritesIMG/WalkingRightMario3.bmp</File>
+  </SourceFiles>
+  <DestFiles>
+    <File>Font/font.spritefont</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>
