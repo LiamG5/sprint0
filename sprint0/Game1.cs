@@ -19,11 +19,12 @@ public class Game1 : Game
 
     private List<IController> controllers;
 
-    private Texture2D StandingRightMario;
-    private Texture2D WalkingRightMario1;
-    private Texture2D WalkingRightMario2;
-    private Texture2D WalkingRightMario3;
-    public MarioSprite marioSprite;
+    private Texture2D linkSheet;
+    private Texture2D bossSheet;
+    private Texture2D enemiesSheet;
+    private Texture2D miscSheet;
+    private Texture2D itemSheet;
+    public SpriteMain marioSprite;
     private SpriteFont font;
     public int state;
 
@@ -44,20 +45,15 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-            StandingRightMario = Content.Load<Texture2D>("StandingRightMario");
-            WalkingRightMario1 = Content.Load<Texture2D>("WalkingRightMario1");
-            WalkingRightMario2 = Content.Load<Texture2D>("WalkingRightMario2");
-            WalkingRightMario3 = Content.Load<Texture2D>("WalkingRightMario3");
+            linkSheet = Content.Load<Texture2D>("legendofzelda_link_sheet");
+            bossSheet = Content.Load<Texture2D>("legendofzelda_bosses_sheet");
+            enemiesSheet = Content.Load<Texture2D>("legendofzelda_enemies_sheet");
+            itemSheet = Content.Load<Texture2D>("legendofzelda_items_sheet");
+            miscSheet = Content.Load<Texture2D>("legendofzelda_misccharacters_sheet");
             font = Content.Load<SpriteFont>("font");
 
-        //strapped to get this done will work on better way to do this later 
-        marioSprite = new MarioSprite(
-        StandingRightMario, 
-        WalkingRightMario1, 
-        WalkingRightMario2, 
-        WalkingRightMario3, 
-        new Vector2(100, 300)
-    );
+        
+        
 
             
             controllers = new List<IController>
@@ -76,7 +72,7 @@ public class Game1 : Game
     {
         controller.Update();
     } 
-        marioSprite.Update(gameTime);
+        
         base.Update(gameTime);
     }
 
@@ -85,7 +81,7 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
         
         _spriteBatch.Begin();
-        marioSprite.Draw(_spriteBatch);
+        //marioSprite.Draw(_spriteBatch); 
         _spriteBatch.DrawString(font, "Created by Liam Graham \n Sorce files, class foler", new Vector2(200, 350), Color.White );
         _spriteBatch.End();
 
