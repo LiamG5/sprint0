@@ -27,7 +27,7 @@ namespace sprint0.Classes
 
         public void Draw(SpriteBatch spriteBatch)
         {
-        spriteBatch.Draw(textureC, new Vector2(100, 300), Color.White);
+            spriteBatch.Draw(textureC, new Vector2(100, 300), Color.White);
         }
     }
 }

@@ -45,18 +45,10 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-            linkSheet = Content.Load<Texture2D>("legendofzelda_link_sheet");
-            bossSheet = Content.Load<Texture2D>("legendofzelda_bosses_sheet");
-            enemiesSheet = Content.Load<Texture2D>("legendofzelda_enemies_sheet");
-            itemSheet = Content.Load<Texture2D>("legendofzelda_items_sheet");
-            miscSheet = Content.Load<Texture2D>("legendofzelda_misccharacters_sheet");
-            font = Content.Load<SpriteFont>("font");
 
-        
-        
+        Texture2DStorage.LoadAllTextures(Content);
 
-            
-            controllers = new List<IController>
+        controllers = new List<IController>
             {
              new KeyboardController(this, marioSprite),
                 new MouseController(this, marioSprite)
