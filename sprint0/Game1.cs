@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using sprint0.Interfaces;
 using sprint0.Classes;
+using sprint0.Player;
 
 
 
@@ -15,7 +16,8 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-
+    private LinkSprite linkSprite;
+    private Link link;
 
     private List<IController> controllers;
 
@@ -37,16 +39,19 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
+        
 
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
-
         Texture2DStorage.LoadAllTextures(Content);
+        _spriteBatch = new SpriteBatch(GraphicsDevice);
+        font = Texture2DStorage.GetFont();
+        linkSprite = new LinkSprite(Texture2DStorage.GetLinkSpriteSheet());
+        link = new Link(_spriteBatch, linkSprite);
+        
 
         controllers = new List<IController>
             {
@@ -73,8 +78,8 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
         
         _spriteBatch.Begin();
-        //marioSprite.Draw(_spriteBatch); 
-        _spriteBatch.DrawString(font, "Created by Liam Graham \n Sorce files, class foler", new Vector2(200, 350), Color.White );
+        link.Update();
+        _spriteBatch.DrawString(font, "Created by team 6, the goo crew", new Vector2(200, 350), Color.White );
         _spriteBatch.End();
 
         base.Draw(gameTime);

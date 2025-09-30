@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 using sprint0.Interfaces;
 using sprint0.Classes;
 using System;
@@ -13,7 +14,7 @@ public static class Texture2DStorage
 	public static Texture2D miscSpriteSheet;
 	public static SpriteFont font;
 
-	public static LoadAllTextures(ContentManager content)
+	public static void LoadAllTextures(ContentManager Content)
 	{
 		linkSpriteSheet = Content.Load<Texture2D>("legendofzelda_link_sheet");
 		bossSpriteSheet = Content.Load<Texture2D>("legendofzelda_bosses_sheet");

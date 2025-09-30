@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\sprint0.csproj": {}
+    "c:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\sprint0.csproj": {}
   },
   "projects": {
-    "C:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\sprint0.csproj": {
+    "c:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\sprint0.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\sprint0.csproj",
+        "projectUniqueName": "c:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\sprint0.csproj",
         "projectName": "sprint0",
-        "projectPath": "C:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\sprint0.csproj",
+        "projectPath": "c:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\sprint0.csproj",
         "packagesPath": "C:\\Users\\liame\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\obj\\",
+        "outputPath": "c:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\liame\\AppData\\Roaming\\NuGet\\NuGet.Config"

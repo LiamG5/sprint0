@@ -1,148 +1,135 @@
 using sprint0.Interfaces;
+using sprint0.Classes;
 using sprint0;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
+using Microsoft.Xna.Framework.Graphics;
 
 
-namespace sprint0.Classes
+namespace sprint0.Player
 {
 	class Link : ILink
 	{
-		private SpriteMain linkSprite;
-		ILinkState state;
+		private LinkSprite linkSprite;
+		SpriteBatch spriteBatch;
 		Vector2 position = new Vector2(20, 100);
 		
 		enum Direction { Up, Down, Left, Right };
+		private Direction currentDirection;
 
-        public Link(ISprite linkSprite)
+		public Link(SpriteBatch _spriteBatch, ISprite linkSprite)
 		{
-			this.linkSprite = (SpriteMain)linkSprite;
+
+			this.linkSprite = (LinkSprite)linkSprite;
+			this.spriteBatch = _spriteBatch;
 		}
 
 		public void Update()
 		{
-			state.Update();
+			linkSprite.Draw(spriteBatch, position);
 		}
+
+		public void Idle()
+		{
+			if (currentDirection == Direction.Left)
+			{
+				linkSprite.LinkDrawStandingLeft();
+			} else if(currentDirection == Direction.Right){
+				linkSprite.LinkDrawStandingRight();
+			} else if(currentDirection == Direction.Down){
+				linkSprite.LinkDrawStandingDown();
+			} else if(currentDirection == Direction.Up) {
+				linkSprite.LinkDrawStandingUp();
+			}
+		}
+
 		public void MoveLeft()
 		{
-			position += new Vector2(-5,0);
-			linkWalkLeft.Draw();
-			Direction = Direction.Left;
-        }
+			position += new Vector2(-5, 0);
+			linkSprite.LinkDrawWalkingLeft();
+			currentDirection = Direction.Left;
+		}
 		public void MoveRight()
 		{
 			position += new Vector2(5, 0);
-			linkWalkRight.Draw();
-			Direction = Direction.Right;
+			linkSprite.LinkDrawWalkingRight();
+			currentDirection = Direction.Right;
         }
 		public void MoveUp()
 		{
 			position += new Vector2(0, -5);
-			linkWalkUp.Draw();
-			Direction = Direction.Up;
+			linkSprite.LinkDrawWalkingUp();
+			currentDirection = Direction.Up;
         }
 		public void MoveDown()
 		{
 			position += new Vector2(0, 5);
-			linkWalkDown.Draw();
-			Direction = Direction.Down;
+			linkSprite.LinkDrawWalkingDown();
+			currentDirection = Direction.Down;
         }
 		public void Attack()
 		{
-			if (Direction == Direction.Left)
+			if (currentDirection == Direction.Left)
 			{
-				linkAttackLeft.Draw();
-                state.AttackLeft();
+				linkSprite.LinkDrawAttackingLeft();
+                
             }
-            else if (Direction == Direction.Right)
+            else if (currentDirection == Direction.Right)
 			{
-				linkAttackRight.Draw();
-                state.AttackRight();
+				linkSprite.LinkDrawAttackingRight();
+                
             }
-            else if (Direction == Direction.Up)
+            else if (currentDirection == Direction.Up)
 			{
-				linkAttackUp.Draw();
-                state.AttackUp();
+				linkSprite.LinkDrawAttackingUp();
+                
             }
-            else if (Direction == Direction.Down)
+            else if (currentDirection == Direction.Down)
 			{
-				linkAttackDown.Draw();
-                state.AttackDown();
+				linkSprite.LinkDrawAttackingDown();
+                
+            }
+        }
+		public void Magic()
+		{
+			if (currentDirection == Direction.Left)
+			{
+				linkSprite.LinkDrawMagicLeft();
+                
+            }
+            else if (currentDirection == Direction.Right)
+			{
+				linkSprite.LinkDrawMagicRight();
+                
+            }
+            else if (currentDirection == Direction.Up)
+			{
+				linkSprite.LinkDrawMagicUp();
+                
+            }
+            else if (currentDirection == Direction.Down)
+			{
+				linkSprite.LinkDrawMagicDown();
+                
             }
         }
 		public void UseItem1()
 		{
-			if (Direction == Direction.Left)
-			{
-				linkUseItem1Left.Draw();
-				state.UseItem1Left();
-			}
-			else if (Direction == Direction.Right)
-			{
-				linkUseItem1Right.Draw();
-				state.UseItem1Right();
-			}
-			else if (Direction == Direction.Up)
-			{
-				linkUseItem1Up.Draw();
-				state.UseItem1Up();
-			}
-			else if (Direction == Direction.Down)
-			{
-				linkUseItem1Down.Draw();
-				state.UseItem1Down();
-			}
+			linkSprite.LinkDrawUseItem1();
 		}
 		public void UseItem2()
 		{
-			if (Direction == Direction.Left)
-			{
-				linkUseItem2Left.Draw();
-				state.UseItem2Left();
-			}
-			else if (Direction == Direction.Right)
-			{
-				linkUseItem2Right.Draw();
-				state.UseItem2Right();
-			}
-			else if (Direction == Direction.Up)
-			{
-				linkUseItem2Up.Draw();
-				state.UseItem2Up();
-			}
-			else if (Direction == Direction.Down)
-			{
-				linkUseItem2Down.Draw();
-				state.UseItem2Down();
-            }
+			linkSprite.LinkDrawUseItem1();
 		}
 		public void UseItem3()
 		{
-			if (Direction == Direction.Left)
-			{
-				linkUseItem3Left.Draw();
-				state.UseItem3Left();
-			}
-			else if (Direction == Direction.Right)
-			{
-				linkUseItem3Right.Draw();
-				state.UseItem3Right();
-			}
-			else if (Direction == Direction.Up)
-			{
-				linkUseItem3Up.Draw();
-				state.UseItem3Up();
-			}
-			else if (Direction == Direction.Down)
-			{
-				linkUseItem3Down.Draw();
-				state.UseItem3Down();
-            }
+			linkSprite.LinkDrawUseItem1();
+        
 		}
 		public void TakeDamage()
 		{
-			state.TakeDamage();
+			linkSprite.LinkDrawUseItem1(); // should change color of sprite, this ok for now just need something up
 		}
 	}
 
