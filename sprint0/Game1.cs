@@ -1,10 +1,13 @@
-﻿
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using sprint0.Interfaces;
 using sprint0.Classes;
+using sprint0.Sprites;
+using System;
+using static sprint0.Sprites.BlockFactory;
 
 
 
@@ -16,14 +19,16 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
 
-
     private List<IController> controllers;
 
+    public ISprite tile;
+    private BlockFactory blocks;
     private Texture2D linkSheet;
     private Texture2D bossSheet;
     private Texture2D enemiesSheet;
     private Texture2D miscSheet;
     private Texture2D itemSheet;
+    private Texture2D blockSheet;
     public SpriteMain marioSprite;
     private SpriteFont font;
     public int state;
@@ -47,7 +52,9 @@ public class Game1 : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         Texture2DStorage.LoadAllTextures(Content);
-
+        blocks = BlockFactory.Instance; // Initialize Block Factory
+        tile = blocks.BuildTileBlock(_spriteBatch); // Assign initial Block
+        
         controllers = new List<IController>
             {
              new KeyboardController(this, marioSprite),
@@ -63,10 +70,103 @@ public class Game1 : Game
          foreach (var controller in controllers)
     {
         controller.Update();
-    } 
-        
+        }
+
+        // Updating block state forward
+        if (Keyboard.GetState().IsKeyDown(Keys.Y))
+        {
+            BlockType currBlock = blocks.getBlock();
+            if (currBlock.Equals(BlockType.Tile))
+            {
+                tile = blocks.BuildChiseledTileBlock(_spriteBatch);
+            }
+            else if (currBlock.Equals(BlockType.ChiseledTile))
+            {
+                tile = blocks.BuildFishBlock(_spriteBatch);
+            }
+            else if (currBlock.Equals(BlockType.Fish))
+            {
+                tile = blocks.BuildDragonBlock(_spriteBatch);
+            }
+            else if (currBlock.Equals(BlockType.Dragon))
+            {
+                tile = blocks.BuildVoidBlock(_spriteBatch);
+            }
+            else if (currBlock.Equals(BlockType.Void))
+            {
+                tile = blocks.BuildDirtBlock(_spriteBatch);
+            }
+            else if (currBlock.Equals(BlockType.Dirt))
+            {
+                tile = blocks.BuildSolidBlock(_spriteBatch);
+            }
+            else if (currBlock.Equals(BlockType.Solid))
+            {
+                tile = blocks.BuildStairBlock(_spriteBatch);
+            }
+            else if (currBlock.Equals(BlockType.Stair))
+            {
+                tile = blocks.BuildBrickBlock(_spriteBatch);
+            }
+            else if (currBlock.Equals(BlockType.Brick))
+            {
+                tile = blocks.BuildGrateBlock(_spriteBatch);
+            }
+            else
+            {
+                tile = blocks.BuildTileBlock(_spriteBatch);
+            }
+        }
+
+        // Updating block state backward
+        if (Keyboard.GetState().IsKeyDown(Keys.T))
+        {
+            BlockType currBlock = blocks.getBlock();
+            if (currBlock.Equals(BlockType.Tile))
+            {
+                tile = blocks.BuildGrateBlock(_spriteBatch);
+            }
+            else if (currBlock.Equals(BlockType.ChiseledTile))
+            {
+                tile = blocks.BuildTileBlock(_spriteBatch);
+            }
+            else if (currBlock.Equals(BlockType.Fish))
+            {
+                tile = blocks.BuildChiseledTileBlock(_spriteBatch);
+            }
+            else if (currBlock.Equals(BlockType.Dragon))
+            {
+                tile = blocks.BuildFishBlock(_spriteBatch);
+            }
+            else if (currBlock.Equals(BlockType.Void))
+            {
+                tile = blocks.BuildDragonBlock(_spriteBatch);
+            }
+            else if (currBlock.Equals(BlockType.Dirt))
+            {
+                tile = blocks.BuildVoidBlock(_spriteBatch);
+            }
+            else if (currBlock.Equals(BlockType.Solid))
+            {
+                tile = blocks.BuildDirtBlock(_spriteBatch);
+            }
+            else if (currBlock.Equals(BlockType.Stair))
+            {
+                tile = blocks.BuildSolidBlock(_spriteBatch);
+            }
+            else if (currBlock.Equals(BlockType.Brick))
+            {
+                tile = blocks.BuildStairBlock(_spriteBatch);
+            }
+            else
+            {
+                tile = blocks.BuildBrickBlock(_spriteBatch);
+            }
+        }
+
         base.Update(gameTime);
     }
+
 
     protected override void Draw(GameTime gameTime)
     {
@@ -74,7 +174,7 @@ public class Game1 : Game
         
         _spriteBatch.Begin();
         //marioSprite.Draw(_spriteBatch); 
-        _spriteBatch.DrawString(font, "Created by Liam Graham \n Sorce files, class foler", new Vector2(200, 350), Color.White );
+        tile.Draw(_spriteBatch); // Draw Blocks
         _spriteBatch.End();
 
         base.Draw(gameTime);

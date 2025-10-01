@@ -20,6 +20,30 @@
 /processorParam:TextureFormat=Compressed
 /build:Font/File.spritefont;Font/font.spritefont
 
+#begin legendofzelda_blocks_sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:legendofzelda_blocks_sheet.png
+
+#begin Sprites/legendofzelda_blocks_sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/legendofzelda_blocks_sheet.png
+
 #begin Sprites/legendofzelda_bosses_sheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
