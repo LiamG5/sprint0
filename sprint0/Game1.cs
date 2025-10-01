@@ -1,4 +1,4 @@
-﻿
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -54,6 +54,7 @@ public class Game1 : Game
         Texture2DStorage.LoadAllTextures(Content);
         blocks = BlockFactory.Instance; // Initialize Block Factory
         tile = blocks.BuildTileBlock(_spriteBatch); // Assign initial Block
+        
         controllers = new List<IController>
             {
              new KeyboardController(this, marioSprite),
