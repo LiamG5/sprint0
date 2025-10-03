@@ -13,9 +13,6 @@ namespace sprint0.Classes
     public int state;
     public Texture2D textureC; 
    
-    
-    
-
 
         public SpriteMain()
         {
