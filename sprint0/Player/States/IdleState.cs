@@ -1,26 +1,27 @@
 using Microsoft.Xna.Framework;
+using sprint0.Classes;
 
 namespace sprint0.PlayerStates
 {
     public class IdleState : IPlayerState
     {
 
-        public void Enter(Direction direction, LinkSprite linksprite) {
+        public void Enter(Direction direction, LinkAnimation linkAnimation) {
             if (direction == Direction.Up)
             {
-                linkSprite.IdleUp();
+                linkAnimation.LinkStandingUp();
             }
             else if (direction == Direction.Down)
             {
-                linkSprite.IdleDown();
+                linkAnimation.LinkStandingDown();
             }
             else if (direction == Direction.Left)
             {
-                linkSprite.IdleLeft();
+                linkAnimation.LinkStandingLeft();
             }
             else if (direction == Direction.Right)
             {
-                linkSprite.IdleRight();
+                linkAnimation.LinkStandingRight();
             }
         }
         public void UseState(Direction direction, LinkSprite linksprite) { }

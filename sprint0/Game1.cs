@@ -1,4 +1,4 @@
-
+﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -51,9 +51,17 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+        linkSprite = new LinkSprite(Texture2DStorage.GetLinkSpriteSheet());
+        link = new Link(_spriteBatch, linkSprite);
+
+
         Texture2DStorage.LoadAllTextures(Content);
         blocks = BlockFactory.Instance; // Initialize Block Factory
         tile = blocks.BuildTileBlock(_spriteBatch); // Assign initial Block
+
+
+
+
         
         controllers = new List<IController>
             {
@@ -173,7 +181,7 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
         
         _spriteBatch.Begin();
-        //marioSprite.Draw(_spriteBatch); 
+        
         tile.Draw(_spriteBatch); // Draw Blocks
         _spriteBatch.End();
 

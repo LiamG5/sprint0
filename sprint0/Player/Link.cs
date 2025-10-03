@@ -2,6 +2,7 @@ using sprint0.Interfaces;
 using sprint0;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 
 
@@ -10,22 +11,28 @@ namespace sprint0.Classes
 	class Link : ILink
 	{
 		
-		private LinkSprite linkSprite;
+		
 
+		private SpriteBatch spriteBatch;
         private IPlayerState state;
         private Vector2 position = new Vector2(20, 100);
         private Vector2 velocity = new Vector2(0, 0);
 
+		private LinkAnimation linkAnimation;
+
         public Direction direction { get; private set; } = Direction.Right;
 
-        public Link(ISprite linkSprite)
+		public Link(SpriteBatch spriteBatch)
 		{
-			this.linkSprite = (SpriteMain)linkSprite;
+			
+			this.spriteBatch = _spriteBatch;
+			this.linkAnimation = new LinkAnimation();
 		}
 
 		public void Update()
 		{
 			state.Update();
+			linkAnimation.Draw(spriteBatch, position);
 		}
 
         public void ChangeState(IPlayerState newState)
@@ -43,30 +50,30 @@ namespace sprint0.Classes
         public void MoveLeft()
 		{
 			velocity = new Vector2(-5,0);
-			link.DrawWalkLeft();
+			linkAnimation.LinkWalkingLeft();
 			direction = Direction.Left;
         }
 		public void MoveRight()
 		{
 			velocity = new Vector2(5, 0);
-			link.DrawWalkDown();
+			linkAnimation.LinkWalkingRight();
 			direction = Direction.Right;
         }
 		public void MoveUp()
 		{
             velocity = new Vector2(0, -5);
-			linkWalkUp.Draw();
+			linkAnimation.LinkWalkingUp
 			direction = Direction.Up;
         }
 		public void MoveDown()
 		{
             velocity = new Vector2(0, 5);
-			linkWalkDown.Draw();
+			linkAnimation.LinkWalkingDown();
 			direction = Direction.Down;
         }
 		public void Attack()
 		{
-            ChangeState(new AttackState());
+			ChangeState(new AttackState());
         }
         public void UseItem1()
 		{

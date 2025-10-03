@@ -7,6 +7,8 @@ namespace sprint0.PlayerStates
         private float timer = 1000;
         public void Enter(Direction direction, LinkSprite linksprite)
         {
+
+            //No animation for damaged, just change color off charater
             if (direction == Direction.Up)
             {
                 linkSprite.DamagedUp();
