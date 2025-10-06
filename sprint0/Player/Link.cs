@@ -24,7 +24,7 @@ namespace sprint0.Classes
 
 		public Link(SpriteBatch spriteBatch)
 		{
-			this.spriteBatch = _spriteBatch;
+			this.spriteBatch = spriteBatch;
 			this.linkAnimation = new LinkAnimation();
 		}
 

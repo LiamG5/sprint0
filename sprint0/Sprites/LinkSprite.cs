@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using sprint0.Interfaces;
 using System;
 using System.Drawing;
+using Color = Microsoft.Xna.Framework.Color;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace sprint0.Classes
 {
@@ -16,9 +18,9 @@ namespace sprint0.Classes
         
 
         
-        public LinkSprite(Texture2D spriteSheet)
+        public LinkSprite()
         {
-            this.spriteSheet = spriteSheet;
+            this.spriteSheet = Texture2DStorage.GetLinkSpriteSheet();
             this.sourceRectangle = new Rectangle(0 * linkColor, 0, 16, 16);
             this.nextRectangle = sourceRectangle;
         }
@@ -144,7 +146,7 @@ namespace sprint0.Classes
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color)
         {
-            spriteBatch.Draw(spriteSheet, position, sourceRectangle, Color.White);
+            spriteBatch.Draw(spriteSheet, position, sourceRectangle, color);
         }
     }
 }

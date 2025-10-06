@@ -10,16 +10,15 @@ namespace sprint0.Classes
         int frameNum = 0; 
         private LinkSprite linkSprite;
 
+        private LinkObjectSprite linkObjSprite;
+
 
 
         public LinkAnimation()
         {
             this.linkSprite = new LinkSprite();
-        }
+            this.linkObjSprite = new LinkObjectSprite();
 
-        public void NextFrame()
-        {
-            frameNum++;
         }
 
         // Row 1 - Standing animations
@@ -52,20 +51,21 @@ namespace sprint0.Classes
         public void LinkWalkingDown()
         {
             switch (frameNum) {
-                case 0:
+    case 0:
                     linkSprite.LinkDrawWalkingDown();
                     frameNum = 1;
-                    break;
-                case 1:
+        break;
+    case 1:
                     linkSprite.LinkDrawStandingDown();
                     frameNum = 0;
         
-                    break;
-                    linkSprite.LinkDrawStandingDown();
+        break;
+                    
+    default: 
+            linkSprite.LinkDrawStandingDown();
                     frameNum = 0;
-                default: 
         
-                    break; // Optional after default
+        break; 
 }
             
         }
@@ -187,7 +187,7 @@ namespace sprint0.Classes
 
         public void LinkAttackingUp()
         {
-            switch (frameNum)
+switch (frameNum)
             {
                 case 0:
                     linkSprite.LinkDrawAttacking0Up();
@@ -319,27 +319,23 @@ namespace sprint0.Classes
             }
         }
 
-        public void LinkUseItem()
+        public void LinkUseItem1()
         {
-            switch (frameNum)
-            {
-                case 0:
-                    linkSprite.LinkDrawUseItem1();
-                    frameNum = 1;
-                    break;
-                case 1:
-                    linkSprite.LinkDrawUseItem1();
-                    frameNum = 0;
-                    break;
-
-
-                default:
-                    linkSprite.LinkDrawStandingUp();
-                    frameNum = 0;
-                    break;
- 
-            }
             
+                    linkObjSprite.LinkObjDrawItem1();
+                   
+        }
+        public void LinkUseItem2()
+        {
+            
+                    linkObjSprite.LinkObjDrawItem2();
+                   
+        }
+        public void LinkUseItem3()
+        {
+
+            linkObjSprite.LinkObjDrawItem3();
+                   
         }
         
 
@@ -347,6 +343,7 @@ namespace sprint0.Classes
         {
 
         }
+
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color)
         {

@@ -31,6 +31,7 @@ public class Game1 : Game
     private Texture2D blockSheet;
     public SpriteMain marioSprite;
     private SpriteFont font;
+    private Link link;
     public int state;
 
     public Game1()
@@ -50,9 +51,7 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-        linkSprite = new LinkSprite(Texture2DStorage.GetLinkSpriteSheet());
-        link = new Link(_spriteBatch, linkSprite);
+        link = new Link(_spriteBatch);
 
 
         Texture2DStorage.LoadAllTextures(Content);
@@ -182,7 +181,7 @@ public class Game1 : Game
         
         _spriteBatch.Begin();
         
-        tile.Draw(_spriteBatch); // Draw Blocks
+        tile.Draw(_spriteBatch); // Draw Blocks need to make Iblock interface diffrenet then sprite
         _spriteBatch.End();
 
         base.Draw(gameTime);
