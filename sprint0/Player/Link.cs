@@ -3,15 +3,12 @@ using sprint0;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
 
 namespace sprint0.Classes
 {
-	class Link : ILink
+	public class Link : ILink
 	{
-		
-		
 
 		private SpriteBatch spriteBatch;
         private IPlayerState state;
@@ -19,12 +16,14 @@ namespace sprint0.Classes
         private Vector2 velocity = new Vector2(0, 0);
 
 		private LinkAnimation linkAnimation;
+		private Color color = Color.White;
 
-        public Direction direction { get; private set; } = Direction.Right;
+
+		private enum Direction { Up, Down, Left, Right };
+        private Direction direction = Direction.Right;
 
 		public Link(SpriteBatch spriteBatch)
 		{
-			
 			this.spriteBatch = _spriteBatch;
 			this.linkAnimation = new LinkAnimation();
 		}
@@ -32,7 +31,7 @@ namespace sprint0.Classes
 		public void Update()
 		{
 			state.Update();
-			linkAnimation.Draw(spriteBatch, position);
+			linkAnimation.Draw(spriteBatch, position, color);
 		}
 
         public void ChangeState(IPlayerState newState)
@@ -42,9 +41,15 @@ namespace sprint0.Classes
             state.Enter();
         }
 
+		public void ChangeColor(Color color)
+		{
+			this.color = color;
+		}
+
         public void Idle()
         {
-            ChangeState(new IdleState());
+			velocity = new Vector2(0, 0);
+            ChangeState(new IdleState(direction, linkAnimation));
         }
 
         public void MoveLeft()
@@ -62,36 +67,39 @@ namespace sprint0.Classes
 		public void MoveUp()
 		{
             velocity = new Vector2(0, -5);
-			linkAnimation.LinkWalkingUp
+			linkAnimation.LinkWalkingUp();
 			direction = Direction.Up;
         }
 		public void MoveDown()
 		{
-            velocity = new Vector2(0, 5);
+			velocity = new Vector2(0, 5);
 			linkAnimation.LinkWalkingDown();
 			direction = Direction.Down;
         }
 		public void Attack()
 		{
-			ChangeState(new AttackState());
+			ChangeState(new AttackState(direction, linkAnimation));
         }
         public void UseItem1()
 		{
-            ChangeState(new Item1State());
+            ChangeState(new Item1State(direction, linkAnimation));
         }
         public void UseItem2()
 		{
-			ChangeState(new Item2State());
+			ChangeState(new Item2State(direction, linkAnimation));
         }
 		public void UseItem3()
 		{
-			ChangeState(new Item3State());
+			ChangeState(new Item3State(direction, linkAnimation));
         }
-
 		public void TakeDamage()
 		{
-			ChangeState(new DamagedState);
+			ChangeState(new DamagedState(direction, linkAnimation));
 		}
-	}
+		public void UseMagic()
+		{ 			
+			ChangeState(new MagicState(direction, linkAnimation));
+		}
+    }
 
 }

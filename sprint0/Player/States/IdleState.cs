@@ -6,7 +6,16 @@ namespace sprint0.PlayerStates
     public class IdleState : IPlayerState
     {
 
-        public void Enter(Direction direction, LinkAnimation linkAnimation) {
+        private Direction direction;
+        private LinkAnimation linkAnimation;
+
+        public IdleState(Direction direction, LinkAnimation linkAnimation) 
+        {
+            this.direction = direction;
+            this.linkAnimation = linkAnimation;
+        }
+
+        public void Enter() {
             if (direction == Direction.Up)
             {
                 linkAnimation.LinkStandingUp();
@@ -24,7 +33,7 @@ namespace sprint0.PlayerStates
                 linkAnimation.LinkStandingRight();
             }
         }
-        public void UseState(Direction direction, LinkSprite linksprite) { }
+        public void UseState() { }
         public void Exit() { }
         public void Update(GameTime gameTime) { }
     }

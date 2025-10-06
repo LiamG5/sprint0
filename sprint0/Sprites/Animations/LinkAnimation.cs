@@ -15,7 +15,11 @@ namespace sprint0.Classes
         public LinkAnimation()
         {
             this.linkSprite = new LinkSprite();
-            
+        }
+
+        public void NextFrame()
+        {
+            frameNum++;
         }
 
         // Row 1 - Standing animations
@@ -48,20 +52,20 @@ namespace sprint0.Classes
         public void LinkWalkingDown()
         {
             switch (frameNum) {
-    case 0:
+                case 0:
                     linkSprite.LinkDrawWalkingDown();
                     frameNum = 1;
-        break;
-    case 1:
+                    break;
+                case 1:
                     linkSprite.LinkDrawStandingDown();
                     frameNum = 0;
         
-        break;
+                    break;
                     linkSprite.LinkDrawStandingDown();
                     frameNum = 0;
-    default: 
+                default: 
         
-        break; // Optional after default
+                    break; // Optional after default
 }
             
         }
@@ -183,7 +187,7 @@ namespace sprint0.Classes
 
         public void LinkAttackingUp()
         {
-switch (frameNum)
+            switch (frameNum)
             {
                 case 0:
                     linkSprite.LinkDrawAttacking0Up();
@@ -344,10 +348,9 @@ switch (frameNum)
 
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color)
         {
-            linkSprite.Draw(spriteBatch, position);
-            
+            linkSprite.Draw(spriteBatch, position, color);
         }
     }
 }

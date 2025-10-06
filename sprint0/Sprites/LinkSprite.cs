@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Interfaces;
 using System;
+using System.Drawing;
 
 namespace sprint0.Classes
 {
@@ -138,15 +139,11 @@ namespace sprint0.Classes
 
         public void Update(GameTime gameTime)
         {
-
             sourceRectangle = nextRectangle;
-
-
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color)
         {
-            
             spriteBatch.Draw(spriteSheet, position, sourceRectangle, Color.White);
         }
     }

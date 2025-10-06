@@ -2,39 +2,43 @@ using Microsoft.Xna.Framework;
 
 namespace sprint0.PlayerStates
 {
-    public class IdleState : IPlayerState
+    public class DamagedState : IPlayerState
     {
-        private float timer = 1000;
-        public void Enter(Direction direction, LinkSprite linksprite)
-        {
+        private float timer = 1500;
+        private Link player;
+        private Direction direction;
+        private LinkAnimation linkAnimation;
 
-            //No animation for damaged, just change color off charater
-            if (direction == Direction.Up)
-            {
-                linkSprite.DamagedUp();
-            }
-            else if (direction == Direction.Down)
-            {
-                linkSprite.DamagedDown();
-            }
-            else if (direction == Direction.Left)
-            {
-                linkSprite.DamagedLeft();
-            }
-            else if (direction == Direction.Right)
-            {
-                linkSprite.DamagedRight();
-            }
+        public DamagedState(Link player, Direction direction, LinkAnimation linkAnimation)
+        {
+            this.player = player;
+            this.direction = direction;
+            this.linkAnimation = linkAnimation;
         }
-        public void UseState(Direction direction, LinkSprite linksprite) { }
+
+        public void Enter() { }
+        public void UseState() { }
         public void Exit() { }
-        public void Update(GameTime gameTime, Link player) 
-        { 
+        public void Update(GameTime gameTime)
+        {
             timer -= gameTime.ElapsedGameTime.Milliseconds;
 
             if (timer <= 0)
             {
-                player.ChangeState(new IdleState());
+                player.ChangeColor(Color.White);
+                player.ChangeState(new IdleState(direction, linkAnimation));
+            }
+            else if (timer <= 500)
+            {
+                player.ChangeColor(Color.Red);
+            }
+            else if (timer <= 1000)
+            {
+                player.ChangeColor(Color.White);
+            }
+            else if (timer <= 1500)
+            {
+                player.ChangeColor(Color.Red);
             }
         }
     }
