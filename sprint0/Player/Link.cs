@@ -11,27 +11,32 @@ namespace sprint0.Classes
 	{
 
 		private SpriteBatch spriteBatch;
-        private IPlayerState state;
+
+		private IPlayerState state;
+
         private Vector2 position = new Vector2(20, 100);
         private Vector2 velocity = new Vector2(0, 0);
 
-		private LinkAnimation linkAnimation;
-		private Color color = Color.White;
+		private LinkAnimation linkAnimation = new LinkAnimation();
 
+		private GameTime time;
 
 		private enum Direction { Up, Down, Left, Right };
-        private Direction direction = Direction.Right;
+        public Direction direction { get; private set; } = Direction.Right;
 
-		public Link(SpriteBatch spriteBatch)
+		public Link(SpriteBatch spriteBatch, GameTime gameTime)
 		{
 			this.spriteBatch = spriteBatch;
-			this.linkAnimation = new LinkAnimation();
+			this.time = gameTime;
 		}
 
 		public void Update()
 		{
-			state.Update();
-			linkAnimation.Draw(spriteBatch, position, color);
+			state.Update(gameTime);
+			state.UseState();
+			position += velocity;
+
+            linkAnimation.Draw(spriteBatch, position);
 		}
 
         public void ChangeState(IPlayerState newState)
@@ -41,64 +46,76 @@ namespace sprint0.Classes
             state.Enter();
         }
 
-		public void ChangeColor(Color color)
-		{
-			this.color = color;
-		}
-
         public void Idle()
         {
 			velocity = new Vector2(0, 0);
-            ChangeState(new IdleState(direction, linkAnimation));
+            ChangeState(new IdleState(this, linkAnimation));
         }
 
+        //Do not allow movement if player is acting or taking damage
         public void MoveLeft()
 		{
-			velocity = new Vector2(-5,0);
-			linkAnimation.LinkWalkingLeft();
-			direction = Direction.Left;
+			if (state is IdleState)
+			{
+				velocity = new Vector2(-5, 0);
+                direction = Direction.Left;
+                ChangeState(new MoveState(this, linkAnimation));
+            }
         }
+
 		public void MoveRight()
 		{
-			velocity = new Vector2(5, 0);
-			linkAnimation.LinkWalkingRight();
-			direction = Direction.Right;
+			if (state is IdleState)
+			{
+				velocity = new Vector2(5, 0);
+				direction = Direction.Right;
+                ChangeState(new MoveState(this, linkAnimation));
+            }
         }
+
 		public void MoveUp()
 		{
-            velocity = new Vector2(0, -5);
-			linkAnimation.LinkWalkingUp();
-			direction = Direction.Up;
+			if (state is IdleState)
+			{
+				velocity = new Vector2(0, -5);
+				direction = Direction.Up;
+                ChangeState(new MoveState(this, linkAnimation));
+            }
         }
+
 		public void MoveDown()
 		{
-			velocity = new Vector2(0, 5);
-			linkAnimation.LinkWalkingDown();
-			direction = Direction.Down;
+			if (state is IdleState)
+			{
+				velocity = new Vector2(0, 5);
+				direction = Direction.Down;
+                ChangeState(new MoveState(this, linkAnimation));
+            }
         }
+
 		public void Attack()
 		{
-			ChangeState(new AttackState(direction, linkAnimation));
+			ChangeState(new AttackState(this, linkAnimation));
         }
         public void UseItem1()
 		{
-            ChangeState(new Item1State(direction, linkAnimation));
+            ChangeState(new ItemState(this, linkAnimation));
         }
         public void UseItem2()
 		{
-			ChangeState(new Item2State(direction, linkAnimation));
+			ChangeState(new ItemState(this, linkAnimation));
         }
 		public void UseItem3()
 		{
-			ChangeState(new Item3State(direction, linkAnimation));
+			ChangeState(new ItemState(this, linkAnimation));
         }
 		public void TakeDamage()
 		{
-			ChangeState(new DamagedState(direction, linkAnimation));
+			ChangeState(new DamagedState(this, linkAnimation));
 		}
 		public void UseMagic()
 		{ 			
-			ChangeState(new MagicState(direction, linkAnimation));
+			ChangeState(new MagicState(this, linkAnimation));
 		}
     }
 
