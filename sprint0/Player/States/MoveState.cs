@@ -1,17 +1,17 @@
 using Microsoft.Xna.Framework;
+using sprint0.Classes;
 
 namespace sprint0.PlayerStates
 {
-    public class DamagedState : IPlayerState
+    public class MoveState : IPlayerState
     {
-
         private Link player;
         private LinkAnimation linkAnimation;
 
-        private float currentTime;
-        private float duration = 1500;
+        private float currentTime = 0;
+        private float duration = 1000;
 
-        public DamagedState(Link player, LinkAnimation linkAnimation)
+        public MoveState(Link player, LinkAnimation linkAnimation)
         {
             this.player = player;
             this.linkAnimation = linkAnimation;
@@ -25,7 +25,7 @@ namespace sprint0.PlayerStates
 
             if (currentTime > duration)
             {
-                player.Idle();
+                currentTime -= duration;
             }
         }
 
@@ -34,21 +34,20 @@ namespace sprint0.PlayerStates
             switch (player.direction)
             {
                 case Link.Direction.Up:
-                    linkAnimation.LinkDamagedUp(duration, currentTime);
+                    linkAnimation.LinkWalkingUp(duration, currentTime);
                     break;
                 case Link.Direction.Down:
-                    linkAnimation.LinkDamagedDown(duration, currentTime);
+                    linkAnimation.LinkWalkingDown(duration, currentTime);
                     break;
                 case Link.Direction.Left:
-                    linkAnimation.LinkDamagedLeft(duration, currentTime);
+                    linkAnimation.LinkWalkingLeft(duration, currentTime);
                     break;
                 case Link.Direction.Right:
-                    linkAnimation.LinkDamagedRight(duration, currentTime);
+                    linkAnimation.LinkWalkingRight(duration, currentTime);
                     break;
             }
         }
 
         public void Exit() { }
     }
-
 }

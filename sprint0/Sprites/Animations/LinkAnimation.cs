@@ -7,348 +7,318 @@ namespace sprint0.Classes
 {
     public class LinkAnimation : ISprite
     {
-        int frameNum = 0; 
+        private Color color = Color.White;
         private LinkSprite linkSprite;
-
-
 
         public LinkAnimation()
         {
             this.linkSprite = new LinkSprite();
         }
-
-        public void NextFrame()
+           
+        public void ChangeColor(Color color)
         {
-            frameNum++;
+            this.color = color;
         }
 
         // Row 1 - Standing animations
         public void LinkStandingDown()
         {
             linkSprite.LinkDrawStandingDown();
-            frameNum = 0;
         }
 
         public void LinkStandingLeft()
         {
             linkSprite.LinkDrawStandingLeft();
-            frameNum = 0;
         }
 
         public void LinkStandingUp()
         {
             linkSprite.LinkDrawStandingUp();
-            frameNum = 0;
         }
 
         public void LinkStandingRight()
         {
             linkSprite.LinkDrawStandingRight();
-            frameNum = 0;
-
         }
 
         // Row 2 - Walking animations
-        public void LinkWalkingDown()
+        public void LinkWalkingDown(float totalTime, float currentTime)
         {
-            switch (frameNum) {
-                case 0:
-                    linkSprite.LinkDrawWalkingDown();
-                    frameNum = 1;
-                    break;
-                case 1:
-                    linkSprite.LinkDrawStandingDown();
-                    frameNum = 0;
-        
-                    break;
-                    linkSprite.LinkDrawStandingDown();
-                    frameNum = 0;
-                default: 
-        
-                    break; // Optional after default
-}
-            
-        }
-
-        public void LinkWalkingLeft()
-        {
-            switch (frameNum)
+            float progress = currentTime / totalTime;
+            if (progress <= 0.5f)
             {
-                case 0:
-                    linkSprite.LinkDrawWalkingLeft();
-                    frameNum = 1;
-                    break;
-                case 1:
-                    linkSprite.LinkDrawStandingLeft();
-                    frameNum = 0;
-                    break;
-
-                default:
-                    linkSprite.LinkDrawStandingLeft();
-                    frameNum = 0;
-                    break;
-
+                linkSprite.LinkDrawWalkingDown();
+            }
+            else
+            {
+                linkSprite.LinkDrawStandingDown();
             }
         }
 
-        public void LinkWalkingUp()
+        public void LinkWalkingLeft(float totalTime, float currentTime)
         {
-            switch (frameNum)
+            float progress = currentTime / totalTime;
+            if (progress <= 0.5f)
             {
-                case 0:
-                    linkSprite.LinkDrawWalkingUp();
-                    frameNum = 1;
-                    break;
-                case 1:
-                    linkSprite.LinkDrawStandingUp();
-                    frameNum = 0;
-                    break;
-
-                default:
-                    linkSprite.LinkDrawStandingUp();
-                    frameNum = 0;
-                    break;
-
+                linkSprite.LinkDrawWalkingLeft();
             }
-
+            else
+            {
+                linkSprite.LinkDrawStandingLeft();
+            }
         }
 
-        public void LinkWalkingRight()
+        public void LinkWalkingUp(float totalTime, float currentTime)
         {
-            switch (frameNum)
+            float progress = currentTime / totalTime;
+            if (progress <= 0.5f)
             {
-                case 0:
-                    linkSprite.LinkDrawWalkingRight();
-                    frameNum = 1;
-                    break;
-                case 1:
-                    linkSprite.LinkDrawStandingRight();
-                    frameNum = 0;
-                    break;
-
-
-                default:
-                    linkSprite.LinkDrawStandingRight();
-                    frameNum = 0;
-                    break;
-                    
+                linkSprite.LinkDrawWalkingUp();
             }
-            
+            else
+            {
+                linkSprite.LinkDrawStandingUp();
+            }
         }
 
-
-
+        public void LinkWalkingRight(float totalTime, float currentTime)
+        {
+            float progress = currentTime / totalTime;
+            if (progress <= 0.5f)
+            {
+                linkSprite.LinkDrawWalkingRight();
+            }
+            else
+            {
+                linkSprite.LinkDrawStandingRight();
+            }
+        }
 
         // Row 3&4 - Attacking animations
-        public void LinkAttackingDown()
+        public void LinkAttackingDown(float totalTime, float currentTime)
         {
-            switch (frameNum)
+            float progress = currentTime / totalTime;
+            if (progress <= 0.5f)
             {
-                case 0:
-                    linkSprite.LinkDrawAttacking0Down();
-                    frameNum = 1;
-                    break;
-                case 1:
-                    linkSprite.LinkDrawAttackingDown();
-                    frameNum = 0;
-                    break;
-
-
-                default:
-                    linkSprite.LinkDrawStandingDown();
-                    frameNum = 0;
-                    break;
- 
+                linkSprite.LinkDrawAttacking0Down();
             }
-            
-        }
-
-        public void LinkAttackingLeft()
-        {
-            switch (frameNum)
+            else
             {
-                case 0:
-                    linkSprite.LinkDrawAttacking0Left();
-                    frameNum = 1;
-                    break;
-                case 1:
-                    linkSprite.LinkDrawAttackingLeft();
-                    frameNum = 0;
-                    break;
-
-
-                default:
-                    linkSprite.LinkDrawStandingLeft();
-                    frameNum = 0;
-                    break;
- 
+                linkSprite.LinkDrawAttackingDown();
             }
         }
 
-        public void LinkAttackingUp()
+        public void LinkAttackingLeft(float totalTime, float currentTime)
         {
-            switch (frameNum)
+            float progress = currentTime / totalTime;
+            if (progress <= 0.5f)
             {
-                case 0:
-                    linkSprite.LinkDrawAttacking0Up();
-                    frameNum = 1;
-                    break;
-                case 1:
-                    linkSprite.LinkDrawAttackingUp();
-                    frameNum = 0;
-                    break;
-
-
-                default:
-                    linkSprite.LinkDrawStandingUp();
-                    frameNum = 0;
-                    break;
- 
-            }   
+                linkSprite.LinkDrawAttacking0Left();
+            }
+            else
+            {
+                linkSprite.LinkDrawAttackingLeft();
+            }
         }
 
-        public void LinkAttackingRight()
+        public void LinkAttackingUp(float totalTime, float currentTime)
         {
-           switch (frameNum)
+            float progress = currentTime / totalTime;
+            if (progress <= 0.5f)
             {
-                case 0:
-                    linkSprite.LinkDrawAttacking0Right();
-                    frameNum = 1;
-                    break;
-                case 1:
-                    linkSprite.LinkDrawAttackingRight();
-                    frameNum = 0;
-                    break;
+                linkSprite.LinkDrawAttacking0Up();
+            }
+            else
+            {
+                linkSprite.LinkDrawAttackingUp();
+            }
+        }
 
-
-                default:
-                    linkSprite.LinkDrawStandingRight();
-                    frameNum = 0;
-                    break;
- 
+        public void LinkAttackingRight(float totalTime, float currentTime)
+        {
+            float progress = currentTime / totalTime;
+            if (progress <= 0.5f)
+            {
+                linkSprite.LinkDrawAttacking0Right();
+            }
+            else
+            {
+                linkSprite.LinkDrawAttackingRight();
             }
         }
 
         // Row 3&5 - Magic animations
-        public void LinkMagicDown()
+        public void LinkMagicDown(float totalTime, float currentTime)
         {
-            switch (frameNum)
+            float progress = currentTime / totalTime;
+            if (progress <= 0.5f)
             {
-                case 0:
-                    linkSprite.LinkDrawAttacking0Down();
-                    frameNum = 1;
-                    break;
-                case 1:
-                    linkSprite.LinkDrawMagicDown();
-                    frameNum = 0;
-                    break;
-
-
-                default:
-                    linkSprite.LinkDrawStandingDown();
-                    frameNum = 0;
-                    break;
- 
+                linkSprite.LinkDrawAttacking0Down();
             }
-            
-        }
-
-        public void LinkMagicLeft()
-        {
-           switch (frameNum)
+            else
             {
-                case 0:
-                    linkSprite.LinkDrawAttacking0Down();
-                    frameNum = 1;
-                    break;
-                case 1:
-                    linkSprite.LinkDrawMagicDown();
-                    frameNum = 0;
-                    break;
-
-
-                default:
-                    linkSprite.LinkDrawStandingDown();
-                    frameNum = 0;
-                    break;
- 
+                linkSprite.LinkDrawMagicDown();
             }
         }
 
-        public void LinkMagicUp()
+        public void LinkMagicLeft(float totalTime, float currentTime)
         {
-            switch (frameNum)
+            float progress = currentTime / totalTime;
+            if (progress <= 0.5f)
             {
-                case 0:
-                    linkSprite.LinkDrawAttacking0Up();
-                    frameNum = 1;
-                    break;
-                case 1:
-                    linkSprite.LinkDrawMagicUp();
-                    frameNum = 0;
-                    break;
-
-
-                default:
-                    linkSprite.LinkDrawStandingUp();
-                    frameNum = 0;
-                    break;
- 
+                linkSprite.LinkDrawAttacking0Down();
+            }
+            else
+            {
+                linkSprite.LinkDrawMagicDown();
             }
         }
 
-        public void LinkMagicRight()
+        public void LinkMagicUp(float totalTime, float currentTime)
         {
-            switch (frameNum)
+            float progress = currentTime / totalTime;
+            if (progress <= 0.5f)
             {
-                case 0:
-                    linkSprite.LinkDrawAttacking0Right();
-                    frameNum = 1;
-                    break;
-                case 1:
-                    linkSprite.LinkDrawMagicRight();
-                    frameNum = 0;
-                    break;
-
-
-                default:
-                    linkSprite.LinkDrawStandingRight();
-                    frameNum = 0;
-                    break;
- 
+                linkSprite.LinkDrawAttacking0Up();
+            }
+            else
+            {
+                linkSprite.LinkDrawMagicUp();
             }
         }
 
-        public void LinkUseItem()
+        public void LinkMagicRight(float totalTime, float currentTime)
         {
-            switch (frameNum)
+            float progress = currentTime / totalTime;
+            if (progress <= 0.5f)
             {
-                case 0:
-                    linkSprite.LinkDrawUseItem1();
-                    frameNum = 1;
-                    break;
-                case 1:
-                    linkSprite.LinkDrawUseItem1();
-                    frameNum = 0;
-                    break;
-
-
-                default:
-                    linkSprite.LinkDrawStandingUp();
-                    frameNum = 0;
-                    break;
- 
+                linkSprite.LinkDrawAttacking0Right();
             }
-            
+            else
+            {
+                linkSprite.LinkDrawMagicRight();
+            }
         }
-        
+
+        public void LinkUseItem(float totalTime, float currentTime)
+        {
+            float progress = currentTime / totalTime;
+            if (progress <= 0.5f)
+            {
+                linkSprite.LinkDrawUseItem1();
+            }
+            else
+            {
+                linkSprite.LinkDrawUseItem1();
+            }
+        }
+
+        public void LinkDamagedUp(float totalTime, float currentTime)
+        {
+            float progress = currentTime / totalTime;
+            if (progress <= 0.25f)
+            {
+                color = Color.White;
+                linkSprite.LinkStandingUp();
+            }
+            else if (progress <= 0.5f)
+            {
+                color = color.Red;
+                linkSprite.LinkStandingUp();
+            }
+            else if (progress <= 0.75f)
+            {
+                color = Color.White;
+                linkSprite.LinkStandingUp();
+            }
+            else
+            {
+                color = Color.Red;
+                linkSprite.LinkStandingUp();
+            }
+        }
+
+        public void LinkDamagedDown(float totalTime, float currentTime)
+        {
+            float progress = currentTime / totalTime;
+            if (progress <= 0.25f)
+            {
+                color = Color.White;
+                linkSprite.LinkStandingDown();
+            }
+            else if (progress <= 0.5f)
+            {
+                color = color.Red;
+                linkSprite.LinkStandingDown();
+            }
+            else if (progress <= 0.75f)
+            {
+                color = Color.White;
+                linkSprite.LinkStandingDown();
+            }
+            else
+            {
+                color = Color.Red;
+                linkSprite.LinkStandingDown();
+            }
+        }
+
+        public void LinkDamagedLeft(float totalTime, float currentTime)
+        {
+            float progress = currentTime / totalTime;
+            if (progress <= 0.25f)
+            {
+                color = Color.White;
+                linkSprite.LinkStandingLeft();
+            }
+            else if (progress <= 0.5f)
+            {
+                color = color.Red;
+                linkSprite.LinkStandingLeft();
+            }
+            else if (progress <= 0.75f)
+            {
+                color = Color.White;
+                linkSprite.LinkStandingLeft();
+            }
+            else
+            {
+                color = Color.Red;
+                linkSprite.LinkStandingLeft();
+            }
+        }
+
+        public void LinkDamagedRight(float totalTime, float currentTime)
+        {
+            float progress = currentTime / totalTime;
+            if (progress <= 0.25f)
+            {
+                color = Color.White;
+                linkSprite.LinkStandingRight();
+            }
+            else if (progress <= 0.5f)
+            {
+                color = color.Red;
+                linkSprite.LinkStandingRight();
+            }
+            else if (progress <= 0.75f)
+            {
+                color = Color.White;
+                linkSprite.LinkStandingRight();
+            }
+            else
+            {
+                color = Color.Red;
+                linkSprite.LinkStandingRight();
+            }
+        }
+
 
         public void Update(GameTime gameTime)
         {
-
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
             linkSprite.Draw(spriteBatch, position, color);
         }
