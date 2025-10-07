@@ -15,14 +15,17 @@ namespace sprint0.Classes
         public Rectangle nextRectangle;
         private int linkColor = 1;
 
-        
+        private Color DamgColor;
 
-        
+
+
+
         public LinkSprite()
         {
             this.spriteSheet = Texture2DStorage.GetLinkSpriteSheet();
             this.sourceRectangle = new Rectangle(0 * linkColor, 0, 16, 16);
             this.nextRectangle = sourceRectangle;
+            this.DamgColor = Color.White;
         }
 
         // Row 1 - Standing animations
@@ -139,14 +142,19 @@ namespace sprint0.Classes
             nextRectangle = new Rectangle(30 * linkColor, 150, 16, 16);
         }
 
+        public void UpdateColor(Color color)
+        {
+            DamgColor = color;
+        }
+
         public void Update(GameTime gameTime)
         {
             sourceRectangle = nextRectangle;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
-            spriteBatch.Draw(spriteSheet, position, sourceRectangle, color);
+            spriteBatch.Draw(spriteSheet, position, sourceRectangle, DamgColor);
         }
     }
 }

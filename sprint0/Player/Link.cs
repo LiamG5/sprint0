@@ -24,13 +24,13 @@ namespace sprint0.Classes
 		private enum Direction { Up, Down, Left, Right };
         public Direction direction { get; private set; } = Direction.Right;
 
-		public Link(SpriteBatch spriteBatch, GameTime gameTime)
+		public Link(SpriteBatch spriteBatch)
 		{
 			this.spriteBatch = spriteBatch;
-			this.time = gameTime;
+			
 		}
 
-		public void Update()
+		public void Update(GameTime gameTime)
 		{
 			state.Update(gameTime);
 			state.UseState();

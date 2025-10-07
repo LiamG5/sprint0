@@ -44,7 +44,7 @@ namespace sprint0.Classes
             sourceRectangle = nextRectangle;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
             
             spriteBatch.Draw(spriteSheet, position, sourceRectangle, Color.White);

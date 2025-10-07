@@ -29,7 +29,6 @@ public class Game1 : Game
     private Texture2D miscSheet;
     private Texture2D itemSheet;
     private Texture2D blockSheet;
-    public SpriteMain marioSprite;
     private SpriteFont font;
     private Link link;
     public int state;
@@ -62,11 +61,12 @@ public class Game1 : Game
 
 
         
-        controllers = new List<IController>
+        /*controllers = new List<IController>
             {
              new KeyboardController(this, marioSprite),
                 new MouseController(this, marioSprite)
             }; 
+            */
     }
 
     protected override void Update(GameTime gameTime)
@@ -181,7 +181,7 @@ public class Game1 : Game
         
         _spriteBatch.Begin();
         
-        tile.Draw(_spriteBatch); // Draw Blocks need to make Iblock interface diffrenet then sprite
+        //tile.Draw(_spriteBatch); // Draw Blocks need to make Iblock interface diffrenet then sprite
         _spriteBatch.End();
 
         base.Draw(gameTime);
