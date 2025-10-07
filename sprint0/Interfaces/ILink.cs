@@ -6,7 +6,7 @@ namespace sprint0.Interfaces
 
 	public interface ILink
 	{
-		void Update();
+		void Update(GameTime gametime);
 
 		void MoveLeft();
 		void MoveRight();

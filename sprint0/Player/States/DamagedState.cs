@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using sprint0.Classes;
 
 namespace sprint0.PlayerStates
 {

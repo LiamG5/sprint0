@@ -31,7 +31,7 @@ namespace sprint0.PlayerStates
 
         public void UseState()
         {
-            linkAnimation.LinkUseItem(duration, currentTime);
+            linkAnimation.LinkUseItem1(duration, currentTime);
         }
 
         public void Exit() { }

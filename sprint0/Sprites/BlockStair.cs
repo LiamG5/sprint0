@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace sprint0.Sprites
 {
-    public class BlockStair : ISprite {
+    public class BlockStair : IBlock {
 
         private Texture2D blockSS;
         private static int blockType = 7;
