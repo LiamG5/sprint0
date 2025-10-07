@@ -6,10 +6,9 @@ namespace sprint0.Interfaces
 
 	public interface IPlayerState
 	{
-
-		void UseState(Direction direction, LinkSprite linksprite);
+		void UseState();
 		void Update(GameTime gameTime);
-		void Enter(Direction direction, LinkSprite linksprite);
+		void Enter();
 		void Exit();
 
 	}
