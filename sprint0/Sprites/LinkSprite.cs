@@ -1,8 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Interfaces;
-using System;
-using System.Drawing;
 
 namespace sprint0.Classes
 {
@@ -22,6 +20,9 @@ namespace sprint0.Classes
             this.sourceRectangle = new Rectangle(0 * linkColor, 0, 16, 16);
             this.nextRectangle = sourceRectangle;
         }
+
+        // parameterless constructor for LinkAnimation convenience
+        public LinkSprite() { }
 
         // Row 1 - Standing animations
         public void LinkDrawStandingDown()
@@ -142,9 +143,14 @@ namespace sprint0.Classes
             sourceRectangle = nextRectangle;
         }
 
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(spriteSheet, new Vector2(0,0), sourceRectangle, Color.White);
+        }
+
         public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color)
         {
-            spriteBatch.Draw(spriteSheet, position, sourceRectangle, Color.White);
+            spriteBatch.Draw(spriteSheet, position, sourceRectangle, color);
         }
     }
 }

@@ -1,5 +1,7 @@
 using sprint0.Interfaces;
 using sprint0;
+using sprint0.Sprites.Animations;
+using sprint0.PlayerStates;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,26 +19,29 @@ namespace sprint0.Classes
         private Vector2 position = new Vector2(20, 100);
         private Vector2 velocity = new Vector2(0, 0);
 
-		private LinkAnimation linkAnimation = new LinkAnimation();
+	private LinkAnimation linkAnimation;
 
-		private GameTime time;
+	private GameTime time;
 
-		private enum Direction { Up, Down, Left, Right };
+		public enum Direction { Up, Down, Left, Right };
         public Direction direction { get; private set; } = Direction.Right;
 
-		public Link(SpriteBatch spriteBatch, GameTime gameTime)
+		public Link(SpriteBatch spriteBatch, LinkAnimation linkAnimation)
 		{
 			this.spriteBatch = spriteBatch;
-			this.time = gameTime;
+			this.linkAnimation = linkAnimation;
+			// start in idle state
+			this.state = new sprint0.PlayerStates.IdleState(this, this.linkAnimation);
 		}
 
-		public void Update()
+		public void Update(GameTime gameTime)
 		{
 			state.Update(gameTime);
 			state.UseState();
 			position += velocity;
 
-            linkAnimation.Draw(spriteBatch, position);
+			linkAnimation.Update(gameTime);
+			linkAnimation.Draw(spriteBatch, position);
 		}
 
         public void ChangeState(IPlayerState newState)

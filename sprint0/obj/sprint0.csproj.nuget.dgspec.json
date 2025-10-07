@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Rei\\source\\repos\\CSE 3902 Project\\sprint0\\sprint0.csproj": {}
+    "/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/sprint0.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Rei\\source\\repos\\CSE 3902 Project\\sprint0\\sprint0.csproj": {
+    "/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/sprint0.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Rei\\source\\repos\\CSE 3902 Project\\sprint0\\sprint0.csproj",
+        "projectUniqueName": "/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/sprint0.csproj",
         "projectName": "sprint0",
-        "projectPath": "C:\\Users\\Rei\\source\\repos\\CSE 3902 Project\\sprint0\\sprint0.csproj",
-        "packagesPath": "C:\\Users\\Rei\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Rei\\source\\repos\\CSE 3902 Project\\sprint0\\obj\\",
+        "projectPath": "/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/sprint0.csproj",
+        "packagesPath": "/Users/krushpatel/.nuget/packages/",
+        "outputPath": "/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Rei\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/krushpatel/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -70,12 +64,26 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.19, 8.0.19]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.osx-arm64",
+              "version": "[8.0.19, 8.0.19]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.19, 8.0.19]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

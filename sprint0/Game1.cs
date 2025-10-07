@@ -8,6 +8,7 @@ using sprint0.Classes;
 using sprint0.Sprites;
 using System;
 using static sprint0.Sprites.BlockFactory;
+using sprint0.Controllers;
 
 
 
@@ -20,6 +21,10 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch;
 
     private List<IController> controllers;
+    private sprint0.Classes.Link link;
+    private sprint0.Classes.LinkSprite linkSprite;
+    private sprint0.Sprites.Animations.LinkAnimation linkAnimation;
+    private sprint0.Controllers.KeyboardController keyboardController;
 
     public ISprite tile;
     private BlockFactory blocks;
@@ -49,25 +54,20 @@ public class Game1 : Game
 
     protected override void LoadContent()
     {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
+    _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        linkSprite = new LinkSprite(Texture2DStorage.GetLinkSpriteSheet());
-        link = new Link(_spriteBatch, linkSprite);
+    // Load textures first
+    Texture2DStorage.LoadAllTextures(Content);
 
-
-        Texture2DStorage.LoadAllTextures(Content);
+    // Initialize link sprite, animation, and player
+    linkSprite = new sprint0.Classes.LinkSprite(Texture2DStorage.GetLinkSpriteSheet());
+    linkAnimation = new sprint0.Sprites.Animations.LinkAnimation(linkSprite);
+    link = new sprint0.Classes.Link(_spriteBatch, linkAnimation);
+    Link player = link;
+    keyboardController = new KeyboardController(player);
         blocks = BlockFactory.Instance; // Initialize Block Factory
         tile = blocks.BuildTileBlock(_spriteBatch); // Assign initial Block
 
-
-
-
-        
-        controllers = new List<IController>
-            {
-             new KeyboardController(this, marioSprite),
-                new MouseController(this, marioSprite)
-            }; 
     }
 
     protected override void Update(GameTime gameTime)
@@ -75,10 +75,7 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-         foreach (var controller in controllers)
-    {
-        controller.Update();
-        }
+        keyboardController.Update();
 
         // Updating block state forward
         if (Keyboard.GetState().IsKeyDown(Keys.Y))

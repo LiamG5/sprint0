@@ -1,18 +1,18 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Interfaces;
-using System;
+using sprint0.Classes;
 
-namespace sprint0.Classes
+namespace sprint0.Sprites.Animations
 {
-    public class LinkAnimation : ISprite
+    public class LinkAnimation
     {
         private Color color = Color.White;
         private LinkSprite linkSprite;
 
-        public LinkAnimation()
+        public LinkAnimation(LinkSprite linkSprite)
         {
-            this.linkSprite = new LinkSprite();
+            this.linkSprite = linkSprite;
         }
            
         public void ChangeColor(Color color)
@@ -219,22 +219,22 @@ namespace sprint0.Classes
             if (progress <= 0.25f)
             {
                 color = Color.White;
-                linkSprite.LinkStandingUp();
+                linkSprite.LinkDrawStandingUp();
             }
             else if (progress <= 0.5f)
             {
-                color = color.Red;
-                linkSprite.LinkStandingUp();
+                color = Color.Red;
+                linkSprite.LinkDrawStandingUp();
             }
             else if (progress <= 0.75f)
             {
                 color = Color.White;
-                linkSprite.LinkStandingUp();
+                linkSprite.LinkDrawStandingUp();
             }
             else
             {
                 color = Color.Red;
-                linkSprite.LinkStandingUp();
+                linkSprite.LinkDrawStandingUp();
             }
         }
 
@@ -244,22 +244,22 @@ namespace sprint0.Classes
             if (progress <= 0.25f)
             {
                 color = Color.White;
-                linkSprite.LinkStandingDown();
+                linkSprite.LinkDrawStandingDown();
             }
             else if (progress <= 0.5f)
             {
-                color = color.Red;
-                linkSprite.LinkStandingDown();
+                color = Color.Red;
+                linkSprite.LinkDrawStandingDown();
             }
             else if (progress <= 0.75f)
             {
                 color = Color.White;
-                linkSprite.LinkStandingDown();
+                linkSprite.LinkDrawStandingDown();
             }
             else
             {
                 color = Color.Red;
-                linkSprite.LinkStandingDown();
+                linkSprite.LinkDrawStandingDown();
             }
         }
 
@@ -269,22 +269,22 @@ namespace sprint0.Classes
             if (progress <= 0.25f)
             {
                 color = Color.White;
-                linkSprite.LinkStandingLeft();
+                linkSprite.LinkDrawStandingLeft();
             }
             else if (progress <= 0.5f)
             {
-                color = color.Red;
-                linkSprite.LinkStandingLeft();
+                color = Color.Red;
+                linkSprite.LinkDrawStandingLeft();
             }
             else if (progress <= 0.75f)
             {
                 color = Color.White;
-                linkSprite.LinkStandingLeft();
+                linkSprite.LinkDrawStandingLeft();
             }
             else
             {
                 color = Color.Red;
-                linkSprite.LinkStandingLeft();
+                linkSprite.LinkDrawStandingLeft();
             }
         }
 
@@ -294,22 +294,22 @@ namespace sprint0.Classes
             if (progress <= 0.25f)
             {
                 color = Color.White;
-                linkSprite.LinkStandingRight();
+                linkSprite.LinkDrawStandingRight();
             }
             else if (progress <= 0.5f)
             {
-                color = color.Red;
-                linkSprite.LinkStandingRight();
+                color = Color.Red;
+                linkSprite.LinkDrawStandingRight();
             }
             else if (progress <= 0.75f)
             {
                 color = Color.White;
-                linkSprite.LinkStandingRight();
+                linkSprite.LinkDrawStandingRight();
             }
             else
             {
                 color = Color.Red;
-                linkSprite.LinkStandingRight();
+                linkSprite.LinkDrawStandingRight();
             }
         }
 
