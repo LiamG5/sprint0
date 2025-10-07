@@ -4,17 +4,19 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Rei/source/repos/CSE 3902 Project/sprint0/Content/Font/File.spritefont</File>
-    <File>C:/Users/Rei/source/repos/CSE 3902 Project/sprint0/Content/legendofzelda_blocks_sheet.png</File>
-    <File>C:/Users/Rei/source/repos/CSE 3902 Project/sprint0/Content/Sprites/legendofzelda_blocks_sheet.png</File>
-    <File>C:/Users/Rei/source/repos/CSE 3902 Project/sprint0/Content/Sprites/legendofzelda_bosses_sheet.png</File>
-    <File>C:/Users/Rei/source/repos/CSE 3902 Project/sprint0/Content/Sprites/legendofzelda_enemies_sheet.png</File>
-    <File>C:/Users/Rei/source/repos/CSE 3902 Project/sprint0/Content/Sprites/legendofzelda_items_sheet.png</File>
-    <File>C:/Users/Rei/source/repos/CSE 3902 Project/sprint0/Content/Sprites/legendofzelda_link_sheet.png</File>
-    <File>C:/Users/Rei/source/repos/CSE 3902 Project/sprint0/Content/Sprites/legendofzelda_misccharacters_sheet.png</File>
+    <File>C:/Users/Rei/source/repos/3902 Project - 02/sprint0/Content/Font/File.spritefont</File>
+    <File>C:/Users/Rei/source/repos/3902 Project - 02/sprint0/Content/legendofzelda_blocks_sheet.png</File>
+    <File>C:/Users/Rei/source/repos/3902 Project - 02/sprint0/Content/legendofzelda_enemies_sheet_final.png</File>
+    <File>C:/Users/Rei/source/repos/3902 Project - 02/sprint0/Content/Sprites/legendofzelda_blocks_sheet.png</File>
+    <File>C:/Users/Rei/source/repos/3902 Project - 02/sprint0/Content/Sprites/legendofzelda_bosses_sheet.png</File>
+    <File>C:/Users/Rei/source/repos/3902 Project - 02/sprint0/Content/Sprites/legendofzelda_enemies_sheet.png</File>
+    <File>C:/Users/Rei/source/repos/3902 Project - 02/sprint0/Content/Sprites/legendofzelda_items_sheet.png</File>
+    <File>C:/Users/Rei/source/repos/3902 Project - 02/sprint0/Content/Sprites/legendofzelda_link_sheet.png</File>
+    <File>C:/Users/Rei/source/repos/3902 Project - 02/sprint0/Content/Sprites/legendofzelda_misccharacters_sheet.png</File>
   </SourceFiles>
   <DestFiles>
     <File>Font/font.spritefont</File>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

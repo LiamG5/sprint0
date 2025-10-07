@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "AL7F6McBDeA=",
+  "dgSpecHash": "DAuTp2+GHWI=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Rei\\source\\repos\\CSE 3902 Project\\sprint0\\sprint0.csproj",
+  "projectFilePath": "C:\\Users\\Rei\\source\\repos\\3902 Project - 02\\sprint0\\sprint0.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Rei\\.nuget\\packages\\monogame.content.builder.task\\3.8.4\\monogame.content.builder.task.3.8.4.nupkg.sha512",
     "C:\\Users\\Rei\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.4\\monogame.framework.desktopgl.3.8.4.nupkg.sha512",

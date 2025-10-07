@@ -8,6 +8,7 @@ using sprint0.Classes;
 using sprint0.Sprites;
 using System;
 using static sprint0.Sprites.BlockFactory;
+using static sprint0.Sprites.EnemySpriteFactory;
 
 
 
@@ -22,7 +23,9 @@ public class Game1 : Game
     private List<IController> controllers;
 
     public ISprite tile;
+    public ISprite enemy;
     private BlockFactory blocks;
+    private EnemySpriteFactory enemies;
     private Texture2D linkSheet;
     private Texture2D bossSheet;
     private Texture2D enemiesSheet;
@@ -51,17 +54,11 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        linkSprite = new LinkSprite(Texture2DStorage.GetLinkSpriteSheet());
-        link = new Link(_spriteBatch, linkSprite);
-
-
         Texture2DStorage.LoadAllTextures(Content);
         blocks = BlockFactory.Instance; // Initialize Block Factory
+        enemies = EnemySpriteFactory.Instance;
         tile = blocks.BuildTileBlock(_spriteBatch); // Assign initial Block
-
-
-
-
+        enemy = enemies.SpawnGel(_spriteBatch);
         
         controllers = new List<IController>
             {
@@ -172,6 +169,62 @@ public class Game1 : Game
             }
         }
 
+        // Updating enemy type forward
+        if (Keyboard.GetState().IsKeyDown(Keys.O))
+        {
+            switch (enemies.getEnemy())
+            {
+                case EnemyType.BladeTrap:
+                    enemy = enemies.SpawnGel(_spriteBatch);
+                    break;
+                case EnemyType.Gel:
+                    enemy = enemies.SpawnKeese(_spriteBatch);
+                    break;
+                case EnemyType.Keese:
+                    enemy = enemies.SpawnRedGoriya(_spriteBatch);
+                    break;
+                case EnemyType.RedGoriya:
+                    enemy = enemies.SpawnStalfos(_spriteBatch);
+                    break;
+                case EnemyType.Stalfos:
+                    enemy = enemies.SpawnWallmaster(_spriteBatch);
+                    break;
+                case EnemyType.Wallmaster:
+                    enemy = enemies.SpawnBladeTrap(_spriteBatch);
+                    break;
+
+            }
+        }
+
+        // Updating enemy type backward
+        if (Keyboard.GetState().IsKeyDown(Keys.P))
+        {
+            switch (enemies.getEnemy())
+            {
+                case EnemyType.BladeTrap:
+                    enemy = enemies.SpawnWallmaster(_spriteBatch);
+                    break;
+                case EnemyType.Gel:
+                    enemy = enemies.SpawnBladeTrap(_spriteBatch);
+                    break;
+                case EnemyType.Keese:
+                    enemy = enemies.SpawnGel(_spriteBatch);
+                    break;
+                case EnemyType.RedGoriya:
+                    enemy = enemies.SpawnKeese(_spriteBatch);
+                    break;
+                case EnemyType.Stalfos:
+                    enemy = enemies.SpawnRedGoriya(_spriteBatch);
+                    break;
+                case EnemyType.Wallmaster:
+                    enemy = enemies.SpawnStalfos(_spriteBatch);
+                    break;
+
+            }
+        }
+
+        enemy.Update(gameTime);
+
         base.Update(gameTime);
     }
 
@@ -183,6 +236,7 @@ public class Game1 : Game
         _spriteBatch.Begin();
         
         tile.Draw(_spriteBatch); // Draw Blocks
+        enemy.Draw(_spriteBatch);
         _spriteBatch.End();
 
         base.Draw(gameTime);
