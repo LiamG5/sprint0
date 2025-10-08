@@ -8,6 +8,7 @@ using sprint0.Classes;
 using sprint0.Sprites;
 using System;
 using static sprint0.Sprites.BlockFactory;
+using static sprint0.Sprites.EnemySpriteFactory;
 
 
 
@@ -22,15 +23,17 @@ public class Game1 : Game
     private List<IController> controllers;
 
     public ISprite tile;
+    public ISprite enemy;
     private BlockFactory blocks;
+    private EnemySpriteFactory enemies;
     private Texture2D linkSheet;
     private Texture2D bossSheet;
     private Texture2D enemiesSheet;
     private Texture2D miscSheet;
     private Texture2D itemSheet;
     private Texture2D blockSheet;
-    public SpriteMain marioSprite;
     private SpriteFont font;
+    private Link link;
     public int state;
 
     public Game1()
@@ -50,24 +53,25 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-        linkSprite = new LinkSprite(Texture2DStorage.GetLinkSpriteSheet());
-        link = new Link(_spriteBatch, linkSprite);
+        link = new Link(_spriteBatch);
 
 
         Texture2DStorage.LoadAllTextures(Content);
         blocks = BlockFactory.Instance; // Initialize Block Factory
+        enemies = EnemySpriteFactory.Instance;
         tile = blocks.BuildTileBlock(_spriteBatch); // Assign initial Block
+        enemy = enemies.SpawnGel(_spriteBatch);
 
 
 
 
         
-        controllers = new List<IController>
+        /*controllers = new List<IController>
             {
              new KeyboardController(this, marioSprite),
                 new MouseController(this, marioSprite)
             }; 
+            */
     }
 
     protected override void Update(GameTime gameTime)
@@ -172,6 +176,62 @@ public class Game1 : Game
             }
         }
 
+        // Updating enemy type forward
+        if (Keyboard.GetState().IsKeyDown(Keys.O))
+        {
+            switch (enemies.getEnemy())
+            {
+                case EnemyType.BladeTrap:
+                    enemy = enemies.SpawnGel(_spriteBatch);
+                    break;
+                case EnemyType.Gel:
+                    enemy = enemies.SpawnKeese(_spriteBatch);
+                    break;
+                case EnemyType.Keese:
+                    enemy = enemies.SpawnRedGoriya(_spriteBatch);
+                    break;
+                case EnemyType.RedGoriya:
+                    enemy = enemies.SpawnStalfos(_spriteBatch);
+                    break;
+                case EnemyType.Stalfos:
+                    enemy = enemies.SpawnWallmaster(_spriteBatch);
+                    break;
+                case EnemyType.Wallmaster:
+                    enemy = enemies.SpawnBladeTrap(_spriteBatch);
+                    break;
+
+            }
+        }
+
+        // Updating enemy type backward
+        if (Keyboard.GetState().IsKeyDown(Keys.P))
+        {
+            switch (enemies.getEnemy())
+            {
+                case EnemyType.BladeTrap:
+                    enemy = enemies.SpawnWallmaster(_spriteBatch);
+                    break;
+                case EnemyType.Gel:
+                    enemy = enemies.SpawnBladeTrap(_spriteBatch);
+                    break;
+                case EnemyType.Keese:
+                    enemy = enemies.SpawnGel(_spriteBatch);
+                    break;
+                case EnemyType.RedGoriya:
+                    enemy = enemies.SpawnKeese(_spriteBatch);
+                    break;
+                case EnemyType.Stalfos:
+                    enemy = enemies.SpawnRedGoriya(_spriteBatch);
+                    break;
+                case EnemyType.Wallmaster:
+                    enemy = enemies.SpawnStalfos(_spriteBatch);
+                    break;
+
+            }
+        }
+
+        enemy.Update(gameTime);
+
         base.Update(gameTime);
     }
 
@@ -181,8 +241,9 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
         
         _spriteBatch.Begin();
-        
-        tile.Draw(_spriteBatch); // Draw Blocks
+
+        //tile.Draw(_spriteBatch); // Draw Blocks need to make Iblock interface diffrenet then sprite
+        //enemy.Draw(_spriteBatch); // Enemy classes utilise the old ISprite interface which only took SpriteBatch as the parameter
         _spriteBatch.End();
 
         base.Draw(gameTime);
