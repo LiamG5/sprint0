@@ -5,7 +5,9 @@ using sprint0.Classes;
 using System;
 using Microsoft.Xna.Framework.Content;
 
-public static class Texture2DStorage
+namespace sprint0.Sprites
+{
+    public static class Texture2DStorage
 {
 	public static Texture2D linkSpriteSheet;
 	public static Texture2D blockSpriteSheet;
@@ -20,7 +22,7 @@ public static class Texture2DStorage
 		blockSpriteSheet = Content.Load<Texture2D>("legendofzelda_blocks_sheet");
 		linkSpriteSheet = Content.Load<Texture2D>("legendofzelda_link_sheet");
 		bossSpriteSheet = Content.Load<Texture2D>("legendofzelda_bosses_sheet");
-		enemiesSpriteSheet = Content.Load<Texture2D>("legendofzelda_enemies_sheet_final");
+		enemiesSpriteSheet = Content.Load<Texture2D>("legendofzelda_enemies_sheet");
 		itemSpriteSheet = Content.Load<Texture2D>("legendofzelda_items_sheet");
 		miscSpriteSheet = Content.Load<Texture2D>("legendofzelda_misccharacters_sheet");
 		font = Content.Load<SpriteFont>("font");
@@ -55,4 +57,5 @@ public static class Texture2DStorage
 	{
 		return font;
 	}
+}
 }

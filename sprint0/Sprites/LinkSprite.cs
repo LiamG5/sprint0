@@ -22,7 +22,7 @@ namespace sprint0.Classes
 
         public LinkSprite()
         {
-            this.spriteSheet = Texture2DStorage.GetLinkSpriteSheet();
+            this.spriteSheet = sprint0.Sprites.Texture2DStorage.GetLinkSpriteSheet();
             this.sourceRectangle = new Rectangle(0 * linkColor, 0, 16, 16);
             this.nextRectangle = sourceRectangle;
             this.DamgColor = Color.White;
@@ -154,7 +154,8 @@ namespace sprint0.Classes
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
-            spriteBatch.Draw(spriteSheet, position, sourceRectangle, DamgColor);
+            float scale = 3.0f; // Make sprites 3x bigger
+            spriteBatch.Draw(spriteSheet, position, sourceRectangle, DamgColor, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
         }
     }
 }

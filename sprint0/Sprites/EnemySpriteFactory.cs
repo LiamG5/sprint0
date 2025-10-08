@@ -30,7 +30,7 @@ namespace sprint0.Sprites
         private static EnemySpriteFactory instance = new EnemySpriteFactory(); 
         private EnemySpriteFactory() 
         { 
-            enemySpritesheet = Texture2DStorage.GetEnemiesSpriteSheet(); 
+            enemySpritesheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet(); 
         } 
         public static EnemySpriteFactory Instance 
         { 

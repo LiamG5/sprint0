@@ -24,7 +24,8 @@ namespace sprint0.Sprites
         }
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
-            spriteBatch.Draw(blockSS, position, block, Color.White);
+            float scale = 3.0f; // Make sprites 3x bigger
+            spriteBatch.Draw(blockSS, position, block, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
         }
     }
 }

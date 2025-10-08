@@ -1,12 +1,12 @@
-using sprint0;
 using sprint0.Interfaces;
+using sprint0.Classes;
 
 namespace sprint0.Commands
 {
     public sealed class AttackCommand : ICommand
     {
-        private readonly IPlayer player;
-        public AttackCommand(IPlayer player) { this.player = player; }
-        public void Execute() => player.Attack();
+        private readonly Link link;
+        public AttackCommand(Link link) { this.link = link; }
+        public void Execute() => link.Attack();
     }
 }

@@ -1,12 +1,12 @@
-using sprint0;
+using Microsoft.Xna.Framework;
 using sprint0.Interfaces;
 
 namespace sprint0.Commands
 {
     public sealed class QuitCommand : ICommand
     {
-        private readonly IGameState state;
-        public QuitCommand(IGameState state) { this.state = state; }
-        public void Execute() => state.Quit();
+        private readonly Game game;
+        public QuitCommand(Game game) { this.game = game; }
+        public void Execute() => game.Exit();
     }
 }

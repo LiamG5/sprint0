@@ -27,7 +27,6 @@ namespace sprint0.Classes
             this.color = color;
         }
 
-        // Row 1 - Standing animations
         public void LinkStandingDown()
         {
             linkSprite.LinkDrawStandingDown();
@@ -48,7 +47,6 @@ namespace sprint0.Classes
             linkSprite.LinkDrawStandingRight();
         }
 
-        // Row 2 - Walking animations
         public void LinkWalkingDown(float totalTime, float currentTime)
         {
             float progress = currentTime / totalTime;
@@ -101,7 +99,6 @@ namespace sprint0.Classes
             }
         }
 
-        // Row 3&4 - Attacking animations
         public void LinkAttackingDown(float totalTime, float currentTime)
         {
             float progress = currentTime / totalTime;
@@ -154,7 +151,6 @@ namespace sprint0.Classes
             }
         }
 
-        // Row 3&5 - Magic animations
         public void LinkMagicDown(float totalTime, float currentTime)
         {
             float progress = currentTime / totalTime;
@@ -231,22 +227,22 @@ namespace sprint0.Classes
             float progress = currentTime / totalTime;
             if (progress <= 0.25f)
             {
-                color = Color.White;
+                color = Color.Red;
                 linkSprite.LinkDrawStandingUp();
             }
             else if (progress <= 0.5f)
             {
-                color = Color.Red;
+                color = Color.White;
                 linkSprite.LinkDrawStandingUp();
             }
             else if (progress <= 0.75f)
             {
-                color = Color.White;
+                color = Color.Red;
                 linkSprite.LinkDrawStandingUp();
             }
             else
             {
-                color = Color.Red;
+                color = Color.White;
                 linkSprite.LinkDrawStandingUp();
             }
         }
@@ -256,22 +252,22 @@ namespace sprint0.Classes
             float progress = currentTime / totalTime;
             if (progress <= 0.25f)
             {
-                color = Color.White;
+                color = Color.Red;
                 linkSprite.LinkDrawStandingDown();
             }
             else if (progress <= 0.5f)
             {
-                color = Color.Red;
+                color = Color.White;
                 linkSprite.LinkDrawStandingDown();
             }
             else if (progress <= 0.75f)
             {
-                color = Color.White;
+                color = Color.Red;
                 linkSprite.LinkDrawStandingDown();
             }
             else
             {
-                color = Color.Red;
+                color = Color.White;
                 linkSprite.LinkDrawStandingDown();
             }
         }
@@ -281,22 +277,22 @@ namespace sprint0.Classes
             float progress = currentTime / totalTime;
             if (progress <= 0.25f)
             {
-                color = Color.White;
+                color = Color.Red;
                 linkSprite.LinkDrawStandingLeft();
             }
             else if (progress <= 0.5f)
             {
-                color = Color.Red;
+                color = Color.White;
                 linkSprite.LinkDrawStandingLeft();
             }
             else if (progress <= 0.75f)
             {
-                color = Color.White;
+                color = Color.Red;
                 linkSprite.LinkDrawStandingLeft();
             }
             else
             {
-                color = Color.Red;
+                color = Color.White;
                 linkSprite.LinkDrawStandingLeft();
             }
         }
@@ -306,22 +302,22 @@ namespace sprint0.Classes
             float progress = currentTime / totalTime;
             if (progress <= 0.25f)
             {
-                color = Color.White;
+                color = Color.Red;
                 linkSprite.LinkDrawStandingRight();
             }
             else if (progress <= 0.5f)
             {
-                color = Color.Red;
+                color = Color.White;
                 linkSprite.LinkDrawStandingRight();
             }
             else if (progress <= 0.75f)
             {
-                color = Color.White;
+                color = Color.Red;
                 linkSprite.LinkDrawStandingRight();
             }
             else
             {
-                color = Color.Red;
+                color = Color.White;
                 linkSprite.LinkDrawStandingRight();
             }
         }
@@ -329,13 +325,13 @@ namespace sprint0.Classes
 
         public void Update(GameTime gameTime)
         {
+            linkSprite.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
-            linkSprite.Draw(spriteBatch, position);
-            linkObjSprite.Draw(spriteBatch, position);
             linkSprite.UpdateColor(color);
+            linkSprite.Draw(spriteBatch, position);
         }
     }
 }

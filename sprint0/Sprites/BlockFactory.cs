@@ -28,7 +28,7 @@ namespace sprint0.Sprites
         private static BlockFactory instance = new BlockFactory(); 
         private BlockFactory() 
         { 
-            blockSpritesheet = Texture2DStorage.GetBlockSpriteSheet(); 
+            blockSpritesheet = sprint0.Sprites.Texture2DStorage.GetBlockSpriteSheet(); 
         } 
         public static BlockFactory Instance 
         { 

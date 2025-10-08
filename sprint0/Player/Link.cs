@@ -28,7 +28,8 @@ namespace sprint0.Classes
 		public Link(SpriteBatch spriteBatch)
 		{
 			this.spriteBatch = spriteBatch;
-			
+			this.linkAnimation = new LinkAnimation();
+			this.state = new IdleState(this, linkAnimation);
 		}
 
 		public void Update(GameTime gameTime)
@@ -36,9 +37,18 @@ namespace sprint0.Classes
 			state.Update(gameTime);
 			state.UseState();
 			position += velocity;
-
-            linkAnimation.Draw(spriteBatch, position);
+			linkAnimation.Update(gameTime);
 		}
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            linkAnimation.Draw(spriteBatch, position);
+        }
+
+        public IPlayerState GetCurrentState()
+        {
+            return state;
+        }
 
         public void ChangeState(IPlayerState newState)
         {
@@ -53,44 +63,56 @@ namespace sprint0.Classes
             ChangeState(new IdleState(this, linkAnimation));
         }
 
-        //Do not allow movement if player is acting or taking damage
+        //Allow movement if player is idle or already moving
         public void MoveLeft()
 		{
-			if (state is IdleState)
+			if (state is IdleState || state is MoveState)
 			{
 				velocity = new Vector2(-5, 0);
                 direction = Direction.Left;
-                ChangeState(new MoveState(this, linkAnimation));
+                if (state is IdleState)
+                {
+                    ChangeState(new MoveState(this, linkAnimation));
+                }
             }
         }
 
 		public void MoveRight()
 		{
-			if (state is IdleState)
+			if (state is IdleState || state is MoveState)
 			{
 				velocity = new Vector2(5, 0);
 				direction = Direction.Right;
-                ChangeState(new MoveState(this, linkAnimation));
+                if (state is IdleState)
+                {
+                    ChangeState(new MoveState(this, linkAnimation));
+                }
             }
         }
 
 		public void MoveUp()
 		{
-			if (state is IdleState)
+			if (state is IdleState || state is MoveState)
 			{
 				velocity = new Vector2(0, -5);
 				direction = Direction.Up;
-                ChangeState(new MoveState(this, linkAnimation));
+                if (state is IdleState)
+                {
+                    ChangeState(new MoveState(this, linkAnimation));
+                }
             }
         }
 
 		public void MoveDown()
 		{
-			if (state is IdleState)
+			if (state is IdleState || state is MoveState)
 			{
 				velocity = new Vector2(0, 5);
 				direction = Direction.Down;
-                ChangeState(new MoveState(this, linkAnimation));
+                if (state is IdleState)
+                {
+                    ChangeState(new MoveState(this, linkAnimation));
+                }
             }
         }
 
