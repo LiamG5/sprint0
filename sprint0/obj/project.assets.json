@@ -290,24 +290,31 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\liame\\.nuget\\packages\\": {}
+    "C:\\Users\\Rei\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\sprint0.csproj",
+      "projectUniqueName": "C:\\Users\\Rei\\source\\repos\\3902 Project - 02\\sprint0\\sprint0.csproj",
       "projectName": "sprint0",
-      "projectPath": "c:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\sprint0.csproj",
-      "packagesPath": "C:\\Users\\liame\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\obj\\",
+      "projectPath": "C:\\Users\\Rei\\source\\repos\\3902 Project - 02\\sprint0\\sprint0.csproj",
+      "packagesPath": "C:\\Users\\Rei\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Rei\\source\\repos\\3902 Project - 02\\sprint0\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\liame\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Rei\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -352,24 +359,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.20, 8.0.20]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[8.0.20, 8.0.20]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[8.0.20, 8.0.20]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[8.0.20, 8.0.20]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
