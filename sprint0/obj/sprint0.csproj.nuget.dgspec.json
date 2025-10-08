@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/sprint0.csproj": {}
+    "c:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\sprint0.csproj": {}
   },
   "projects": {
-    "/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/sprint0.csproj": {
+    "c:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\sprint0.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/sprint0.csproj",
+        "projectUniqueName": "c:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\sprint0.csproj",
         "projectName": "sprint0",
-        "projectPath": "/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/sprint0.csproj",
-        "packagesPath": "/Users/krushpatel/.nuget/packages/",
-        "outputPath": "/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/obj/",
+        "projectPath": "c:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\sprint0.csproj",
+        "packagesPath": "C:\\Users\\liame\\.nuget\\packages\\",
+        "outputPath": "c:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/krushpatel/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\liame\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -67,15 +67,19 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.19, 8.0.19]"
+              "version": "[8.0.20, 8.0.20]"
             },
             {
-              "name": "Microsoft.NETCore.App.Host.osx-arm64",
-              "version": "[8.0.19, 8.0.19]"
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[8.0.20, 8.0.20]"
             },
             {
               "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.19, 8.0.19]"
+              "version": "[8.0.20, 8.0.20]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.20, 8.0.20]"
             }
           ],
           "frameworkReferences": {
@@ -83,7 +87,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
