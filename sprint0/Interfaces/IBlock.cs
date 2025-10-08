@@ -1,0 +1,11 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+namespace sprint0.Interfaces
+{
+public interface IBlock
+{   
+    void Update(GameTime gameTime);
+    void Draw(SpriteBatch spriteBatch);
+}
+}

@@ -3,6 +3,7 @@ using sprint0;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
+using Microsoft.Xna.Framework.Graphics;
 
 
 namespace sprint0.Classes
@@ -19,7 +20,6 @@ namespace sprint0.Classes
         public KeyboardController(Game1 game, ISprite linkSprite)
         {
             this.game = game;
-            
         }
 
         public void Update()
@@ -52,6 +52,8 @@ namespace sprint0.Classes
             {
                 
             }
+
+
 
             previousState = currentState;
         }

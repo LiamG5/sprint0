@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+/*using Microsoft.Xna.Framework;   // not needed for current build ok example code
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Interfaces;
 using sprint0.Classes;
@@ -13,9 +13,6 @@ namespace sprint0.Classes
     public int state;
     public Texture2D textureC; 
    
-    
-    
-
 
         public SpriteMain()
         {
@@ -38,3 +35,4 @@ namespace sprint0.Classes
         }
     }
 }
+*/

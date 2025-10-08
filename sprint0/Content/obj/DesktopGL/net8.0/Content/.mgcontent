@@ -4,15 +4,17 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/sprint0/Content/Font/File.spritefont</File>
-    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/sprint0/Content/Sprites/legendofzelda_bosses_sheet.png</File>
-    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/sprint0/Content/Sprites/legendofzelda_enemies_sheet.png</File>
-    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/sprint0/Content/Sprites/legendofzelda_items_sheet.png</File>
-    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/sprint0/Content/Sprites/legendofzelda_link_sheet.png</File>
-    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/sprint0/Content/Sprites/legendofzelda_misccharacters_sheet.png</File>
+    <File>/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/Content/Font/File.spritefont</File>
+    <File>/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/Content/Sprites/legendofzelda_blocks_sheet.png</File>
+    <File>/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/Content/Sprites/legendofzelda_bosses_sheet.png</File>
+    <File>/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/Content/Sprites/legendofzelda_enemies_sheet.png</File>
+    <File>/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/Content/Sprites/legendofzelda_items_sheet.png</File>
+    <File>/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/Content/Sprites/legendofzelda_link_sheet.png</File>
+    <File>/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/Content/Sprites/legendofzelda_misccharacters_sheet.png</File>
   </SourceFiles>
   <DestFiles>
     <File>Font/font.spritefont</File>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
