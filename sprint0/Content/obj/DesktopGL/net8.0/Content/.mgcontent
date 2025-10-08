@@ -5,7 +5,10 @@
   <Config />
   <SourceFiles>
     <File>/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/Content/Font/File.spritefont</File>
+<<<<<<< HEAD
     <File>/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/Content/legendofzelda_blocks_sheet.png</File>
+=======
+>>>>>>> Main
     <File>/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/Content/Sprites/legendofzelda_blocks_sheet.png</File>
     <File>/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/Content/Sprites/legendofzelda_bosses_sheet.png</File>
     <File>/Users/krushpatel/Documents/CSE3902/sprint0-liam/sprint0/Content/Sprites/legendofzelda_enemies_sheet.png</File>
@@ -15,7 +18,6 @@
   </SourceFiles>
   <DestFiles>
     <File>Font/font.spritefont</File>
-    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
