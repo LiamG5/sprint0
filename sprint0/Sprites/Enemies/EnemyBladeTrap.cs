@@ -22,9 +22,9 @@ namespace sprint0.Sprites
         {
             
         }
-        public void Draw(SpriteBatch sprite)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
-            sprite.Draw(enemySS, enemyPos, enemy, Color.White);
+            spriteBatch.Draw(enemySS, position, enemy, Color.White);
         }
     }
 }

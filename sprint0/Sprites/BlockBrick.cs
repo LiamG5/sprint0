@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace sprint0.Sprites
 {
-    public class BlockBrick : IBlock {
+    public class BlockBrick : IBlock, ISprite {
 
         private Texture2D blockSS;
         private static int blockType = 8;
@@ -22,9 +22,9 @@ namespace sprint0.Sprites
         {
             
         }
-        public void Draw(SpriteBatch sprite)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
-            sprite.Draw(blockSS, blockPos, block, Color.White);
+            spriteBatch.Draw(blockSS, position, block, Color.White);
         }
     }
 }

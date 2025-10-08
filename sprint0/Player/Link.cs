@@ -1,5 +1,6 @@
 using sprint0.Interfaces;
 using sprint0;
+using sprint0.PlayerStates;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,7 +22,7 @@ namespace sprint0.Classes
 
 		private GameTime time;
 
-		private enum Direction { Up, Down, Left, Right };
+		public enum Direction { Up, Down, Left, Right };
         public Direction direction { get; private set; } = Direction.Right;
 
 		public Link(SpriteBatch spriteBatch)

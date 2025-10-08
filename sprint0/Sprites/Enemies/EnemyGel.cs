@@ -38,9 +38,9 @@ namespace sprint0.Sprites
                 }
             }
         }
-        public void Draw(SpriteBatch sprite)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
-            sprite.Draw(enemySS, enemyPos, temp, Color.White);
+            spriteBatch.Draw(enemySS, position, temp, Color.White);
         }
     }
 }
