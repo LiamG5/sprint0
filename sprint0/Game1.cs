@@ -22,10 +22,13 @@ public class Game1 : Game
 
     public ISprite tile;
     public ISprite enemy;
+    public ISprite item;
     private BlockFactory blocks;
     private EnemySpriteFactory enemies;
+    private ItemFactory items;
     public BlockCarousel blockCarousel;
     public EnemyCarousel enemyCarousel;
+    public ItemCarousel itemCarousel;
     private Texture2D linkSheet;
     private Texture2D bossSheet;
     private Texture2D enemiesSheet;
@@ -60,12 +63,15 @@ public class Game1 : Game
         
         blocks = BlockFactory.Instance;
         enemies = EnemySpriteFactory.Instance;
+        items = ItemFactory.Instance;
         
         blockCarousel = new BlockCarousel(blocks, _spriteBatch);
         enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
+        itemCarousel = new ItemCarousel(items, _spriteBatch);
         
         tile = blockCarousel.GetCurrentBlock();
         enemy = enemyCarousel.GetCurrentEnemy();
+        item = itemCarousel.GetCurrentItem();
 
         controllers = new List<IController>();
         keyboard = new KeyboardController(this, null);
@@ -88,6 +94,7 @@ public class Game1 : Game
 
 
         enemy.Update(gameTime);
+        item.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -101,9 +108,9 @@ public class Game1 : Game
 
         tile.Draw(_spriteBatch, new Vector2(100, 100));
         enemy.Draw(_spriteBatch, new Vector2(400, 100));
+        item.Draw(_spriteBatch, new Vector2(200, 100));
         link.Draw(_spriteBatch);
         _spriteBatch.End();
-
         base.Draw(gameTime);
     }
 
@@ -114,8 +121,16 @@ public class Game1 : Game
         
         blockCarousel = new BlockCarousel(blocks, _spriteBatch);
         enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
+        itemCarousel = new ItemCarousel(items, _spriteBatch);
         
         tile = blockCarousel.GetCurrentBlock();
         enemy = enemyCarousel.GetCurrentEnemy();
+        item = itemCarousel.GetCurrentItem();
+
+        controllers = new List<IController>();
+        keyboard = new KeyboardController(this, null);
+        controllers.Add(keyboard);
+        
+        previousKeyboardState = Keyboard.GetState();
     }
 }

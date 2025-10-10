@@ -43,6 +43,8 @@ namespace sprint0.Classes
             pressOnceCommands[Keys.Y] = new NextCommand(game.blockCarousel);
             pressOnceCommands[Keys.O] = new PrevCommand(game.enemyCarousel);
             pressOnceCommands[Keys.P] = new NextCommand(game.enemyCarousel);
+            pressOnceCommands[Keys.U] = new PrevCommand(game.itemCarousel);
+            pressOnceCommands[Keys.I] = new NextCommand(game.itemCarousel);
             pressOnceCommands[Keys.Q] = new QuitCommand(game);
             pressOnceCommands[Keys.R] = new ResetCommand(game);
             
@@ -76,6 +78,9 @@ namespace sprint0.Classes
                     else if (key == Keys.O || key == Keys.P)
                     {
                         game.enemy = game.enemyCarousel.GetCurrentEnemy();
+                    }else if(key == Keys.U || key == Keys.I)
+                    {
+                        game.item = game.itemCarousel.GetCurrentItem();
                     }
                 }
             }
