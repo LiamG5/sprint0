@@ -22,7 +22,7 @@ namespace sprint0.Sprites
 		blockSpriteSheet = Content.Load<Texture2D>("legendofzelda_blocks_sheet");
 		linkSpriteSheet = Content.Load<Texture2D>("legendofzelda_link_sheet");
 		bossSpriteSheet = Content.Load<Texture2D>("legendofzelda_bosses_sheet");
-		enemiesSpriteSheet = Content.Load<Texture2D>("legendofzelda_enemies_sheet_final");
+		enemiesSpriteSheet = Content.Load<Texture2D>("Sprites/legendofzelda_enemies_sheet_final");
 		itemSpriteSheet = Content.Load<Texture2D>("legendofzelda_items_sheet");
 		miscSpriteSheet = Content.Load<Texture2D>("legendofzelda_misccharacters_sheet");
 		font = Content.Load<SpriteFont>("font");

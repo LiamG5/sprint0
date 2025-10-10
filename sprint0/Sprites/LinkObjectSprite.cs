@@ -46,8 +46,7 @@ namespace sprint0.Classes
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
-            float scale = 3.0f; // Make sprites 3x bigger
-            spriteBatch.Draw(spriteSheet, position, sourceRectangle, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(spriteSheet, position, sourceRectangle, Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
         }
     }
 }

@@ -1,2 +1,11 @@
 .vs/
-.obj/
+*.user
+
+bin/
+obj/
+*.pdb
+
+Content/bin/
+Content/obj/
+*.mgcontent
+*.mgstats

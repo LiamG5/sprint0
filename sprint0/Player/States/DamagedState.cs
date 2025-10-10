@@ -19,7 +19,9 @@ namespace sprint0.PlayerStates
             this.linkAnimation = linkAnimation;
         }
 
-        public void Enter() { }
+        public void Enter() { 
+            player.velocity = new Vector2(0, 0);
+        }
 
         public void Update(GameTime gameTime)
         {

@@ -24,7 +24,6 @@ namespace sprint0.PlayerStates
         {
             currentTime += (float)gameTime.ElapsedGameTime.Milliseconds;
 
-            // Reset timer when it exceeds duration to loop the animation
             if (currentTime > duration)
             {
                 currentTime -= duration;

@@ -15,15 +15,15 @@ namespace sprint0.Classes
 
 		private IPlayerState state;
 
-        private Vector2 position = new Vector2(20, 100);
-        private Vector2 velocity = new Vector2(0, 0);
-
 		private LinkAnimation linkAnimation = new LinkAnimation();
 
 		private GameTime time;
 
 		public enum Direction { Up, Down, Left, Right };
         public Direction direction { get; private set; } = Direction.Right;
+
+		public Vector2 position { get; set; } = new Vector2(20, 100);
+        public Vector2 velocity { get; set; } = new Vector2(0, 0);
 
 		public Link(SpriteBatch spriteBatch)
 		{
