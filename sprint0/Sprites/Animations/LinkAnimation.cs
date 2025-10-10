@@ -332,6 +332,7 @@ namespace sprint0.Classes
         {
             linkSprite.UpdateColor(color);
             linkSprite.Draw(spriteBatch, position);
+            
         }
     }
 }

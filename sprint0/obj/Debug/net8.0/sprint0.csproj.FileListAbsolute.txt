@@ -37,7 +37,6 @@ c:\Users\liame\OneDrive\Documents\cse 3902\sprint0\sprint0\bin\Debug\net8.0\Cont
 c:\Users\liame\OneDrive\Documents\cse 3902\sprint0\sprint0\bin\Debug\net8.0\Content\WalkingRightMario3.xnb
 c:\Users\liame\OneDrive\Documents\cse 3902\sprint0\sprint0\obj\Debug\net8.0\sprint0.sourcelink.json
 c:\Users\liame\OneDrive\Documents\cse 3902\sprint0\sprint0\bin\Debug\net8.0\Content\Sprites\legendofzelda_bosses_sheet.xnb
-c:\Users\liame\OneDrive\Documents\cse 3902\sprint0\sprint0\bin\Debug\net8.0\Content\Sprites\legendofzelda_enemies_sheet.xnb
 c:\Users\liame\OneDrive\Documents\cse 3902\sprint0\sprint0\bin\Debug\net8.0\Content\Sprites\legendofzelda_items_sheet.xnb
 c:\Users\liame\OneDrive\Documents\cse 3902\sprint0\sprint0\bin\Debug\net8.0\Content\Sprites\legendofzelda_link_sheet.xnb
 c:\Users\liame\OneDrive\Documents\cse 3902\sprint0\sprint0\bin\Debug\net8.0\Content\Sprites\legendofzelda_misccharacters_sheet.xnb
@@ -96,3 +95,6 @@ C:\Users\Rei\source\repos\CSE 3902 Project\sprint0\obj\Debug\net8.0\sprint0.cspr
 C:\Users\Rei\source\repos\CSE 3902 Project\sprint0\obj\Debug\net8.0\sprint0.genruntimeconfig.cache
 C:\Users\Rei\source\repos\CSE 3902 Project\sprint0\obj\Debug\net8.0\ref\sprint0.dll
 C:\Users\Rei\source\repos\CSE 3902 Project\sprint0\bin\Debug\net8.0\Content\legendofzelda_blocks_sheet.xnb
+c:\Users\liame\OneDrive\Documents\cse 3902\sprint0\sprint0\bin\Debug\net8.0\Content\legendofzelda_blocks_sheet.xnb
+c:\Users\liame\OneDrive\Documents\cse 3902\sprint0\sprint0\bin\Debug\net8.0\Content\Sprites\legendofzelda_blocks_sheet.xnb
+c:\Users\liame\OneDrive\Documents\cse 3902\sprint0\sprint0\bin\Debug\net8.0\Content\Sprites\legendofzelda_enemies_sheet_final.xnb

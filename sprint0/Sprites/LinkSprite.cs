@@ -94,22 +94,22 @@ namespace sprint0.Classes
         // Row 4 - Attacking animations
         public void LinkDrawAttackingDown()
         {
-            nextRectangle = new Rectangle(0 * linkColor, 90, 16, 16);
+            nextRectangle = new Rectangle(0 * linkColor, 84, 16, 28);
         }
 
         public void LinkDrawAttackingLeft()
         {
-            nextRectangle = new Rectangle(30 * linkColor, 90, 16, 16);
+            nextRectangle = new Rectangle(24 * linkColor, 90, 28, 16);
         }
 
         public void LinkDrawAttackingUp()
         {
-            nextRectangle = new Rectangle(60 * linkColor, 90, 16, 16);
+            nextRectangle = new Rectangle(60 * linkColor, 84, 16, 28);
         }
 
         public void LinkDrawAttackingRight()
         {
-            nextRectangle = new Rectangle(90 * linkColor, 90, 16, 16);
+            nextRectangle = new Rectangle(84 * linkColor, 90, 28, 16);
         }
 
         // Row 5 - Magic animations
