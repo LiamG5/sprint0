@@ -14,7 +14,7 @@ namespace sprint0.Classes
         public Rectangle sourceRectangle;
         public Rectangle nextRectangle;
         private int linkColor = 1;
-
+        private Vector2 positionOffset;
         private Color DamgColor;
 
 
@@ -26,6 +26,7 @@ namespace sprint0.Classes
             this.sourceRectangle = new Rectangle(0 * linkColor, 0, 16, 16);
             this.nextRectangle = sourceRectangle;
             this.DamgColor = Color.White;
+            this.positionOffset = Vector2.Zero;
         }
 
         // Row 1 - Standing animations
@@ -100,11 +101,14 @@ namespace sprint0.Classes
         public void LinkDrawAttackingLeft()
         {
             nextRectangle = new Rectangle(24 * linkColor, 90, 28, 16);
+            positionOffset = new Vector2(-12, 0);
         }
 
         public void LinkDrawAttackingUp()
         {
+
             nextRectangle = new Rectangle(60 * linkColor, 84, 16, 28);
+            positionOffset = new Vector2(0, -12);
         }
 
         public void LinkDrawAttackingRight()
@@ -153,8 +157,10 @@ namespace sprint0.Classes
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
-        {
-            spriteBatch.Draw(spriteSheet, position, sourceRectangle, DamgColor, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+        {   
+            Vector2 drawPosition = position + (positionOffset * 3.0f);
+            spriteBatch.Draw(spriteSheet, drawPosition, sourceRectangle, DamgColor, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+            positionOffset = Vector2.Zero;
         }
     }
 }
