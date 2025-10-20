@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Rei\\Source\\Repos\\sprint0\\sprint0\\sprint0.csproj": {}
+    "C:\\Users\\Rei\\source\\repos\\Sprint0\\sprint0\\sprint0.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Rei\\Source\\Repos\\sprint0\\sprint0\\sprint0.csproj": {
+    "C:\\Users\\Rei\\source\\repos\\Sprint0\\sprint0\\sprint0.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Rei\\Source\\Repos\\sprint0\\sprint0\\sprint0.csproj",
+        "projectUniqueName": "C:\\Users\\Rei\\source\\repos\\Sprint0\\sprint0\\sprint0.csproj",
         "projectName": "sprint0",
-        "projectPath": "C:\\Users\\Rei\\Source\\Repos\\sprint0\\sprint0\\sprint0.csproj",
+        "projectPath": "C:\\Users\\Rei\\source\\repos\\Sprint0\\sprint0\\sprint0.csproj",
         "packagesPath": "C:\\Users\\Rei\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Rei\\Source\\Repos\\sprint0\\sprint0\\obj\\",
         "projectStyle": "PackageReference",

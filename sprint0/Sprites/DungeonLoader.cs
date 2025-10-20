@@ -3,29 +3,95 @@ using Microsoft.Xna.Framework.Graphics;
 using sprint0.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using static sprint0.Sprites.DungeonCarousel;
 
 namespace sprint0.Sprites
 {
-    public class DungeonLoader : ISprite
+    public class DungeonLoader
     {
-        private BlockFactory blocks;
+        private ISprite[] storage;
+        private String path;
+        private int storageIdx = 0;
+        private BlockFactory blocks = BlockFactory.Instance;
 
-        public DungeonLoader(BlockFactory blocks)
+        public DungeonLoader(BlockFactory blocks, string path)
         {
             this.blocks = blocks;
+            this.path = path;
+            int totalCells = 84;
+            storage = new ISprite[totalCells];
+            storageIdx = 0;
         }
 
         public void Update(GameTime gameTime)
         {
 
         }
-
-        public void Draw(SpriteBatch sprite, Vector2 pos)
+        public void Draw(SpriteBatch sprite, GraphicsDeviceManager graphics)
         {
+            const int gridColumns = 12;
+            const int gridRows = 7;
+            const int tileSize = 48;
 
+            storageIdx = 0;
+            string[] lines = File.ReadAllLines(path);
+
+            int maxCells = Math.Min(storage.Length, gridColumns * gridRows);
+
+            foreach (string line in lines )
+            {
+                string[] columns = line.Split(',');
+                foreach (string block in columns)
+                {
+                    switch (block)
+                    {
+                        case "Tile":
+                            storage[storageIdx] = blocks.BuildTileBlock(sprite);
+                            break;
+                        case "ChiseledTile":
+                            storage[storageIdx] = blocks.BuildChiseledTileBlock(sprite);
+                            break;
+                        case "Fish":
+                            storage[storageIdx] = blocks.BuildFishBlock(sprite);
+                            break;
+                        case "Dragon":
+                            storage[storageIdx] = blocks.BuildDragonBlock(sprite);
+                            break;
+                        case "Void":
+                            storage[storageIdx] = blocks.BuildVoidBlock(sprite);
+                            break;
+                        case "Dirt":
+                            storage[storageIdx] = blocks.BuildDirtBlock(sprite);    
+                            break;
+                        case "Solid":
+                            storage[storageIdx] = blocks.BuildSolidBlock(sprite);
+                            break;
+                        case "Stair":
+                            storage[storageIdx] = blocks.BuildStairBlock(sprite);
+                            break;
+                        case "Brick":
+                            storage[storageIdx] = blocks.BuildBrickBlock(sprite);
+                            break;
+                        case "Grate":
+                            storage[storageIdx] = blocks.BuildGrateBlock(sprite);
+                            break;
+                    }
+
+                    int col = storageIdx % gridColumns;
+                    int row = storageIdx / gridColumns;
+                    Vector2 position = new Vector2(col * tileSize, row * tileSize);
+
+                    storage[storageIdx].Draw(sprite, position);
+                    storageIdx++;
+                }
+
+                if (storageIdx >= maxCells) break;
+            }
         }
     }
 }

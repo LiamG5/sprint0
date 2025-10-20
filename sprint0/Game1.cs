@@ -1,13 +1,14 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
-using sprint0.Interfaces;
 using sprint0.Classes;
+using sprint0.Interfaces;
 using sprint0.PlayerStates;
 using sprint0.Sprites;
 using System;
+using System.Collections.Generic;
 using static sprint0.Sprites.BlockFactory;
+using static sprint0.Sprites.DungeonCarousel;
 using static sprint0.Sprites.EnemySpriteFactory;
 
 
@@ -23,6 +24,7 @@ public class Game1 : Game
     public ISprite tile;
     public ISprite enemy;
     public ISprite item;
+    private DungeonLoader dungeon;
     private BlockFactory blocks;
     private EnemySpriteFactory enemies;
     private ItemFactory items;
@@ -56,7 +58,7 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-        
+
         sprint0.Sprites.Texture2DStorage.LoadAllTextures(Content);
         
         link = new Link(_spriteBatch);
@@ -68,7 +70,9 @@ public class Game1 : Game
         blockCarousel = new BlockCarousel(blocks, _spriteBatch);
         enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
         itemCarousel = new ItemCarousel(items, _spriteBatch);
-        
+
+        dungeon = new DungeonLoader(blocks, @"../../../Content/dungeon.csv");
+
         tile = blockCarousel.GetCurrentBlock();
         enemy = enemyCarousel.GetCurrentEnemy();
         item = itemCarousel.GetCurrentItem();
@@ -106,7 +110,8 @@ public class Game1 : Game
         
         _spriteBatch.Begin();
 
-        tile.Draw(_spriteBatch, new Vector2(100, 100));
+        // tile.Draw(_spriteBatch, new Vector2(100, 100));
+        dungeon.Draw(_spriteBatch, _graphics);
         enemy.Draw(_spriteBatch, new Vector2(400, 100));
         item.Draw(_spriteBatch, new Vector2(200, 100));
         link.Draw(_spriteBatch);
