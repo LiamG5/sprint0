@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace sprint0.Classes
 {
-	public class Link : ILink, ICollidable
+	public class Link : ILink
 	{
 
 		private SpriteBatch spriteBatch;
@@ -22,12 +22,8 @@ namespace sprint0.Classes
 		public enum Direction { Up, Down, Left, Right };
         public Direction direction { get; private set; } = Direction.Right;
 
-        public Vector2 position { get; set; } = new Vector2(50, 50); // Start outside the grid area to avoid any blocks
+		public Vector2 position { get; set; } = new Vector2(20, 100);
         public Vector2 velocity { get; set; } = new Vector2(0, 0);
-        
-        // Collision properties
-        private const int PLAYER_WIDTH = 48;
-        private const int PLAYER_HEIGHT = 48;
 
 		public Link(SpriteBatch spriteBatch)
 		{
@@ -40,6 +36,7 @@ namespace sprint0.Classes
 		{
 			state.Update(gameTime);
 			state.UseState();
+			position += velocity;
 			linkAnimation.Update(gameTime);
 		}
 
@@ -142,33 +139,6 @@ namespace sprint0.Classes
 		public void UseMagic()
 		{ 			
 			ChangeState(new MagicState(this, linkAnimation));
-		}
-		
-		// ICollidable implementation
-		public Rectangle GetBounds()
-		{
-			return new Rectangle((int)position.X, (int)position.Y, PLAYER_WIDTH, PLAYER_HEIGHT);
-		}
-		
-		public bool IsSolid()
-		{
-			return true; // Player is solid
-		}
-		
-		public Vector2 GetPosition()
-		{
-			return position;
-		}
-		
-		public void SetPosition(Vector2 position)
-		{
-			this.position = position;
-		}
-		
-		// Method to handle collision response (called externally when collision is detected)
-		public void HandleCollisionResponse(Vector2 newPosition)
-		{
-			position = newPosition;
 		}
     }
 
