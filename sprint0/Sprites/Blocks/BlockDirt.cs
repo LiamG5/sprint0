@@ -11,7 +11,6 @@ namespace sprint0.Sprites
 
         private Texture2D blockSS;
         private static int blockType = 5;
-        private static Vector2 blockPos = new Vector2(100, 100);
         private static Rectangle block = new Rectangle(16 * blockType, 0, 16, 16);
         private Vector2 position;
 
@@ -25,6 +24,7 @@ namespace sprint0.Sprites
         }
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
+            this.position = position;
             spriteBatch.Draw(blockSS, position, block, Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
         }
         
@@ -35,7 +35,7 @@ namespace sprint0.Sprites
         
         public bool IsSolid()
         {
-            return true;
+            return true; // Dirt blocks are solid
         }
         
         public Vector2 GetPosition()
