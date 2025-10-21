@@ -40,6 +40,8 @@ public class Game1 : Game
     private KeyboardController keyboard;
     public int state;
     private KeyboardState previousKeyboardState;
+    
+    private CollisionResponse collisionResponse;
 
     public Game1()
     {
@@ -78,6 +80,8 @@ public class Game1 : Game
         controllers.Add(keyboard);
         
         previousKeyboardState = Keyboard.GetState();
+        
+        collisionResponse = new CollisionResponse();
     }
 
     protected override void Update(GameTime gameTime)
@@ -86,6 +90,8 @@ public class Game1 : Game
             Exit();
 
         link.Update(gameTime);
+        
+        link.position += link.velocity;
 
         foreach (var controller in controllers)
         {
@@ -132,5 +138,7 @@ public class Game1 : Game
         controllers.Add(keyboard);
         
         previousKeyboardState = Keyboard.GetState();
+        
+        collisionResponse = new CollisionResponse();
     }
 }
