@@ -18,6 +18,7 @@ namespace sprint0.Sprites
         private String path;
         private int storageIdx = 0;
         private BlockFactory blocks = BlockFactory.Instance;
+        private List<ICollidable> collidableObjects = new List<ICollidable>();
 
         public Texture2D border = Texture2DStorage.GetDungeonBorder();
         public DungeonLoader(BlockFactory blocks, string path)
@@ -32,6 +33,58 @@ namespace sprint0.Sprites
         public void Update(GameTime gameTime)
         {
 
+        }
+        
+        public List<ICollidable> GetCollidableObjects()
+        {
+            // Only update positions if the list is empty (first time)
+            if (collidableObjects.Count == 0)
+            {
+                UpdateBlockPositions();
+            }
+            return collidableObjects;
+        }
+        
+        private void UpdateBlockPositions()
+        {
+            const int gridColumns = 12;
+            const int gridRows = 7;
+            const int tileSize = 48;
+            const int offset = 2;
+            
+            // Clear and rebuild the collidable objects list
+            collidableObjects.Clear();
+            
+            int currentIdx = 0;
+            string[] lines = File.ReadAllLines(path);
+            
+            foreach (string line in lines)
+            {
+                string[] columns = line.Split(',');
+                foreach (string block in columns)
+                {
+                    if (currentIdx >= storage.Length) break;
+                    
+                    int col = currentIdx % gridColumns;
+                    int row = currentIdx / gridColumns;
+                    Vector2 position = new Vector2((col + offset) * tileSize, (row + offset) * tileSize);
+                    
+                    // Update the block's position
+                    if (storage[currentIdx] is IBlock blockSprite)
+                    {
+                        blockSprite.SetPosition(position);
+                        
+                        // Add solid blocks to collidable objects
+                        if (blockSprite.IsSolid())
+                        {
+                            collidableObjects.Add(blockSprite);
+                        }
+                    }
+                    
+                    currentIdx++;
+                }
+                if (currentIdx >= storage.Length) break;
+            }
         }
         public void Draw(SpriteBatch sprite, GraphicsDevice graphics)
         {
@@ -90,7 +143,9 @@ namespace sprint0.Sprites
                     int row = storageIdx / gridColumns;
                     Vector2 position = new Vector2((col + offset) * tileSize, (row + offset) * tileSize);
 
+                    // Draw the block at the correct position
                     storage[storageIdx].Draw(sprite, position);
+                    
                     storageIdx++;
                 }
 

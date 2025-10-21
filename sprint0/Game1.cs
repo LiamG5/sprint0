@@ -72,7 +72,7 @@ public class Game1 : Game
         enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
         itemCarousel = new ItemCarousel(items, _spriteBatch);
 
-        dungeon = new DungeonLoader(blocks, @"../../../Content/dungeon.csv");
+        dungeon = new DungeonLoader(blocks, @"Content/dungeon.csv");
 
         tile = blockCarousel.GetCurrentBlock();
         enemy = enemyCarousel.GetCurrentEnemy();
@@ -91,11 +91,50 @@ public class Game1 : Game
             Exit();
 
         link.Update(gameTime);
-
+        
         foreach (var controller in controllers)
         {
             controller.Update();
         }
+        
+        // Store old position for collision response
+        Vector2 oldPosition = link.position;
+        Vector2 newPosition = link.position + link.velocity;
+        
+        // Simple collision detection - prevent movement into solid blocks
+        List<ICollidable> collidableObjects = dungeon.GetCollidableObjects();
+        
+        // Check for collisions with the new position
+        Rectangle newLinkBounds = new Rectangle((int)newPosition.X, (int)newPosition.Y, 48, 48);
+        bool collisionDetected = false;
+        
+        // Debug: Print Link's bounds
+        System.Console.WriteLine($"Link bounds: {newLinkBounds}");
+        System.Console.WriteLine($"Collidable objects count: {collidableObjects.Count}");
+        
+        foreach (ICollidable collidable in collidableObjects)
+        {
+            Rectangle collidableBounds = collidable.GetBounds();
+            System.Console.WriteLine($"Block at: {collidableBounds}, Solid: {collidable.IsSolid()}, Position: {collidable.GetPosition()}");
+            
+            if (collidable.IsSolid())
+            {
+                if (newLinkBounds.Intersects(collidableBounds))
+                {
+                    // Collision detected - don't move
+                    System.Console.WriteLine("COLLISION DETECTED!");
+                    collisionDetected = true;
+                    break;
+                }
+            }
+        }
+        
+        // Only update position if no collision
+        if (!collisionDetected)
+        {
+            link.position = newPosition;
+        }
+        // If collision detected, keep the old position (don't update)
 
 
         enemy.Update(gameTime);

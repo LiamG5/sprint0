@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace sprint0.Interfaces
 {
-public interface IBlock
+public interface IBlock : ICollidable
 {   
     void Update(GameTime gameTime);
     void Draw(SpriteBatch spriteBatch, Vector2 position);

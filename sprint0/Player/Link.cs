@@ -22,8 +22,11 @@ namespace sprint0.Classes
 		public enum Direction { Up, Down, Left, Right };
         public Direction direction { get; private set; } = Direction.Right;
 
-		public Vector2 position { get; set; } = new Vector2(20, 100);
+        public Vector2 position { get; set; } = new Vector2(50, 50); // Start outside the grid area to avoid any blocks
         public Vector2 velocity { get; set; } = new Vector2(0, 0);
+        
+        private const int PLAYER_WIDTH = 48;
+        private const int PLAYER_HEIGHT = 48;
 
 		public Link(SpriteBatch spriteBatch)
 		{
