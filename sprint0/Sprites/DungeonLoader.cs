@@ -19,6 +19,7 @@ namespace sprint0.Sprites
         private int storageIdx = 0;
         private BlockFactory blocks = BlockFactory.Instance;
 
+        public Texture2D border = Texture2DStorage.GetDungeonBorder();
         public DungeonLoader(BlockFactory blocks, string path)
         {
             this.blocks = blocks;
@@ -32,11 +33,14 @@ namespace sprint0.Sprites
         {
 
         }
-        public void Draw(SpriteBatch sprite, GraphicsDeviceManager graphics)
+        public void Draw(SpriteBatch sprite, GraphicsDevice graphics)
         {
+            sprite.Draw(border, new Vector2(0, 0), new Rectangle(0, 0, graphics.Viewport.Width, graphics.Viewport.Height), Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+
             const int gridColumns = 12;
             const int gridRows = 7;
             const int tileSize = 48;
+            const int offset = 2;
 
             storageIdx = 0;
             string[] lines = File.ReadAllLines(path);
@@ -84,7 +88,7 @@ namespace sprint0.Sprites
 
                     int col = storageIdx % gridColumns;
                     int row = storageIdx / gridColumns;
-                    Vector2 position = new Vector2(col * tileSize, row * tileSize);
+                    Vector2 position = new Vector2((col + offset) * tileSize, (row + offset) * tileSize);
 
                     storage[storageIdx].Draw(sprite, position);
                     storageIdx++;

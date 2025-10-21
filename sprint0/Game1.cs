@@ -31,6 +31,7 @@ public class Game1 : Game
     public BlockCarousel blockCarousel;
     public EnemyCarousel enemyCarousel;
     public ItemCarousel itemCarousel;
+    private Texture2D dungeonBorder;
     private Texture2D linkSheet;
     private Texture2D bossSheet;
     private Texture2D enemiesSheet;
@@ -110,8 +111,7 @@ public class Game1 : Game
         
         _spriteBatch.Begin();
 
-        // tile.Draw(_spriteBatch, new Vector2(100, 100));
-        dungeon.Draw(_spriteBatch, _graphics);
+        dungeon.Draw(_spriteBatch, GraphicsDevice);
         enemy.Draw(_spriteBatch, new Vector2(400, 100));
         item.Draw(_spriteBatch, new Vector2(200, 100));
         link.Draw(_spriteBatch);
