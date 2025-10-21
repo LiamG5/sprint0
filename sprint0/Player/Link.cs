@@ -25,14 +25,9 @@ namespace sprint0.Classes
         public Vector2 position { get; set; } = new Vector2(50, 50); // Start outside the grid area to avoid any blocks
         public Vector2 velocity { get; set; } = new Vector2(0, 0);
         
-<<<<<<< HEAD
-        private const int PLAYER_WIDTH = 48;
-        private const int PLAYER_HEIGHT = 48;
-=======
         // Collision properties
         private const int PLAYER_WIDTH = 48;
-        private const int PLAYER_HEIGHT = 48; 
->>>>>>> CollisionDetection
+        private const int PLAYER_HEIGHT = 48;
 
 		public Link(SpriteBatch spriteBatch)
 		{
@@ -163,6 +158,11 @@ namespace sprint0.Classes
 		public Vector2 GetPosition()
 		{
 			return position;
+		}
+		
+		public void SetPosition(Vector2 position)
+		{
+			this.position = position;
 		}
 		
 		// Method to handle collision response (called externally when collision is detected)
