@@ -26,5 +26,20 @@ namespace sprint0.Sprites
         {
             spriteBatch.Draw(blockSS, position, block, Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
         }
+        
+        public Rectangle GetBounds()
+        {
+            return new Rectangle((int)position.X, (int)position.Y, 48, 48);
+        }
+        
+        public bool IsSolid()
+        {
+            return false;
+        }
+        
+        public Vector2 GetPosition()
+        {
+            return position;
+        }
     }
 }

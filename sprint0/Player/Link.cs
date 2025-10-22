@@ -24,6 +24,9 @@ namespace sprint0.Classes
 
 		public Vector2 position { get; set; } = new Vector2(20, 100);
         public Vector2 velocity { get; set; } = new Vector2(0, 0);
+        
+        private const int PLAYER_WIDTH = 48;
+        private const int PLAYER_HEIGHT = 48; 
 
 		public Link(SpriteBatch spriteBatch)
 		{
@@ -63,7 +66,6 @@ namespace sprint0.Classes
             ChangeState(new IdleState(this, linkAnimation));
         }
 
-        //Allow movement if player is idle or already moving
         public void MoveLeft()
 		{
 			if (state is IdleState || state is MoveState)
@@ -139,6 +141,26 @@ namespace sprint0.Classes
 		public void UseMagic()
 		{ 			
 			ChangeState(new MagicState(this, linkAnimation));
+		}
+		
+		public Rectangle GetBounds()
+		{
+			return new Rectangle((int)position.X, (int)position.Y, PLAYER_WIDTH, PLAYER_HEIGHT);
+		}
+		
+		public bool IsSolid()
+		{
+			return true;
+		}
+		
+		public Vector2 GetPosition()
+		{
+			return position;
+		}
+		
+		public void HandleCollisionResponse(Vector2 newPosition)
+		{
+			position = newPosition;
 		}
     }
 

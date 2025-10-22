@@ -7,6 +7,7 @@ using sprint0.PlayerStates;
 using sprint0.Sprites;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using static sprint0.Sprites.BlockFactory;
 using static sprint0.Sprites.DungeonCarousel;
 using static sprint0.Sprites.EnemySpriteFactory;
@@ -58,25 +59,32 @@ public class Game1 : Game
 
     protected override void LoadContent()
     {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
+        try
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        sprint0.Sprites.Texture2DStorage.LoadAllTextures(Content);
-        
-        link = new Link(_spriteBatch);
-        
-        blocks = BlockFactory.Instance;
-        enemies = EnemySpriteFactory.Instance;
-        items = ItemFactory.Instance;
-        
-        blockCarousel = new BlockCarousel(blocks, _spriteBatch);
-        enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
-        itemCarousel = new ItemCarousel(items, _spriteBatch);
+            sprint0.Sprites.Texture2DStorage.LoadAllTextures(Content);
+            
+            link = new Link(_spriteBatch);
+            
+            blocks = BlockFactory.Instance;
+            enemies = EnemySpriteFactory.Instance;
+            items = ItemFactory.Instance;
+            
+            blockCarousel = new BlockCarousel(blocks, _spriteBatch);
+            enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
+            itemCarousel = new ItemCarousel(items, _spriteBatch);
 
-        dungeon = new DungeonLoader(blocks, @"../../../Content/dungeon.csv");
+            string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
+            if (!File.Exists(dungeonPath))
+            {
+                dungeonPath = Path.Combine("Content", "dungeon.csv");
+            }
+            dungeon = new DungeonLoader(blocks, File.ReadAllText(dungeonPath));
 
-        tile = blockCarousel.GetCurrentBlock();
-        enemy = enemyCarousel.GetCurrentEnemy();
-        item = itemCarousel.GetCurrentItem();
+            tile = blockCarousel.GetCurrentBlock();
+            enemy = enemyCarousel.GetCurrentEnemy();
+            item = itemCarousel.GetCurrentItem();
 
         controllers = new List<IController>();
         keyboard = new KeyboardController(this, null);

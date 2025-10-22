@@ -23,13 +23,16 @@ namespace sprint0.Classes
         public LinkSprite()
         {
             this.spriteSheet = sprint0.Sprites.Texture2DStorage.GetLinkSpriteSheet();
+            if (this.spriteSheet == null)
+            {
+                throw new InvalidOperationException("Link sprite sheet not loaded. Make sure Texture2DStorage.LoadAllTextures() is called before creating LinkSprite.");
+            }
             this.sourceRectangle = new Rectangle(0 * linkColor, 0, 16, 16);
             this.nextRectangle = sourceRectangle;
             this.DamgColor = Color.White;
             this.positionOffset = Vector2.Zero;
         }
 
-        // Row 1 - Standing animations
         public void LinkDrawStandingDown()
         {
             nextRectangle = new Rectangle(0 * linkColor, 0, 16, 16);
@@ -50,7 +53,6 @@ namespace sprint0.Classes
             nextRectangle = new Rectangle(90 * linkColor, 0, 16, 16);
         }
 
-        // Row 2 - Walking animations
         public void LinkDrawWalkingDown()
         {
             nextRectangle = new Rectangle(0 * linkColor, 30, 16, 16);
@@ -71,7 +73,6 @@ namespace sprint0.Classes
             nextRectangle = new Rectangle(90 * linkColor, 30, 16, 16);
         }
 
-        // Row 3 - Pushing animations
         public void LinkDrawAttacking0Down()
         {
             nextRectangle = new Rectangle(0 * linkColor, 60, 16, 16);
@@ -92,7 +93,6 @@ namespace sprint0.Classes
             nextRectangle = new Rectangle(90 * linkColor, 60, 16, 16);
         }
 
-        // Row 4 - Attacking animations
         public void LinkDrawAttackingDown()
         {
             nextRectangle = new Rectangle(0 * linkColor, 84, 16, 28);
@@ -116,7 +116,6 @@ namespace sprint0.Classes
             nextRectangle = new Rectangle(84 * linkColor, 90, 28, 16);
         }
 
-        // Row 5 - Magic animations
         public void LinkDrawMagicDown()
         {
             nextRectangle = new Rectangle(0 * linkColor, 120, 16, 16);
@@ -158,8 +157,11 @@ namespace sprint0.Classes
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {   
-            Vector2 drawPosition = position + (positionOffset * 3.0f);
-            spriteBatch.Draw(spriteSheet, drawPosition, sourceRectangle, DamgColor, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+            if (spriteSheet != null)
+            {
+                Vector2 drawPosition = position + (positionOffset * 3.0f);
+                spriteBatch.Draw(spriteSheet, drawPosition, sourceRectangle, DamgColor, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+            }
             positionOffset = Vector2.Zero;
         }
     }
