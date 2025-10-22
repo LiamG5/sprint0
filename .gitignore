@@ -1,8 +1,8 @@
 .vs/
 *.user
 
-bin/
-obj/
+sprint0/bin/
+sprint0/obj/
 *.pdb
 
 Content/bin/
