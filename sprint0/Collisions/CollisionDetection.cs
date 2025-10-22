@@ -6,7 +6,6 @@ namespace sprint0.Collisions
     public class CollisionDetection
     {
        
-        //Making a colistion object could make this cleaner, puting pos and rec in the same object
         public CollisionDirection GetCollision(Rectangle rec1, Rectangle rec2)
         {
             

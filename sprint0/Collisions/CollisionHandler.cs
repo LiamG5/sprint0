@@ -22,7 +22,6 @@ namespace sprint0.Collisions
 
             Rectangle linkRec = rectangles[0];
 
-            // Start from index 1 since index 0 is Link
             for (int i = 1; i < rectangles.Count; i++)
             {
                 CollisionDirection direction = _collisionDetection.GetCollision(linkRec, rectangles[i]);

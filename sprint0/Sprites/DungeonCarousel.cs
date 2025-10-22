@@ -46,10 +46,8 @@ namespace sprint0.Sprites
             switch (list[idx])
             {
                 case Dungeon.Start:
-                    // load starting room
                     break;
                 case Dungeon.Debug:
-                    // load debug room
                     break;
             }
         }

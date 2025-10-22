@@ -32,12 +32,12 @@ namespace sprint0.Sprites
         
         public Rectangle GetBounds()
         {
-            return new Rectangle((int)position.X, (int)position.Y, 48, 48); // 16 * 3.0f scale
+            return new Rectangle((int)position.X, (int)position.Y, 48, 48);
         }
         
         public bool IsSolid()
         {
-            return true; // Tile blocks are solid
+            return true;
         }
         
         public Vector2 GetPosition()
