@@ -18,6 +18,8 @@ namespace sprint0.Sprites
         private int storageIdx = 0;
         private BlockFactory blocks = BlockFactory.Instance;
 
+        private List<Rectangle> rectangles;
+
         public Texture2D border = Texture2DStorage.GetDungeonBorder();
         public DungeonLoader(BlockFactory blocks, string csvContent)
         {
@@ -26,6 +28,7 @@ namespace sprint0.Sprites
             int totalCells = 84;
             storage = new ISprite[totalCells];
             storageIdx = 0;
+            this.rectangles = new List<Rectangle>();
         }
 
         public void Update(GameTime gameTime)
@@ -46,11 +49,12 @@ namespace sprint0.Sprites
 
             int maxCells = Math.Min(storage.Length, gridColumns * gridRows);
 
-            foreach (string line in lines )
+            foreach (string line in lines)
             {
                 string[] columns = line.Split(',');
                 foreach (string block in columns)
                 {
+                    
                     switch (block)
                     {
                         case "Tile":
@@ -69,7 +73,7 @@ namespace sprint0.Sprites
                             storage[storageIdx] = blocks.BuildVoidBlock(sprite, Vector2.Zero);
                             break;
                         case "Dirt":
-                            storage[storageIdx] = blocks.BuildDirtBlock(sprite, Vector2.Zero);    
+                            storage[storageIdx] = blocks.BuildDirtBlock(sprite, Vector2.Zero);
                             break;
                         case "Solid":
                             storage[storageIdx] = blocks.BuildSolidBlock(sprite, Vector2.Zero);
@@ -88,13 +92,18 @@ namespace sprint0.Sprites
                     int col = storageIdx % gridColumns;
                     int row = storageIdx / gridColumns;
                     Vector2 position = new Vector2((col + offset) * tileSize, (row + offset) * tileSize);
-
+                    rectangles.Add(new Rectangle((int)position.X, (int)position.Y, 48, 48));
                     storage[storageIdx].Draw(sprite, position);
                     storageIdx++;
+                    
                 }
 
                 if (storageIdx >= maxCells) break;
             }
         }
+        public List<Rectangle> GetBlockList()
+		{
+            return rectangles;
+		}
     }
 }

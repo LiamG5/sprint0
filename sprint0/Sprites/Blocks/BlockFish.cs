@@ -36,7 +36,7 @@ namespace sprint0.Sprites
         
         public bool IsSolid()
         {
-            return true;
+            return false;
         }
         
         public Vector2 GetPosition()

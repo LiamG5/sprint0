@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using sprint0.Interfaces;
 
-namespace sprint0.Classes
+namespace sprint0.Collisions
 {
     public class CollisionResponse
     {
@@ -38,24 +38,24 @@ namespace sprint0.Classes
             return resolvedPosition;
         }
         
-        public Vector2 ResolveCollisionDirection(Vector2 oldPosition, Vector2 newPosition, Rectangle playerBounds, Rectangle collidableBounds, Vector2 direction)
+        public Vector2 ResolveCollisionDirection(Rectangle playerBounds, Rectangle collidableBounds, CollisionDirection direction)
         {
-            Vector2 resolvedPosition = newPosition;
+            Vector2 resolvedPosition = new Vector2(playerBounds.Left, playerBounds.Top);
             
-            if (direction.X > 0)
+            if (direction.Equals("Right"))
             {
                 resolvedPosition.X = collidableBounds.X - playerBounds.Width;
             }
-            else if (direction.X < 0)
+            else if (direction.Equals("Left"))
             {
                 resolvedPosition.X = collidableBounds.X + collidableBounds.Width;
             }
             
-            if (direction.Y > 0)
+            if (direction.Equals("Up"))
             {
                 resolvedPosition.Y = collidableBounds.Y - playerBounds.Height;
             }
-            else if (direction.Y < 0)
+            else if (direction.Equals("Down"))
             {
                 resolvedPosition.Y = collidableBounds.Y + collidableBounds.Height;
             }

@@ -51,6 +51,7 @@ namespace sprint0.Sprites
         {
             Initialize();
             currBlock = BlockType.Tile;
+            
             return new BlockTile(blockSpritesheet, position);
         }
 

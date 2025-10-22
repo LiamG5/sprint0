@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using sprint0.Classes;
 using sprint0.Interfaces;
+using sprint0.Collisions;
 using sprint0.PlayerStates;
 using sprint0.Sprites;
 using System;
@@ -32,6 +33,7 @@ public class Game1 : Game
     public BlockCarousel blockCarousel;
     public EnemyCarousel enemyCarousel;
     public ItemCarousel itemCarousel;
+    public CollisionUpdater collisionUpdater;
     private Texture2D dungeonBorder;
     private Texture2D linkSheet;
     private Texture2D bossSheet;
@@ -87,6 +89,7 @@ public class Game1 : Game
         controllers = new List<IController>();
         keyboard = new KeyboardController(this, null);
         controllers.Add(keyboard);
+        
         
         previousKeyboardState = Keyboard.GetState();
     }
