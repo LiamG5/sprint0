@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using sprint0.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -20,10 +19,10 @@ namespace sprint0.Sprites
         private BlockFactory blocks = BlockFactory.Instance;
 
         public Texture2D border = Texture2DStorage.GetDungeonBorder();
-        public DungeonLoader(BlockFactory blocks, string path)
+        public DungeonLoader(BlockFactory blocks, string csvContent)
         {
             this.blocks = blocks;
-            this.path = path;
+            this.path = csvContent;
             int totalCells = 84;
             storage = new ISprite[totalCells];
             storageIdx = 0;
@@ -43,7 +42,7 @@ namespace sprint0.Sprites
             const int offset = 2;
 
             storageIdx = 0;
-            string[] lines = File.ReadAllLines(path);
+            string[] lines = path.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             int maxCells = Math.Min(storage.Length, gridColumns * gridRows);
 

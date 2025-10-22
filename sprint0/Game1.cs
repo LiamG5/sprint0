@@ -7,6 +7,7 @@ using sprint0.PlayerStates;
 using sprint0.Sprites;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using static sprint0.Sprites.BlockFactory;
 using static sprint0.Sprites.DungeonCarousel;
 using static sprint0.Sprites.EnemySpriteFactory;
@@ -43,6 +44,8 @@ public class Game1 : Game
     private KeyboardController keyboard;
     public int state;
     private KeyboardState previousKeyboardState;
+    
+    private CollisionResponse collisionResponse;
 
     public Game1()
     {
@@ -58,31 +61,47 @@ public class Game1 : Game
 
     protected override void LoadContent()
     {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
+        try
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        sprint0.Sprites.Texture2DStorage.LoadAllTextures(Content);
-        
-        link = new Link(_spriteBatch);
-        
-        blocks = BlockFactory.Instance;
-        enemies = EnemySpriteFactory.Instance;
-        items = ItemFactory.Instance;
-        
-        blockCarousel = new BlockCarousel(blocks, _spriteBatch);
-        enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
-        itemCarousel = new ItemCarousel(items, _spriteBatch);
+            sprint0.Sprites.Texture2DStorage.LoadAllTextures(Content);
+            
+            link = new Link(_spriteBatch);
+            
+            blocks = BlockFactory.Instance;
+            enemies = EnemySpriteFactory.Instance;
+            items = ItemFactory.Instance;
+            
+            blockCarousel = new BlockCarousel(blocks, _spriteBatch);
+            enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
+            itemCarousel = new ItemCarousel(items, _spriteBatch);
 
-        dungeon = new DungeonLoader(blocks, @"../../../Content/dungeon.csv");
+            string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
+            if (!File.Exists(dungeonPath))
+            {
+                dungeonPath = Path.Combine("Content", "dungeon.csv");
+            }
+            dungeon = new DungeonLoader(blocks, File.ReadAllText(dungeonPath));
 
-        tile = blockCarousel.GetCurrentBlock();
-        enemy = enemyCarousel.GetCurrentEnemy();
-        item = itemCarousel.GetCurrentItem();
+            tile = blockCarousel.GetCurrentBlock();
+            enemy = enemyCarousel.GetCurrentEnemy();
+            item = itemCarousel.GetCurrentItem();
 
-        controllers = new List<IController>();
-        keyboard = new KeyboardController(this, null);
-        controllers.Add(keyboard);
-        
-        previousKeyboardState = Keyboard.GetState();
+            controllers = new List<IController>();
+            keyboard = new KeyboardController(this, null);
+            controllers.Add(keyboard);
+            
+            previousKeyboardState = Keyboard.GetState();
+            
+            collisionResponse = new CollisionResponse();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error loading content: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+            Exit();
+        }
     }
 
     protected override void Update(GameTime gameTime)
@@ -91,6 +110,8 @@ public class Game1 : Game
             Exit();
 
         link.Update(gameTime);
+        
+        link.position += link.velocity;
 
         foreach (var controller in controllers)
         {
@@ -137,5 +158,7 @@ public class Game1 : Game
         controllers.Add(keyboard);
         
         previousKeyboardState = Keyboard.GetState();
+        
+        collisionResponse = new CollisionResponse();
     }
 }
