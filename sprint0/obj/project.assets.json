@@ -295,24 +295,47 @@
     ]
   },
   "packageFolders": {
+<<<<<<< HEAD
     "C:\\Users\\liame\\.nuget\\packages\\": {}
+=======
+    "C:\\Users\\Rei\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+>>>>>>> 0d4fc11e7b0eb4c8605bc664da243436553224c8
   },
   "project": {
     "version": "1.0.0",
     "restore": {
+<<<<<<< HEAD
       "projectUniqueName": "c:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\sprint0.csproj",
       "projectName": "sprint0",
       "projectPath": "c:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\sprint0.csproj",
       "packagesPath": "C:\\Users\\liame\\.nuget\\packages\\",
       "outputPath": "c:\\Users\\liame\\OneDrive\\Documents\\cse 3902\\sprint0\\sprint0\\obj\\",
+=======
+      "projectUniqueName": "C:\\Users\\Rei\\source\\repos\\sprint0\\sprint0\\sprint0.csproj",
+      "projectName": "sprint0",
+      "projectPath": "C:\\Users\\Rei\\source\\repos\\sprint0\\sprint0\\sprint0.csproj",
+      "packagesPath": "C:\\Users\\Rei\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Rei\\source\\repos\\sprint0\\sprint0\\obj\\",
+>>>>>>> 0d4fc11e7b0eb4c8605bc664da243436553224c8
       "projectStyle": "PackageReference",
       "configFilePaths": [
+<<<<<<< HEAD
         "C:\\Users\\liame\\AppData\\Roaming\\NuGet\\NuGet.Config"
+=======
+        "C:\\Users\\Rei\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+>>>>>>> 0d4fc11e7b0eb4c8605bc664da243436553224c8
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+<<<<<<< HEAD
+=======
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+>>>>>>> 0d4fc11e7b0eb4c8605bc664da243436553224c8
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -380,7 +403,11 @@
             "privateAssets": "all"
           }
         },
+<<<<<<< HEAD
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+=======
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+>>>>>>> 0d4fc11e7b0eb4c8605bc664da243436553224c8
       }
     }
   }

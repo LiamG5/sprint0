@@ -75,12 +75,7 @@ public class Game1 : Game
             enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
             itemCarousel = new ItemCarousel(items, _spriteBatch);
 
-            string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
-            if (!File.Exists(dungeonPath))
-            {
-                dungeonPath = Path.Combine("Content", "dungeon.csv");
-            }
-            dungeon = new DungeonLoader(blocks, File.ReadAllText(dungeonPath));
+            dungeon = new DungeonLoader(blocks, File.ReadAllText(@"../../../Content/dungeon.csv"));
 
             tile = blockCarousel.GetCurrentBlock();
             enemy = enemyCarousel.GetCurrentEnemy();
