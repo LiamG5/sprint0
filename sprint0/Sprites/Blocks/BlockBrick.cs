@@ -13,10 +13,12 @@ namespace sprint0.Sprites
         private static int blockType = 8;
         private static Vector2 blockPos = new Vector2(100, 100);
         private static Rectangle block = new Rectangle(16 * blockType, 0, 16, 16);
+        private Vector2 position;
 
-        public BlockBrick(Texture2D sheet)
+        public BlockBrick(Texture2D sheet, Vector2 pos)
         {
             blockSS = sheet;
+            position = pos;
         }
         public void Update(GameTime gameTime)
         {

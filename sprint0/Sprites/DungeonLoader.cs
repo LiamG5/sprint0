@@ -54,34 +54,34 @@ namespace sprint0.Sprites
                     switch (block)
                     {
                         case "Tile":
-                            storage[storageIdx] = blocks.BuildTileBlock(sprite);
+                            storage[storageIdx] = blocks.BuildTileBlock(sprite, Vector2.Zero);
                             break;
                         case "ChiseledTile":
-                            storage[storageIdx] = blocks.BuildChiseledTileBlock(sprite);
+                            storage[storageIdx] = blocks.BuildChiseledTileBlock(sprite, Vector2.Zero);
                             break;
                         case "Fish":
-                            storage[storageIdx] = blocks.BuildFishBlock(sprite);
+                            storage[storageIdx] = blocks.BuildFishBlock(sprite, Vector2.Zero);
                             break;
                         case "Dragon":
-                            storage[storageIdx] = blocks.BuildDragonBlock(sprite);
+                            storage[storageIdx] = blocks.BuildDragonBlock(sprite, Vector2.Zero);
                             break;
                         case "Void":
-                            storage[storageIdx] = blocks.BuildVoidBlock(sprite);
+                            storage[storageIdx] = blocks.BuildVoidBlock(sprite, Vector2.Zero);
                             break;
                         case "Dirt":
-                            storage[storageIdx] = blocks.BuildDirtBlock(sprite);    
+                            storage[storageIdx] = blocks.BuildDirtBlock(sprite, Vector2.Zero);    
                             break;
                         case "Solid":
-                            storage[storageIdx] = blocks.BuildSolidBlock(sprite);
+                            storage[storageIdx] = blocks.BuildSolidBlock(sprite, Vector2.Zero);
                             break;
                         case "Stair":
-                            storage[storageIdx] = blocks.BuildStairBlock(sprite);
+                            storage[storageIdx] = blocks.BuildStairBlock(sprite, Vector2.Zero);
                             break;
                         case "Brick":
-                            storage[storageIdx] = blocks.BuildBrickBlock(sprite);
+                            storage[storageIdx] = blocks.BuildBrickBlock(sprite, Vector2.Zero);
                             break;
                         case "Grate":
-                            storage[storageIdx] = blocks.BuildGrateBlock(sprite);
+                            storage[storageIdx] = blocks.BuildGrateBlock(sprite, Vector2.Zero);
                             break;
                     }
 

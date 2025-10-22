@@ -59,8 +59,6 @@ public class Game1 : Game
 
     protected override void LoadContent()
     {
-        try
-        {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             sprint0.Sprites.Texture2DStorage.LoadAllTextures(Content);
