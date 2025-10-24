@@ -11,6 +11,7 @@ using System.IO;
 using static sprint0.Sprites.BlockFactory;
 using static sprint0.Sprites.DungeonCarousel;
 using static sprint0.Sprites.EnemySpriteFactory;
+using sprint0.Commands;
 
 
 namespace sprint0;
@@ -44,6 +45,16 @@ public class Game1 : Game
     private KeyboardController keyboard;
     public int state;
     private KeyboardState previousKeyboardState;
+
+    private Rectangle mapRect = new Rectangle(32, 32, 6 * 24, 3 * 24);
+    private const int MapRows = 3;
+    private const int MapCols = 6;
+
+    private Dictionary<int, ICommand> mapCellCommands;
+    private MouseController mouse;
+
+    // *TODO* Change after
+    private int currentRoomIndex = 0;
 
     public Game1()
     {
@@ -87,8 +98,35 @@ public class Game1 : Game
         controllers = new List<IController>();
         keyboard = new KeyboardController(this, null);
         controllers.Add(keyboard);
+
+        mapCellCommands = new Dictionary<int, ICommand>
+        {
+            {  0, new GoToRoom1Command(this)  },
+            {  1, new GoToRoom2Command(this)  },
+            {  2, new GoToRoom3Command(this)  },
+            {  3, new GoToRoom4Command(this)  },
+            {  4, new GoToRoom5Command(this)  },
+            {  5, new GoToRoom6Command(this)  },
+            {  6, new GoToRoom7Command(this)  },
+            {  7, new GoToRoom8Command(this)  },
+            {  8, new GoToRoom9Command(this)  },
+            {  9, new GoToRoom10Command(this) },
+            { 10, new GoToRoom11Command(this) },
+            { 11, new GoToRoom12Command(this) },
+            { 12, new GoToRoom13Command(this) },
+            { 13, new GoToRoom14Command(this) },
+            { 14, new GoToRoom15Command(this) },
+            { 15, new GoToRoom16Command(this) },
+            { 16, new GoToRoom17Command(this) },
+        };
         
+        mouse = new MouseController(mapRect, MapRows, MapCols, mapCellCommands);
+        controllers.Add(mouse);
+
         previousKeyboardState = Keyboard.GetState();
+
+        // Start in room 1
+        LoadRoom(1);
     }
 
     protected override void Update(GameTime gameTime)
@@ -125,6 +163,31 @@ public class Game1 : Game
         base.Draw(gameTime);
     }
 
+    public void GoToRoom1()  => LoadRoom(1);
+    public void GoToRoom2()  => LoadRoom(2);
+    public void GoToRoom3()  => LoadRoom(3);
+    public void GoToRoom4()  => LoadRoom(4);
+    public void GoToRoom5()  => LoadRoom(5);
+    public void GoToRoom6()  => LoadRoom(6);
+    public void GoToRoom7()  => LoadRoom(7);
+    public void GoToRoom8()  => LoadRoom(8);
+    public void GoToRoom9()  => LoadRoom(9);
+    public void GoToRoom10() => LoadRoom(10);
+    public void GoToRoom11() => LoadRoom(11);
+    public void GoToRoom12() => LoadRoom(12);
+    public void GoToRoom13() => LoadRoom(13);
+    public void GoToRoom14() => LoadRoom(14);
+    public void GoToRoom15() => LoadRoom(15);
+    public void GoToRoom16() => LoadRoom(16);
+    public void GoToRoom17() => LoadRoom(17);
+
+    //TODO: call loader 
+    private void LoadRoom(int roomIndex)
+    {
+        currentRoomIndex = roomIndex;
+        dungeon.LoadRoom(roomIndex);
+        link.SetPosition(dungeon.GetLinkStartPosition());
+    }
 
     public void ResetGame()
     {
@@ -141,7 +204,33 @@ public class Game1 : Game
         controllers = new List<IController>();
         keyboard = new KeyboardController(this, null);
         controllers.Add(keyboard);
+
+        mapCellCommands = new Dictionary<int, ICommand>
+        {
+            {  0, new GoToRoom1Command(this)  },
+            {  1, new GoToRoom2Command(this)  },
+            {  2, new GoToRoom3Command(this)  },
+            {  3, new GoToRoom4Command(this)  },
+            {  4, new GoToRoom5Command(this)  },
+            {  5, new GoToRoom6Command(this)  },
+            {  6, new GoToRoom7Command(this)  },
+            {  7, new GoToRoom8Command(this)  },
+            {  8, new GoToRoom9Command(this)  },
+            {  9, new GoToRoom10Command(this) },
+            { 10, new GoToRoom11Command(this) },
+            { 11, new GoToRoom12Command(this) },
+            { 12, new GoToRoom13Command(this) },
+            { 13, new GoToRoom14Command(this) },
+            { 14, new GoToRoom15Command(this) },
+            { 15, new GoToRoom16Command(this) },
+            { 16, new GoToRoom17Command(this) },
+        };
+
+        mouse = new MouseController(mapRect, MapRows, MapCols, mapCellCommands);
+        controllers.Add(mouse);
         
         previousKeyboardState = Keyboard.GetState();
+
+        LoadRoom(1);
     }
 }
