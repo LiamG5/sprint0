@@ -1,14 +1,20 @@
-.vs/
+/.vs/
 
+# general build artifacts
 Debug/
 DebugPublic/
 bin/
 obj/
 
+# project-specific build artifacts (should not be committed)
 sprint0/bin/
 sprint0/obj/
+sprint0/Content/bin/
+sprint0/Content/obj/
 
-Content/bin/
-Content/obj/
+# MonoGame content / generated files
 *.mgcontent
 *.mgstats
+
+# macOS
+.DS_Store

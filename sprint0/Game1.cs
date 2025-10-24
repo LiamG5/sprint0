@@ -1,15 +1,15 @@
+using System;
+using System.IO;
+using System.Collections.Generic;
+using sprint0.Commands;
+using sprint0.Classes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using sprint0.Classes;
 using sprint0.Interfaces;
 using sprint0.PlayerStates;
 using sprint0.Sprites;
-using sprint0.Commands;
 using sprint0.Collisions;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using static sprint0.Sprites.BlockFactory;
 using static sprint0.Sprites.DungeonCarousel;
 using static sprint0.Sprites.EnemySpriteFactory;
@@ -85,24 +85,43 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-    // 1x1 white texture used for minimap overlay
-    _minimapOverlay = new Texture2D(GraphicsDevice, 1, 1);
-    _minimapOverlay.SetData(new[] { Color.White });
+        // Initialize controllers list
+        controllers = new List<IController>();
 
-    // UI font for minimap labels
-    _uiFont = Content.Load<SpriteFont>("Font/font"); // matches Content/Font/font.xnb
+        // Load textures with GraphicsDevice (safe loader already supports this)
+        sprint0.Sprites.Texture2DStorage.LoadAllTextures(Content, GraphicsDevice);
 
-            sprint0.Sprites.Texture2DStorage.LoadAllTextures(Content, GraphicsDevice);
-            
-            link = new Link(_spriteBatch);
-            
-            blocks = BlockFactory.Instance;
-            enemies = EnemySpriteFactory.Instance;
-            items = ItemFactory.Instance;
-            
-            blockCarousel = new BlockCarousel(blocks, _spriteBatch);
-            enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
-            itemCarousel = new ItemCarousel(items, _spriteBatch);
+        // Build map index → command table (0..16 → Room1..Room17)
+        mapCellCommands = new Dictionary<int, ICommand>
+        {
+            {  0, new GoToRoom1Command(this)  }, {  1, new GoToRoom2Command(this)  }, {  2, new GoToRoom3Command(this)  },
+            {  3, new GoToRoom4Command(this)  }, {  4, new GoToRoom5Command(this)  }, {  5, new GoToRoom6Command(this)  },
+            {  6, new GoToRoom7Command(this)  }, {  7, new GoToRoom8Command(this)  }, {  8, new GoToRoom9Command(this)  },
+            {  9, new GoToRoom10Command(this) }, { 10, new GoToRoom11Command(this) }, { 11, new GoToRoom12Command(this) },
+            { 12, new GoToRoom13Command(this) }, { 13, new GoToRoom14Command(this) }, { 14, new GoToRoom15Command(this) },
+            { 15, new GoToRoom16Command(this) }, { 16, new GoToRoom17Command(this) },
+        };
+
+        // Mouse controller for the minimap
+        mouse = new MouseController(mapRect, MapRows, MapCols, mapCellCommands);
+        controllers.Add(mouse);
+
+        // Minimap overlay: 1x1 white texture we tint
+        _minimapOverlay = new Texture2D(GraphicsDevice, 1, 1);
+        _minimapOverlay.SetData(new[] { Color.White });
+
+        // UI font for simple labels (Content/Font/font.xnb)
+        _uiFont = Content.Load<SpriteFont>("Font/font");
+
+        link = new Link(_spriteBatch);
+        
+        blocks = BlockFactory.Instance;
+        enemies = EnemySpriteFactory.Instance;
+        items = ItemFactory.Instance;
+        
+        blockCarousel = new BlockCarousel(blocks, _spriteBatch);
+        enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
+        itemCarousel = new ItemCarousel(items, _spriteBatch);
 
             // dungeon will be loaded per-room in LoadRoom
 
@@ -110,33 +129,8 @@ public class Game1 : Game
             enemy = enemyCarousel.GetCurrentEnemy();
             item = itemCarousel.GetCurrentItem();
 
-        controllers = new List<IController>();
         keyboard = new KeyboardController(this, null);
         controllers.Add(keyboard);
-
-        // Map: 0..16 -> Rooms 1..17 (row-major in a 3x6 grid)
-        mapCellCommands = new Dictionary<int, ICommand>
-        {
-            {  0, new GoToRoom1Command(this)  },
-            {  1, new GoToRoom2Command(this)  },
-            {  2, new GoToRoom3Command(this)  },
-            {  3, new GoToRoom4Command(this)  },
-            {  4, new GoToRoom5Command(this)  },
-            {  5, new GoToRoom6Command(this)  },
-            {  6, new GoToRoom7Command(this)  },
-            {  7, new GoToRoom8Command(this)  },
-            {  8, new GoToRoom9Command(this)  },
-            {  9, new GoToRoom10Command(this) },
-            { 10, new GoToRoom11Command(this) },
-            { 11, new GoToRoom12Command(this) },
-            { 12, new GoToRoom13Command(this) },
-            { 13, new GoToRoom14Command(this) },
-            { 14, new GoToRoom15Command(this) },
-            { 15, new GoToRoom16Command(this) },
-            { 16, new GoToRoom17Command(this) },
-        };
-        mouse = new MouseController(mapRect, MapRows, MapCols, mapCellCommands);
-        controllers.Add(mouse);
 
         previousKeyboardState = Keyboard.GetState();
 
@@ -179,13 +173,9 @@ public class Game1 : Game
         enemy.Draw(_spriteBatch, new Vector2(400, 100));
         item.Draw(_spriteBatch, new Vector2(200, 100));
         link.Draw(_spriteBatch);
-        // Draw the minimap rectangle as a translucent red box so it's visible
-        if (_minimapOverlay != null)
-        {
-            _spriteBatch.Draw(_minimapOverlay, mapRect, _minimapColor);
-        }
 
-        // Draw simple room numbers inside each minimap cell
+        if (_minimapOverlay != null)
+            _spriteBatch.Draw(_minimapOverlay, mapRect, _minimapColor);
         DrawMinimapNumbers(_spriteBatch);
         _spriteBatch.End();
         base.Draw(gameTime);
@@ -214,67 +204,53 @@ public class Game1 : Game
         if (_uiFont == null) return;
 
         var r = mapRect;
-        int cellW = r.Width / MapCols;
-        int cellH = r.Height / MapRows;
-
-        const float scale = 0.55f; // make labels smaller; tweak 0.45–0.70 as needed
+        int cellW = r.Width / MapCols, cellH = r.Height / MapRows;
+        const float scale = 0.55f;
 
         for (int row = 0; row < MapRows; row++)
+        for (int col = 0; col < MapCols; col++)
         {
-            for (int col = 0; col < MapCols; col++)
-            {
-                int idx = row * MapCols + col;         // 0..(MapRows*MapCols-1)
-                if (!mapCellCommands.ContainsKey(idx)) // skip unused
-                    continue;
+            int idx = row * MapCols + col;
+            if (!mapCellCommands.ContainsKey(idx)) continue;
 
-                int room = idx + 1;
-                string text = $"R{room}";
+            string text = $"R{idx + 1}";
+            var size = _uiFont.MeasureString(text) * scale;
+            var pos = new Vector2(
+                r.X + col * cellW + (cellW - size.X) * 0.5f,
+                r.Y + row * cellH + (cellH - size.Y) * 0.5f
+            );
 
-                // measure and center inside the cell with the chosen scale
-                var size = _uiFont.MeasureString(text) * scale;
-                var cellX = r.X + col * cellW;
-                var cellY = r.Y + row * cellH;
-                var pos   = new Vector2(
-                    cellX + (cellW - size.X) * 0.5f,
-                    cellY + (cellH - size.Y) * 0.5f
-                );
-
-                // shadow + text at 'scale'
-                sb.DrawString(_uiFont, text, pos + new Vector2(1, 1),
-                              Color.Black * 0.7f, 0f, Vector2.Zero, scale,
-                              SpriteEffects.None, 0f);
-
-                sb.DrawString(_uiFont, text, pos, _minimapTextColor,
-                              0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-            }
+            sb.DrawString(_uiFont, text, pos + new Vector2(1, 1), Color.Black * 0.7f, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            sb.DrawString(_uiFont, text, pos, _minimapTextColor, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
         }
     }
-
     private void LoadRoom(int roomIndex)
     {
         currentRoomIndex = roomIndex;
 
         string csv;
-        string csvPath = Path.Combine("sprint0", "Content", "Dungeon", $"Room{roomIndex}.csv");
-
         try
         {
-            csv = File.ReadAllText(csvPath);
+            using var s = Microsoft.Xna.Framework.TitleContainer.OpenStream($"Content/Dungeon/Room{roomIndex}.csv");
+            using var r = new StreamReader(s);
+            csv = r.ReadToEnd();
         }
-        catch (Exception ex)
+        catch
         {
-            Console.WriteLine($"Failed to load room {roomIndex}: {ex.Message}");
-            Console.WriteLine($"Looking for file at: {Path.GetFullPath(csvPath)}");
-            throw; // Re-throw so we can see the full error
+            var p = Path.Combine(Content.RootDirectory, "Dungeon", $"Room{roomIndex}.csv");
+            if (File.Exists(p))
+                csv = File.ReadAllText(p);
+            else
+            {
+                // 12x7 Void grid fallback
+                csv = string.Join("\n",
+                    System.Linq.Enumerable.Repeat(string.Join(",", System.Linq.Enumerable.Repeat("Void", 12)), 7));
+            }
         }
 
         dungeon = new sprint0.Sprites.DungeonLoader(BlockFactory.Instance, csv);
-
-    // Populate rectangles / block list used by collision system
-    dungeon.LoadRectangles();
-
-        // Position Link (Link exposes 'position')
-        link.position = new Microsoft.Xna.Framework.Vector2(100, 100);
+        if (link != null)
+            link.position = new Vector2(100, 100);
     }
 
     public void ResetGame()
