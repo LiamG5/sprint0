@@ -9,3 +9,8 @@ Content/bin/
 Content/obj/
 *.mgcontent
 *.mgstats
+sprint0/bin/
+sprint0/obj/
+sprint0/Content/bin/
+sprint0/Content/obj/
+.DS_Store
