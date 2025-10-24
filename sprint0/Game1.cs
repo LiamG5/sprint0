@@ -84,12 +84,7 @@ public class Game1 : Game
             enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
             itemCarousel = new ItemCarousel(items, _spriteBatch);
 
-            string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
-            if (!File.Exists(dungeonPath))
-            {
-                dungeonPath = Path.Combine("Content", "dungeon.csv");
-            }
-            dungeon = new DungeonLoader(blocks, File.ReadAllText(dungeonPath));
+            dungeon = null; // Will be set in LoadRoom()
 
             tile = blockCarousel.GetCurrentBlock();
             enemy = enemyCarousel.GetCurrentEnemy();
@@ -181,12 +176,27 @@ public class Game1 : Game
     public void GoToRoom16() => LoadRoom(16);
     public void GoToRoom17() => LoadRoom(17);
 
-    //TODO: call loader 
     private void LoadRoom(int roomIndex)
     {
         currentRoomIndex = roomIndex;
-        dungeon.LoadRoom(roomIndex);
-        link.SetPosition(dungeon.GetLinkStartPosition());
+
+        string csv;
+
+        try
+        {
+            using var s = Microsoft.Xna.Framework.TitleContainer.OpenStream($"Content/Dungeon/Room{roomIndex}.csv");
+            using var r = new StreamReader(s);
+            csv = r.ReadToEnd();
+        }
+        catch
+        {
+            var p = Path.Combine(Content.RootDirectory, "Dungeon", $"Room{roomIndex}.csv");
+            csv = File.ReadAllText(p);
+        }
+
+        dungeon = new sprint0.Sprites.DungeonLoader(blocks, csv);
+
+        link.position = new Vector2(100, 100);
     }
 
     public void ResetGame()
