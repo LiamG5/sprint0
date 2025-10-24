@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using sprint0.Classes;
 using sprint0.Interfaces;
-using sprint0.Collisions;
 using sprint0.PlayerStates;
 using sprint0.Sprites;
 using System;
@@ -12,6 +11,7 @@ using System.IO;
 using static sprint0.Sprites.BlockFactory;
 using static sprint0.Sprites.DungeonCarousel;
 using static sprint0.Sprites.EnemySpriteFactory;
+using sprint0.Collisions;
 
 
 namespace sprint0;
@@ -33,7 +33,6 @@ public class Game1 : Game
     public BlockCarousel blockCarousel;
     public EnemyCarousel enemyCarousel;
     public ItemCarousel itemCarousel;
-    public CollisionUpdater collisionUpdater;
     private Texture2D dungeonBorder;
     private Texture2D linkSheet;
     private Texture2D bossSheet;
@@ -46,6 +45,7 @@ public class Game1 : Game
     private KeyboardController keyboard;
     public int state;
     private KeyboardState previousKeyboardState;
+    private CollisionUpdater collisionUpdater;
 
     public Game1()
     {
@@ -61,7 +61,7 @@ public class Game1 : Game
 
     protected override void LoadContent()
     {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+        _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             sprint0.Sprites.Texture2DStorage.LoadAllTextures(Content);
             
@@ -75,18 +75,24 @@ public class Game1 : Game
             enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
             itemCarousel = new ItemCarousel(items, _spriteBatch);
 
-            dungeon = new DungeonLoader(blocks, File.ReadAllText(@"../../../Content/dungeon.csv"));
+            string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
+
+            dungeon = new DungeonLoader(blocks, File.ReadAllText(dungeonPath));
+            dungeon.LoadRectangles();
 
             tile = blockCarousel.GetCurrentBlock();
             enemy = enemyCarousel.GetCurrentEnemy();
             item = itemCarousel.GetCurrentItem();
 
-        controllers = new List<IController>();
-        keyboard = new KeyboardController(this, null);
-        controllers.Add(keyboard);
-        
-        
-        previousKeyboardState = Keyboard.GetState();
+            controllers = new List<IController>();
+            keyboard = new KeyboardController(this, null);
+            controllers.Add(keyboard);
+
+            collisionUpdater = new CollisionUpdater(dungeon, link);
+            collisionUpdater.getList();  
+            
+            previousKeyboardState = Keyboard.GetState();
+
     }
 
     protected override void Update(GameTime gameTime)
@@ -95,6 +101,7 @@ public class Game1 : Game
             Exit();
 
         link.Update(gameTime);
+        collisionUpdater.Update();
 
         foreach (var controller in controllers)
         {
@@ -141,5 +148,9 @@ public class Game1 : Game
         controllers.Add(keyboard);
         
         previousKeyboardState = Keyboard.GetState();
+
+        dungeon.LoadRectangles();
+        collisionUpdater = new CollisionUpdater(dungeon, link);
+        collisionUpdater.getList();
     }
 }

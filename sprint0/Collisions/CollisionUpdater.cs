@@ -4,6 +4,8 @@ using sprint0.Classes;
 using sprint0.Interfaces;
 using sprint0.Sprites;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using Microsoft.Xna.Framework;
+
 
 namespace sprint0.Collisions
 {
@@ -40,9 +42,26 @@ namespace sprint0.Collisions
         {
             rectangles[0] = link.GetBounds();
             collisions = collisionHandler.CollisionDetect(rectangles);
-            for (int i = 1; i < collisions.Count; i++)
+            for (int i = 0; i < collisions.Count; i++)
             {   
-                collisionResponse.ResolveCollisionDirection(rectangles[0], rectangles[i], collisions[i]);     
+                if (collisions[i] != CollisionDirection.None)
+                {
+                    Vector2 resolvedPosition = collisionResponse.ResolveCollisionDirection(rectangles[0], rectangles[i + 1], collisions[i]);
+                    link.HandleCollisionResponse(resolvedPosition);
+                    
+                    Vector2 velocity = link.velocity;
+                    if (collisions[i] == CollisionDirection.Left || collisions[i] == CollisionDirection.Right)
+                    {
+                        velocity.X = 0;
+                    }
+                    if (collisions[i] == CollisionDirection.Up || collisions[i] == CollisionDirection.Down)
+                    {
+                        velocity.Y = 0;
+                    }
+                    link.velocity = velocity;
+                    
+                    rectangles[0] = link.GetBounds(); 
+                }
             }
 
         }

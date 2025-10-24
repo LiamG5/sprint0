@@ -42,22 +42,22 @@ namespace sprint0.Collisions
         {
             Vector2 resolvedPosition = new Vector2(playerBounds.Left, playerBounds.Top);
             
-            if (direction.Equals("Right"))
+            if (direction == CollisionDirection.Right)
             {
                 resolvedPosition.X = collidableBounds.X - playerBounds.Width;
             }
-            else if (direction.Equals("Left"))
+            else if (direction == CollisionDirection.Left)
             {
                 resolvedPosition.X = collidableBounds.X + collidableBounds.Width;
             }
             
-            if (direction.Equals("Up"))
-            {
-                resolvedPosition.Y = collidableBounds.Y - playerBounds.Height;
-            }
-            else if (direction.Equals("Down"))
+            if (direction == CollisionDirection.Up)
             {
                 resolvedPosition.Y = collidableBounds.Y + collidableBounds.Height;
+            }
+            else if (direction == CollisionDirection.Down)
+            {
+                resolvedPosition.Y = collidableBounds.Y - playerBounds.Height;
             }
             
             return resolvedPosition;

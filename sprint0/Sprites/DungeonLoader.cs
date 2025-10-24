@@ -19,8 +19,9 @@ namespace sprint0.Sprites
         private BlockFactory blocks = BlockFactory.Instance;
 
         private List<Rectangle> rectangles;
+        private List<IBlock> blockObjects;
 
-        public Texture2D border = Texture2DStorage.GetDungeonBorder();
+        public Texture2D border;
         public DungeonLoader(BlockFactory blocks, string csvContent)
         {
             this.blocks = blocks;
@@ -29,6 +30,75 @@ namespace sprint0.Sprites
             storage = new ISprite[totalCells];
             storageIdx = 0;
             this.rectangles = new List<Rectangle>();
+            this.blockObjects = new List<IBlock>();
+            this.border = Texture2DStorage.GetDungeonBorder();
+        }
+
+        public void LoadRectangles()
+        {
+            const int gridColumns = 12;
+            const int tileSize = 48;
+            const int offset = 2;
+
+            rectangles.Clear();
+            blockObjects.Clear();
+            string[] lines = path.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            int cellIndex = 0;
+            foreach (string line in lines)
+            {
+                string[] columns = line.Split(',');
+                foreach (string blockType in columns)
+                {
+                    int col = cellIndex % gridColumns;
+                    int row = cellIndex / gridColumns;
+                    Vector2 position = new Vector2((col + offset) * tileSize, (row + offset) * tileSize);
+                    
+                    // Create block object based on type
+                    IBlock block = null;
+                    switch (blockType)
+                    {
+                        case "Tile":
+                            block = blocks.BuildTileBlock(null, position) as IBlock;
+                            break;
+                        case "ChiseledTile":
+                            block = blocks.BuildChiseledTileBlock(null, position) as IBlock;
+                            break;
+                        case "Fish":
+                            block = blocks.BuildFishBlock(null, position) as IBlock;
+                            break;
+                        case "Dragon":
+                            block = blocks.BuildDragonBlock(null, position) as IBlock;
+                            break;
+                        case "Void":
+                            block = blocks.BuildVoidBlock(null, position) as IBlock;
+                            break;
+                        case "Dirt":
+                            block = blocks.BuildDirtBlock(null, position) as IBlock;
+                            break;
+                        case "Solid":
+                            block = blocks.BuildSolidBlock(null, position) as IBlock;
+                            break;
+                        case "Stair":
+                            block = blocks.BuildStairBlock(null, position) as IBlock;
+                            break;
+                        case "Brick":
+                            block = blocks.BuildBrickBlock(null, position) as IBlock;
+                            break;
+                        case "Grate":
+                            block = blocks.BuildGrateBlock(null, position) as IBlock;
+                            break;
+                    }
+                    
+                    if (block != null && block.IsSolid())
+                    {
+                        rectangles.Add(new Rectangle((int)position.X, (int)position.Y, 48, 48));
+                        blockObjects.Add(block);
+                    }
+                    
+                    cellIndex++;
+                }
+            }
         }
 
         public void Update(GameTime gameTime)

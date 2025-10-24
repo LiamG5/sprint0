@@ -20,22 +20,14 @@ namespace sprint0.Sprites
 
 	public static void LoadAllTextures(ContentManager Content)
 	{
-		try
-		{
-			blockSpriteSheet = Content.Load<Texture2D>("legendofzelda_blocks_sheet");
-			linkSpriteSheet = Content.Load<Texture2D>("legendofzelda_link_sheet");
-			bossSpriteSheet = Content.Load<Texture2D>("legendofzelda_bosses_sheet");
-			enemiesSpriteSheet = Content.Load<Texture2D>("Sprites/legendofzelda_enemies_sheet_final");
-			itemSpriteSheet = Content.Load<Texture2D>("legendofzelda_items_sheet");
-			miscSpriteSheet = Content.Load<Texture2D>("legendofzelda_misccharacters_sheet");
-			dungeonBorder = Content.Load<Texture2D>("Room2Border");
-			font = Content.Load<SpriteFont>("Font/font");
-		}
-		catch (Exception ex)
-		{
-			System.Diagnostics.Debug.WriteLine($"Error loading textures: {ex.Message}");
-			throw;
-		}
+		blockSpriteSheet = Content.Load<Texture2D>("legendofzelda_blocks_sheet");
+		linkSpriteSheet = Content.Load<Texture2D>("legendofzelda_link_sheet");
+		bossSpriteSheet = Content.Load<Texture2D>("legendofzelda_bosses_sheet");
+		enemiesSpriteSheet = Content.Load<Texture2D>("Sprites/legendofzelda_enemies_sheet_final");
+		itemSpriteSheet = Content.Load<Texture2D>("legendofzelda_items_sheet");
+		miscSpriteSheet = Content.Load<Texture2D>("legendofzelda_misccharacters_sheet");
+		dungeonBorder = Content.Load<Texture2D>("Room2Border");
+		font = Content.Load<SpriteFont>("Font/font");
 	}
 
 	public static Texture2D GetLinkSpriteSheet()
