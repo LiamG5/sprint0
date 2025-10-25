@@ -18,16 +18,72 @@ namespace sprint0.Sprites
 	public static Texture2D dungeonBorder;
 	public static SpriteFont font;
 
-	public static void LoadAllTextures(ContentManager Content)
+	private static Texture2D LoadTextureSafe(ContentManager content, GraphicsDevice gd, string assetName)
 	{
-		blockSpriteSheet = Content.Load<Texture2D>("legendofzelda_blocks_sheet");
-		linkSpriteSheet = Content.Load<Texture2D>("legendofzelda_link_sheet");
-		bossSpriteSheet = Content.Load<Texture2D>("legendofzelda_bosses_sheet");
-		enemiesSpriteSheet = Content.Load<Texture2D>("Sprites/legendofzelda_enemies_sheet_final");
-		itemSpriteSheet = Content.Load<Texture2D>("legendofzelda_items_sheet");
-		miscSpriteSheet = Content.Load<Texture2D>("legendofzelda_misccharacters_sheet");
-		dungeonBorder = Content.Load<Texture2D>("Room2Border");
-		font = Content.Load<SpriteFont>("Font/font");
+		try
+		{
+			return content.Load<Texture2D>(assetName);
+		}
+		catch (ContentLoadException)
+		{
+			var tex = new Texture2D(gd, 1, 1);
+			tex.SetData(new[] { Color.Magenta }); // visible placeholder
+			return tex;
+		}
+	}
+
+	private static Texture2D TryLoadAny(ContentManager content, GraphicsDevice gd, params string[] names)
+	{
+		foreach (var n in names)
+		{
+			try
+			{
+				return content.Load<Texture2D>(n);
+			}
+			catch { /* try next */ }
+		}
+		// last-resort placeholder
+		var tex = new Texture2D(gd, 1, 1);
+		tex.SetData(new[] { Microsoft.Xna.Framework.Color.Magenta });
+		return tex;
+	}
+
+	public static void LoadAllTextures(ContentManager content, GraphicsDevice gd)
+	{
+		// Border
+		dungeonBorder = TryLoadAny(content, gd, "Room2Border", "Content/Room2Border");
+
+		// Blocks / tiles
+		blockSpriteSheet = TryLoadAny(content, gd,
+			"legendofzelda_blocks_sheet",
+			"Sprites/legendofzelda_blocks_sheet");
+
+		// Enemies
+		enemiesSpriteSheet = TryLoadAny(content, gd,
+			"Sprites/legendofzelda_enemies_sheet_final",
+			"legendofzelda_enemies_sheet_final",
+			"Sprites/legendofzelda_enemies_sheet");
+
+		// Items
+		itemSpriteSheet = TryLoadAny(content, gd,
+			"legendofzelda_items_sheet",
+			"Sprites/legendofzelda_items_sheet");
+
+		// Link
+		linkSpriteSheet = TryLoadAny(content, gd,
+			"legendofzelda_link_sheet",
+			"Sprites/legendofzelda_link_sheet");
+
+		// Misc
+		miscSpriteSheet = TryLoadAny(content, gd,
+			"legendofzelda_misccharacters_sheet",
+			"Sprites/legendofzelda_misccharacters_sheet");
+
+		// Boss sheet - keep existing name as fallback
+		bossSpriteSheet = TryLoadAny(content, gd, "legendofzelda_bosses_sheet", "Sprites/legendofzelda_bosses_sheet");
+
+		// Font (no safe fallback)
+		font = content.Load<SpriteFont>("Font/font");
 	}
 
 	public static Texture2D GetLinkSpriteSheet()

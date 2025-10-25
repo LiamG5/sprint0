@@ -1,58 +1,47 @@
-using sprint0.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-
+using System.Collections.Generic;
+using sprint0.Interfaces;
 
 namespace sprint0.Classes
-
 {
-    public class MouseController : IController
+    public sealed class MouseController : IController
     {
+        private readonly Rectangle mapRect;
+        private readonly int rows, cols;
+        private readonly Dictionary<int, ICommand> cellCommands;
         private MouseState previousState;
-        private Game1 game;
-        private SpriteMain linkSprite; //replace spirtemain with linksprite
 
-        public MouseController(Game1 game, ISprite linkSprite)
+        public MouseController(Rectangle mapRect, int rows, int cols, Dictionary<int, ICommand> cellCommands)
         {
-            this.game = game;
-            
+            this.mapRect = mapRect;
+            this.rows = rows;
+            this.cols = cols;
+            this.cellCommands = cellCommands;
+            previousState = Mouse.GetState();
         }
 
         public void Update()
         {
-            MouseState currentState = Mouse.GetState();
-            int width = game.GraphicsDevice.Viewport.Width;
-            int height = game.GraphicsDevice.Viewport.Height;
+            var current = Mouse.GetState();
+            var pos = new Point(current.X, current.Y);
 
-            // left click
-            if (currentState.LeftButton == ButtonState.Pressed && previousState.LeftButton == ButtonState.Released)
+            // Left click edge
+            if (current.LeftButton == ButtonState.Pressed && previousState.LeftButton == ButtonState.Released)
             {
-                Vector2 position = new Vector2(currentState.X, currentState.Y);
-                if (position.X < width / 2 && position.Y < height / 2)
+                if (mapRect.Contains(pos))
                 {
-                
-                }
-                else if (position.X >= width / 2 && position.Y < height / 2)
-                {
-                    
-                }
-                else if (position.X < width / 2 && position.Y >= height / 2)
-                {
-                
-                }
-                else
-                {
-                
+                    int cellW = mapRect.Width / cols;
+                    int cellH = mapRect.Height / rows;
+                    int col = (pos.X - mapRect.X) / cellW;
+                    int row = (pos.Y - mapRect.Y) / cellH;
+                    int index = row * cols + col;
+
+                    if (cellCommands.TryGetValue(index, out var cmd))
+                        cmd.Execute();
                 }
             }
-
-            // Right click
-            if (currentState.RightButton == ButtonState.Pressed && previousState.RightButton == ButtonState.Released)
-            {
-                game.Exit();
-            }
-
-            previousState = currentState;
+            previousState = current;
         }
     }
 }
