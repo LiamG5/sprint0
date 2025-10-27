@@ -23,6 +23,8 @@ namespace sprint0.Sprites
         private List<IEnemy> enemies;
         private List<Projectile> projectiles;
         private List<IItem> items;
+        private List<ICollidable> boarders;
+        
 
         public Texture2D border;
         public DungeonLoader(BlockFactory blocks, string csvContent)
@@ -38,6 +40,8 @@ namespace sprint0.Sprites
             this.projectiles = new List<Projectile>();
             this.items = new List<IItem>();
             this.border = Texture2DStorage.GetDungeonBorder();
+            this.boarders = new List<ICollidable>();
+
         }
 
         public void LoadRectangles()
@@ -59,7 +63,7 @@ namespace sprint0.Sprites
                     int col = cellIndex % gridColumns;
                     int row = cellIndex / gridColumns;
                     Vector2 position = new Vector2((col + offset) * tileSize, (row + offset) * tileSize);
-                    
+
                     // Create block object based on type
                     IBlock block = null;
                     switch (blockType)
@@ -95,16 +99,28 @@ namespace sprint0.Sprites
                             block = blocks.BuildGrateBlock(null, position) as IBlock;
                             break;
                     }
-                    
+
                     if (block != null && block.IsSolid())
                     {
                         rectangles.Add(new Rectangle((int)position.X, (int)position.Y, 48, 48));
                         blockObjects.Add(block);
                     }
-                    
+
                     cellIndex++;
                 }
             }
+            for (int i = 0; i < 2; i++)
+            {
+            boarders.Add(new DungeonLongWall(new Vector2(0+ i * 424, 48)));// top
+            boarders.Add(new DungeonLongWall(new Vector2(0 + i * 424, 432)));//bottom
+            boarders.Add(new DungeonTallWall(new Vector2(48 + i* 634, 0)));//top
+            boarders.Add(new DungeonTallWall(new Vector2(48 + i *634, 294)));//bottom
+            boarders.Add(new DungeonDoor(new Vector2(352, 24 + i * 408)));// top
+            boarders.Add(new DungeonDoor(new Vector2(24 + i*658 ,222)));//side
+            
+            }
+
+
         }
 
         public void Update(GameTime gameTime)
@@ -130,7 +146,7 @@ namespace sprint0.Sprites
                 string[] columns = line.Split(',');
                 foreach (string block in columns)
                 {
-                    
+
                     switch (block)
                     {
                         case "Tile":
@@ -171,11 +187,15 @@ namespace sprint0.Sprites
                     rectangles.Add(new Rectangle((int)position.X, (int)position.Y, 48, 48));
                     storage[storageIdx].Draw(sprite, position);
                     storageIdx++;
-                    
+
+
                 }
 
                 if (storageIdx >= maxCells) break;
             }
+
+
+
         }
         public List<Rectangle> GetBlockList()
 		{
@@ -191,11 +211,15 @@ namespace sprint0.Sprites
 		{
 			return enemies;
 		}
-		
-		public List<Projectile> GetProjectiles()
-		{
-			return projectiles;
-		}
+
+        public List<Projectile> GetProjectiles()
+        {
+            return projectiles;
+        }
+        public List<ICollidable> GetBoarders()
+        {
+            return boarders;
+        }
 		
 		public void AddEnemy(IEnemy enemy)
 		{

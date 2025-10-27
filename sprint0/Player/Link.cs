@@ -22,7 +22,7 @@ namespace sprint0.Classes
 		public enum Direction { Up, Down, Left, Right };
         public Direction direction { get; private set; } = Direction.Right;
 
-		public Vector2 position { get; set; } = new Vector2(20, 100);
+		public Vector2 position { get; set; } = new Vector2(400, 200);
         public Vector2 velocity { get; set; } = new Vector2(0, 0);
         
         private const int PLAYER_WIDTH = 48;
@@ -172,15 +172,19 @@ namespace sprint0.Classes
 				
 			case IBlock block when block.IsSolid():
 				HandleBlockCollision(block, direction);
+					break;
+				case ICollidable doorwall when doorwall.IsSolid() :
+				HandleBlockCollision(doorwall, direction);
 				break;
 			
 			case IItem item:
-				// Item collision is handled by the item itself
-				break;
+					// Item collision is handled by the item itself
+					break;
+				
 		}
 	}
 	
-	private void HandleBlockCollision(IBlock block, Collisions.CollisionDirection direction)
+	private void HandleBlockCollision(ICollidable block, Collisions.CollisionDirection direction)
 	{
 		var collisionResponse = new Collisions.CollisionResponse();
 		Vector2 resolvedPosition = collisionResponse.ResolveCollisionDirection(
