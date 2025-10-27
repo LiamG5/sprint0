@@ -174,7 +174,8 @@ namespace sprint0.Classes
 				HandleBlockCollision(block, direction);
 				break;
 			
-			case ICollidable item:
+			case IItem item:
+				// Item collision is handled by the item itself
 				break;
 		}
 	}
