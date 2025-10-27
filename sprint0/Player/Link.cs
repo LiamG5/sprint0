@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace sprint0.Classes
 {
-	public class Link : ILink
+	public class Link : ILink, ICollidable
 	{
 
 		private SpriteBatch spriteBatch;
@@ -68,7 +68,7 @@ namespace sprint0.Classes
 
         public void MoveLeft()
 		{
-			if (state is IdleState || state is MoveState)
+			if (state is IdleState || state is MoveState || state is DamagedState)
 			{
 				velocity = new Vector2(-5, 0);
                 direction = Direction.Left;
@@ -81,7 +81,7 @@ namespace sprint0.Classes
 
 		public void MoveRight()
 		{
-			if (state is IdleState || state is MoveState)
+			if (state is IdleState || state is MoveState || state is DamagedState)
 			{
 				velocity = new Vector2(5, 0);
 				direction = Direction.Right;
@@ -94,7 +94,7 @@ namespace sprint0.Classes
 
 		public void MoveUp()
 		{
-			if (state is IdleState || state is MoveState)
+			if (state is IdleState || state is MoveState || state is DamagedState)
 			{
 				velocity = new Vector2(0, -5);
 				direction = Direction.Up;
@@ -107,7 +107,7 @@ namespace sprint0.Classes
 
 		public void MoveDown()
 		{
-			if (state is IdleState || state is MoveState)
+			if (state is IdleState || state is MoveState || state is DamagedState)
 			{
 				velocity = new Vector2(0, 5);
 				direction = Direction.Down;
@@ -158,10 +158,41 @@ namespace sprint0.Classes
 			return position;
 		}
 		
-		public void HandleCollisionResponse(Vector2 newPosition)
+	public void HandleCollisionResponse(Vector2 newPosition)
+	{
+		position = newPosition;
+	}
+	
+	public void OnCollision(ICollidable other, Collisions.CollisionDirection direction)
+	{
+		switch (other)
 		{
-			position = newPosition;
+			case IEnemy enemy:
+				break;
+				
+			case IBlock block when block.IsSolid():
+				HandleBlockCollision(block, direction);
+				break;
+			
+			case ICollidable item:
+				break;
 		}
+	}
+	
+	private void HandleBlockCollision(IBlock block, Collisions.CollisionDirection direction)
+	{
+		var collisionResponse = new Collisions.CollisionResponse();
+		Vector2 resolvedPosition = collisionResponse.ResolveCollisionDirection(
+			this.GetBounds(), block.GetBounds(), direction);
+		position = resolvedPosition;
+		
+		Vector2 newVelocity = velocity;
+		if (direction == Collisions.CollisionDirection.Left || direction == Collisions.CollisionDirection.Right)
+			newVelocity.X = 0;
+		if (direction == Collisions.CollisionDirection.Up || direction == Collisions.CollisionDirection.Down)
+			newVelocity.Y = 0;
+		velocity = newVelocity;
+	}
     }
 
 }

@@ -11,62 +11,73 @@ namespace sprint0.Collisions
 {
     public class CollisionUpdater
     {
-        private readonly CollisionHandler collisionHandler;
-        private List<Rectangle> rectangles;
-        private CollisionResponse collisionResponse;
-        private List<CollisionDirection> collisions;
+        private readonly CollisionDetection collisionDetection;
         private DungeonLoader dungeonLoader;
         private Link link;
-       
+        private List<ICollidable> allCollidables;
 
         public CollisionUpdater(DungeonLoader dungeonLoader, Link link)
         {
-            collisionHandler = new CollisionHandler();
-            collisionResponse = new CollisionResponse(); 
-            rectangles = new List<Rectangle>();
-            collisions = new List<CollisionDirection>();
+            collisionDetection = new CollisionDetection();
             this.link = link;
             this.dungeonLoader = dungeonLoader;
-
+            allCollidables = new List<ICollidable>();
         }
 
         public void getList()
         {
-            rectangles.Add(link.GetBounds());
-            rectangles.AddRange(dungeonLoader.GetBlockList());
-
+            allCollidables.Clear();
+            allCollidables.Add(link);
+            allCollidables.AddRange(dungeonLoader.GetBlocks());
+            allCollidables.AddRange(dungeonLoader.GetEnemies());
+            allCollidables.AddRange(dungeonLoader.GetProjectiles());
         }
 
 
         public void Update()
         {
-            rectangles[0] = link.GetBounds();
-            collisions = collisionHandler.CollisionDetect(rectangles);
-            for (int i = 0; i < collisions.Count; i++)
-            {   
-                if (collisions[i] != CollisionDirection.None)
+            dungeonLoader.CleanupDeadEntities();
+            
+            allCollidables.Clear();
+            allCollidables.Add(link);
+            allCollidables.AddRange(dungeonLoader.GetBlocks());
+            allCollidables.AddRange(dungeonLoader.GetEnemies());
+            allCollidables.AddRange(dungeonLoader.GetProjectiles());
+            
+            for (int i = 0; i < allCollidables.Count; i++)
+            {
+                for (int j = i + 1; j < allCollidables.Count; j++)
                 {
-                    Vector2 resolvedPosition = collisionResponse.ResolveCollisionDirection(rectangles[0], rectangles[i + 1], collisions[i]);
-                    link.HandleCollisionResponse(resolvedPosition);
+                    ICollidable objA = allCollidables[i];
+                    ICollidable objB = allCollidables[j];
                     
-                    Vector2 velocity = link.velocity;
-                    if (collisions[i] == CollisionDirection.Left || collisions[i] == CollisionDirection.Right)
-                    {
-                        velocity.X = 0;
-                    }
-                    if (collisions[i] == CollisionDirection.Up || collisions[i] == CollisionDirection.Down)
-                    {
-                        velocity.Y = 0;
-                    }
-                    link.velocity = velocity;
+                    Rectangle boundsA = objA.GetBounds();
+                    Rectangle boundsB = objB.GetBounds();
                     
-                    rectangles[0] = link.GetBounds(); 
+                    if (boundsB.Left >= boundsA.Right)
+                        continue;
+                    
+                    CollisionDirection direction = collisionDetection.GetCollision(boundsA, boundsB);
+                    
+                    if (direction != CollisionDirection.None)
+                    {
+                        objA.OnCollision(objB, direction);
+                        objB.OnCollision(objA, GetOppositeDirection(direction));
+                    }
                 }
             }
-
         }
         
-        
-
+        private CollisionDirection GetOppositeDirection(CollisionDirection direction)
+        {
+            return direction switch
+            {
+                CollisionDirection.Up => CollisionDirection.Down,
+                CollisionDirection.Down => CollisionDirection.Up,
+                CollisionDirection.Left => CollisionDirection.Right,
+                CollisionDirection.Right => CollisionDirection.Left,
+                _ => CollisionDirection.None
+            };
+        }
     }
 }
