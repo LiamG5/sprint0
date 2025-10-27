@@ -124,15 +124,15 @@ namespace sprint0.Classes
         }
         public void UseItem1()
 		{
-            ChangeState(new ItemState(this, linkAnimation));
+            ChangeState(new ItemState(this, linkAnimation,1));
         }
         public void UseItem2()
 		{
-			ChangeState(new ItemState(this, linkAnimation));
+			ChangeState(new ItemState(this, linkAnimation,2));
         }
 		public void UseItem3()
 		{
-			ChangeState(new ItemState(this, linkAnimation));
+			ChangeState(new ItemState(this, linkAnimation,3));
         }
 		public void TakeDamage()
 		{
