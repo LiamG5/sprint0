@@ -60,7 +60,6 @@ namespace sprint0.Sprites
                     int row = cellIndex / gridColumns;
                     Vector2 position = new Vector2((col + offset) * tileSize, (row + offset) * tileSize);
                     
-                    // Create block object based on type
                     IBlock block = null;
                     switch (blockType)
                     {
@@ -96,10 +95,13 @@ namespace sprint0.Sprites
                             break;
                     }
                     
-                    if (block != null && block.IsSolid())
+                    if (block != null)
                     {
-                        rectangles.Add(new Rectangle((int)position.X, (int)position.Y, 48, 48));
                         blockObjects.Add(block);
+                        if (block.IsSolid())
+                        {
+                            rectangles.Add(new Rectangle((int)position.X, (int)position.Y, 48, 48));
+                        }
                     }
                     
                     cellIndex++;
@@ -109,7 +111,13 @@ namespace sprint0.Sprites
 
         public void Update(GameTime gameTime)
         {
-
+            foreach (var block in blockObjects)
+            {
+                if (block is ISprite sprite)
+                {
+                    sprite.Update(gameTime);
+                }
+            }
         }
         public void Draw(SpriteBatch sprite, GraphicsDevice graphics)
         {
@@ -120,61 +128,31 @@ namespace sprint0.Sprites
             const int tileSize = 48;
             const int offset = 2;
 
-            storageIdx = 0;
-            string[] lines = path.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-            int maxCells = Math.Min(storage.Length, gridColumns * gridRows);
-
-            foreach (string line in lines)
+            ISprite baseTile = blocks.BuildTileBlock(sprite, Vector2.Zero);
+            for (int row = 0; row < gridRows; row++)
             {
-                string[] columns = line.Split(',');
-                foreach (string block in columns)
+                for (int col = 0; col < gridColumns; col++)
                 {
-                    
-                    switch (block)
-                    {
-                        case "Tile":
-                            storage[storageIdx] = blocks.BuildTileBlock(sprite, Vector2.Zero);
-                            break;
-                        case "ChiseledTile":
-                            storage[storageIdx] = blocks.BuildChiseledTileBlock(sprite, Vector2.Zero);
-                            break;
-                        case "Fish":
-                            storage[storageIdx] = blocks.BuildFishBlock(sprite, Vector2.Zero);
-                            break;
-                        case "Dragon":
-                            storage[storageIdx] = blocks.BuildDragonBlock(sprite, Vector2.Zero);
-                            break;
-                        case "Void":
-                            storage[storageIdx] = blocks.BuildVoidBlock(sprite, Vector2.Zero);
-                            break;
-                        case "Dirt":
-                            storage[storageIdx] = blocks.BuildDirtBlock(sprite, Vector2.Zero);
-                            break;
-                        case "Solid":
-                            storage[storageIdx] = blocks.BuildSolidBlock(sprite, Vector2.Zero);
-                            break;
-                        case "Stair":
-                            storage[storageIdx] = blocks.BuildStairBlock(sprite, Vector2.Zero);
-                            break;
-                        case "Brick":
-                            storage[storageIdx] = blocks.BuildBrickBlock(sprite, Vector2.Zero);
-                            break;
-                        case "Grate":
-                            storage[storageIdx] = blocks.BuildGrateBlock(sprite, Vector2.Zero);
-                            break;
-                    }
-
-                    int col = storageIdx % gridColumns;
-                    int row = storageIdx / gridColumns;
                     Vector2 position = new Vector2((col + offset) * tileSize, (row + offset) * tileSize);
-                    rectangles.Add(new Rectangle((int)position.X, (int)position.Y, 48, 48));
-                    storage[storageIdx].Draw(sprite, position);
-                    storageIdx++;
-                    
+                    baseTile.Draw(sprite, position);
                 }
+            }
 
-                if (storageIdx >= maxCells) break;
+            List <BlockChiseledTile> chiseledTiles = new List<BlockChiseledTile>();
+            foreach (var block in blockObjects)
+            {
+                if (block is ISprite blockSprite)
+                {
+                    if (!(block is BlockTile)) {
+                        blockSprite.Draw(sprite, block.GetPosition());
+                    }
+                    if (block is BlockChiseledTile) {
+                        chiseledTiles.Add(block as BlockChiseledTile);
+                    }
+                }
+            }
+            foreach (var chiseledTile in chiseledTiles) {
+                chiseledTile.Draw(sprite, chiseledTile.GetPosition());
             }
         }
         public List<Rectangle> GetBlockList()
