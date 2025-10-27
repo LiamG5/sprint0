@@ -11,8 +11,6 @@ namespace sprint0.Sprites
     public class EnemyStalfos : ISprite {
 
         private Texture2D enemySS;
-        // private static int enemyTypeX = 0;
-        // private static int enemyTypeY = 12;
         private static Vector2 enemyPos = new Vector2(200, 100);
         private static Rectangle frame1 = new Rectangle(16 * 0, 16 * 12, 16, 16);
         private static Rectangle frame2 = new Rectangle(16 * 1, 16 * 12, 16, 16);

@@ -12,8 +12,6 @@ namespace sprint0.Sprites
     public class EnemyKeese : ISprite {
 
         private Texture2D enemySS;
-        // private static int enemyTypeX = 6;
-        // private static int enemyTypeY = 17;
         private static Rectangle frame1 = new Rectangle(16 * 6, 16 * 17, 16, 16);
         private static Rectangle frame2 = new Rectangle(16 * 7, 16 * 17, 16, 16);
         private EnemyAnimationHelper animation = new EnemyAnimationHelper(frame1, frame2);

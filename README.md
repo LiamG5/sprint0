@@ -21,3 +21,6 @@ Cycle current enempy/NPC forward: P
 Other Controls:
 Quit: Q
 Reset to initial state: R
+
+Bugs:
+Link moves incorrectly when damaged

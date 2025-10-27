@@ -83,6 +83,10 @@ public class Game1 : Game
             tile = blockCarousel.GetCurrentBlock();
             enemy = enemyCarousel.GetCurrentEnemy();
             item = itemCarousel.GetCurrentItem();
+            
+            Texture2D enemySheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet();
+            var testEnemy = new EnemyGel(enemySheet, new Vector2(400, 100));
+            dungeon.AddEnemy(testEnemy);
 
             controllers = new List<IController>();
             keyboard = new KeyboardController(this, null);
@@ -108,6 +112,10 @@ public class Game1 : Game
             controller.Update();
         }
 
+        foreach (var e in dungeon.GetEnemies())
+        {
+            e.Update(gameTime);
+        }
 
         enemy.Update(gameTime);
         item.Update(gameTime);
@@ -123,6 +131,15 @@ public class Game1 : Game
         _spriteBatch.Begin();
 
         dungeon.Draw(_spriteBatch, GraphicsDevice);
+        
+        foreach (var e in dungeon.GetEnemies())
+        {
+            if (!e.IsDead())
+            {
+                e.Draw(_spriteBatch, e.GetPosition());
+            }
+        }
+        
         enemy.Draw(_spriteBatch, new Vector2(400, 100));
         item.Draw(_spriteBatch, new Vector2(200, 100));
         link.Draw(_spriteBatch);
@@ -150,6 +167,11 @@ public class Game1 : Game
         previousKeyboardState = Keyboard.GetState();
 
         dungeon.LoadRectangles();
+        
+        Texture2D enemySheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet();
+        var testEnemy = new EnemyGel(enemySheet, new Vector2(400, 100));
+        dungeon.AddEnemy(testEnemy);
+        
         collisionUpdater = new CollisionUpdater(dungeon, link);
         collisionUpdater.getList();
     }

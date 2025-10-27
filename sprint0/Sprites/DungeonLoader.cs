@@ -20,6 +20,9 @@ namespace sprint0.Sprites
 
         private List<Rectangle> rectangles;
         private List<IBlock> blockObjects;
+        private List<IEnemy> enemies;
+        private List<Projectile> projectiles;
+        private List<IItem> items;
 
         public Texture2D border;
         public DungeonLoader(BlockFactory blocks, string csvContent)
@@ -31,6 +34,9 @@ namespace sprint0.Sprites
             storageIdx = 0;
             this.rectangles = new List<Rectangle>();
             this.blockObjects = new List<IBlock>();
+            this.enemies = new List<IEnemy>();
+            this.projectiles = new List<Projectile>();
+            this.items = new List<IItem>();
             this.border = Texture2DStorage.GetDungeonBorder();
         }
 
@@ -175,5 +181,62 @@ namespace sprint0.Sprites
 		{
             return rectangles;
 		}
+		
+		public List<IBlock> GetBlocks()
+		{
+			return blockObjects;
+		}
+		
+		public List<IEnemy> GetEnemies()
+		{
+			return enemies;
+		}
+		
+		public List<Projectile> GetProjectiles()
+		{
+			return projectiles;
+		}
+		
+		public void AddEnemy(IEnemy enemy)
+		{
+			enemies.Add(enemy);
+		}
+		
+		public void RemoveEnemy(IEnemy enemy)
+		{
+			enemies.Remove(enemy);
+		}
+		
+		public void AddProjectile(Projectile projectile)
+		{
+			projectiles.Add(projectile);
+		}
+		
+		public void RemoveProjectile(Projectile projectile)
+		{
+			projectiles.Remove(projectile);
+		}
+		
+	public void CleanupDeadEntities()
+	{
+		enemies.RemoveAll(e => e.IsDead());
+		projectiles.RemoveAll(p => p.ShouldDestroy);
+		items.RemoveAll(i => i.IsCollected());
+	}
+	
+	public List<IItem> GetItems()
+	{
+		return items;
+	}
+	
+	public void AddItem(IItem item)
+	{
+		items.Add(item);
+	}
+	
+	public void RemoveItem(IItem item)
+	{
+		items.Remove(item);
+	}
     }
 }
