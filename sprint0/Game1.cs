@@ -106,6 +106,7 @@ public class Game1 : Game
 
         link.Update(gameTime);
         collisionUpdater.Update();
+        dungeon.Update(gameTime);
 
         foreach (var controller in controllers)
         {
