@@ -1,46 +1,84 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using sprint0.Interfaces;
-using sprint0.Classes;
-using System;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using sprint0.Classes;
+using sprint0.Interfaces;
+using sprint0.Sprites.Enemies;
+using sprint0.Collisions;
+using System;
 
 namespace sprint0.Sprites
 {
-    public class EnemyGel : ISprite {
-
+    public class EnemyGel : ISprite, IEnemy
+    {
         private Texture2D enemySS;
-        // private static int enemyTypeX = 4;
-        // private static int enemyTypeY = 18;
-        private int count = 0;
-        private static Vector2 enemyPos = new Vector2(200, 100);
+        private Vector2 position;
         private static Rectangle frame1 = new Rectangle(16 * 4, 16 * 18, 16, 16);
         private static Rectangle frame2 = new Rectangle(16 * 5, 16 * 18, 16, 16);
-        private static Rectangle temp = frame1;
+        private EnemyAnimationHelper animation = new EnemyAnimationHelper(frame1, frame2);
+        private bool isDead = false;
+        private const int ENEMY_WIDTH = 48;  // 16 * 3.0f scale
+        private const int ENEMY_HEIGHT = 48;
 
-        public EnemyGel (Texture2D sheet)
+        public EnemyGel(Texture2D sheet, Vector2 startPosition)
         { 
             enemySS = sheet;
+            position = startPosition;
         }
+
+        public EnemyGel(Texture2D sheet) : this(sheet, new Vector2(200, 100))
+        {
+        }
+
         public void Update(GameTime gameTime)
         {
-            count++;
-            if (count > 9)
+            animation.Update(gameTime);
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Vector2 drawPosition)
+        {
+            if (!isDead)
             {
-                count = 0;
-                if (temp == frame1)
-                {
-                    temp = frame2;
-                }
-                else
-                {
-                    temp = frame1;
-                }
+                spriteBatch.Draw(enemySS, drawPosition, animation.GetFrame(), Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
             }
         }
-        public void Draw(SpriteBatch spriteBatch, Vector2 position)
+
+        public void TakeDamage()
         {
-            spriteBatch.Draw(enemySS, position, temp, Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+            isDead = true;
+        }
+
+        public bool IsDead()
+        {
+            return isDead;
+        }
+
+        public Rectangle GetBounds()
+        {
+            return new Rectangle((int)position.X, (int)position.Y, ENEMY_WIDTH, ENEMY_HEIGHT);
+        }
+
+        public bool IsSolid()
+        {
+            return true;
+        }
+
+        public Vector2 GetPosition()
+        {
+            return position;
+        }
+
+        public void OnCollision(ICollidable other, CollisionDirection direction)
+        {
+            switch (other)
+            {
+                case Link link:
+                    link.TakeDamage();
+                    break;
+
+                case IBlock block when block.IsSolid():
+                    break;
+            }
         }
     }
 }

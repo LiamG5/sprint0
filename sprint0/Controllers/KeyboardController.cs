@@ -9,6 +9,7 @@ using sprint0.Classes;
 using sprint0.Sprites;
 using sprint0.Commands;
 using sprint0.PlayerStates;
+using sprint0.Managers;
 
 
 namespace sprint0.Classes
@@ -18,13 +19,15 @@ namespace sprint0.Classes
     {
         private KeyboardState previousState;
         private Game1 game;
+        private RoomManager roomManager;
         private Dictionary<Keys, ICommand> pressOnceCommands;
         private Dictionary<Keys, ICommand> holdCommands;
         
 
-        public KeyboardController(Game1 game, ISprite linkSprite)
+        public KeyboardController(Game1 game, RoomManager roomManager)
         {
             this.game = game;
+            this.roomManager = roomManager;
             InitializeKeyMappings();
         }
 
@@ -35,9 +38,6 @@ namespace sprint0.Classes
             
             pressOnceCommands[Keys.Z] = new AttackCommand(game.link);
             pressOnceCommands[Keys.N] = new AttackCommand(game.link);
-            pressOnceCommands[Keys.D1] = new UseItemCommand(game.link, 1);
-            pressOnceCommands[Keys.D2] = new UseItemCommand(game.link, 2);
-            pressOnceCommands[Keys.D3] = new UseItemCommand(game.link, 3);
             pressOnceCommands[Keys.E] = new DamageCommand(game.link);
             pressOnceCommands[Keys.T] = new PrevCommand(game.blockCarousel);
             pressOnceCommands[Keys.Y] = new NextCommand(game.blockCarousel);
@@ -47,6 +47,19 @@ namespace sprint0.Classes
             pressOnceCommands[Keys.I] = new NextCommand(game.itemCarousel);
             pressOnceCommands[Keys.Q] = new QuitCommand(game);
             pressOnceCommands[Keys.R] = new ResetCommand(game);
+            
+            if (roomManager != null)
+            {
+                pressOnceCommands[Keys.D1] = new GoToRoomCommand(roomManager, 1, game);
+                pressOnceCommands[Keys.D2] = new GoToRoomCommand(roomManager, 2, game);
+                pressOnceCommands[Keys.D3] = new GoToRoomCommand(roomManager, 3, game);
+                pressOnceCommands[Keys.D4] = new GoToRoomCommand(roomManager, 4, game);
+                pressOnceCommands[Keys.D5] = new GoToRoomCommand(roomManager, 5, game);
+                pressOnceCommands[Keys.D6] = new GoToRoomCommand(roomManager, 6, game);
+                pressOnceCommands[Keys.D7] = new GoToRoomCommand(roomManager, 7, game);
+                pressOnceCommands[Keys.D8] = new GoToRoomCommand(roomManager, 8, game);
+                pressOnceCommands[Keys.D9] = new GoToRoomCommand(roomManager, 9, game);
+            }
             
             holdCommands[Keys.Left] = new MoveLeftCommand(game.link);
             holdCommands[Keys.A] = new MoveLeftCommand(game.link);

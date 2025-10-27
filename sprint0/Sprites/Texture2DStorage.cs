@@ -15,6 +15,7 @@ namespace sprint0.Sprites
 	public static Texture2D enemiesSpriteSheet;
 	public static Texture2D itemSpriteSheet;
 	public static Texture2D miscSpriteSheet;
+	public static Texture2D dungeonBorder;
 	public static SpriteFont font;
 
 	public static void LoadAllTextures(ContentManager Content)
@@ -25,7 +26,8 @@ namespace sprint0.Sprites
 		enemiesSpriteSheet = Content.Load<Texture2D>("Sprites/legendofzelda_enemies_sheet_final");
 		itemSpriteSheet = Content.Load<Texture2D>("legendofzelda_items_sheet");
 		miscSpriteSheet = Content.Load<Texture2D>("legendofzelda_misccharacters_sheet");
-		font = Content.Load<SpriteFont>("font");
+		dungeonBorder = Content.Load<Texture2D>("Room2Border");
+		font = Content.Load<SpriteFont>("Font/font");
 	}
 
 	public static Texture2D GetLinkSpriteSheet()
@@ -52,6 +54,11 @@ namespace sprint0.Sprites
 	public static Texture2D GetMiscSpriteSheet()
 	{
 		return miscSpriteSheet;
+	}
+
+	public static Texture2D GetDungeonBorder()
+	{
+		return dungeonBorder;
 	}
 	public static SpriteFont GetFont()
 	{

@@ -1,14 +1,19 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
-using sprint0.Interfaces;
 using sprint0.Classes;
+using sprint0.Controllers;
+using sprint0.Interfaces;
 using sprint0.PlayerStates;
 using sprint0.Sprites;
+using sprint0.Managers;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using static sprint0.Sprites.BlockFactory;
+using static sprint0.Sprites.DungeonCarousel;
 using static sprint0.Sprites.EnemySpriteFactory;
+using sprint0.Collisions;
 
 
 namespace sprint0;
@@ -23,12 +28,15 @@ public class Game1 : Game
     public ISprite tile;
     public ISprite enemy;
     public ISprite item;
+    private DungeonLoader dungeon;
+    private RoomManager roomManager;
     private BlockFactory blocks;
     private EnemySpriteFactory enemies;
     private ItemFactory items;
     public BlockCarousel blockCarousel;
     public EnemyCarousel enemyCarousel;
     public ItemCarousel itemCarousel;
+    private Texture2D dungeonBorder;
     private Texture2D linkSheet;
     private Texture2D bossSheet;
     private Texture2D enemiesSheet;
@@ -40,6 +48,7 @@ public class Game1 : Game
     private KeyboardController keyboard;
     public int state;
     private KeyboardState previousKeyboardState;
+    private CollisionUpdater collisionUpdater;
 
     public Game1()
     {
@@ -56,7 +65,7 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-        
+
         sprint0.Sprites.Texture2DStorage.LoadAllTextures(Content);
         
         link = new Link(_spriteBatch);
@@ -68,14 +77,27 @@ public class Game1 : Game
         blockCarousel = new BlockCarousel(blocks, _spriteBatch);
         enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
         itemCarousel = new ItemCarousel(items, _spriteBatch);
+
+        roomManager = new RoomManager(blocks, link);
         
+        dungeon = roomManager.LoadRoom(1, Content.RootDirectory);
+        dungeon.SetRoomManager(roomManager, Content.RootDirectory);
+
         tile = blockCarousel.GetCurrentBlock();
         enemy = enemyCarousel.GetCurrentEnemy();
         item = itemCarousel.GetCurrentItem();
+        
+        Texture2D enemySheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet();
+        var testEnemy = new EnemyGel(enemySheet, new Vector2(400, 100));
+        dungeon.AddEnemy(testEnemy);
 
         controllers = new List<IController>();
-        keyboard = new KeyboardController(this, null);
+        keyboard = new KeyboardController(this, roomManager);
         controllers.Add(keyboard);
+        controllers.Add(new MouseController(roomManager));
+
+        collisionUpdater = new CollisionUpdater(dungeon, link);
+        collisionUpdater.getList();  
         
         previousKeyboardState = Keyboard.GetState();
     }
@@ -85,13 +107,22 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
+        dungeon = roomManager.GetCurrentDungeon();
+        collisionUpdater = new CollisionUpdater(dungeon, link);
+        
         link.Update(gameTime);
+        collisionUpdater.Update();
+        dungeon.Update(gameTime);
 
         foreach (var controller in controllers)
         {
             controller.Update();
         }
 
+        foreach (var e in dungeon.GetEnemies())
+        {
+            e.Update(gameTime);
+        }
 
         enemy.Update(gameTime);
         item.Update(gameTime);
@@ -106,7 +137,16 @@ public class Game1 : Game
         
         _spriteBatch.Begin();
 
-        tile.Draw(_spriteBatch, new Vector2(100, 100));
+        dungeon.Draw(_spriteBatch, GraphicsDevice);
+        
+        foreach (var e in dungeon.GetEnemies())
+        {
+            if (!e.IsDead())
+            {
+                e.Draw(_spriteBatch, e.GetPosition());
+            }
+        }
+        
         enemy.Draw(_spriteBatch, new Vector2(400, 100));
         item.Draw(_spriteBatch, new Vector2(200, 100));
         link.Draw(_spriteBatch);
@@ -127,10 +167,22 @@ public class Game1 : Game
         enemy = enemyCarousel.GetCurrentEnemy();
         item = itemCarousel.GetCurrentItem();
 
+        roomManager = new RoomManager(blocks, link);
+        dungeon = roomManager.LoadRoom(1, Content.RootDirectory);
+        dungeon.SetRoomManager(roomManager, Content.RootDirectory);
+
         controllers = new List<IController>();
-        keyboard = new KeyboardController(this, null);
+        keyboard = new KeyboardController(this, roomManager);
         controllers.Add(keyboard);
+        controllers.Add(new MouseController(roomManager));
         
         previousKeyboardState = Keyboard.GetState();
+        
+        Texture2D enemySheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet();
+        var testEnemy = new EnemyGel(enemySheet, new Vector2(400, 100));
+        dungeon.AddEnemy(testEnemy);
+        
+        collisionUpdater = new CollisionUpdater(dungeon, link);
+        collisionUpdater.getList();
     }
 }

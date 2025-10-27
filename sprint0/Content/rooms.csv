@@ -1,0 +1,7 @@
+#id,left,right,up,down,width,height,blocks,items,enemies
+A,,B,,C,256,240,Brick@32:32;Tile@64:64,RupeeRed@120:100,Gel@180:100
+B,A,, ,D,256,240,Solid@16:16,HeartContainer@120:100,Keese@100:150
+C,,D,A,,256,240,Grate@100:50;Brick@140:80,Bomb@200:120,Stalfos@150:150
+D,B,,C,,256,240,Tile@40:40;Fish@80:80,Clock@100:50,RedGoriya@120:140
+
+

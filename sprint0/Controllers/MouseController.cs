@@ -1,58 +1,46 @@
-using sprint0.Interfaces;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using sprint0.Interfaces;
+using sprint0.Managers;
+using System;
 
-
-namespace sprint0.Classes
-
+namespace sprint0.Controllers
 {
     public class MouseController : IController
     {
-        private MouseState previousState;
-        private Game1 game;
-        private SpriteMain linkSprite; //replace spirtemain with linksprite
-
-        public MouseController(Game1 game, ISprite linkSprite)
+        private MouseState previousMouseState;
+        private RoomManager roomManager;
+        
+        public MouseController(RoomManager roomManager)
         {
-            this.game = game;
-            
+            this.roomManager = roomManager;
+            this.previousMouseState = Mouse.GetState();
         }
-
+        
         public void Update()
         {
-            MouseState currentState = Mouse.GetState();
-            int width = game.GraphicsDevice.Viewport.Width;
-            int height = game.GraphicsDevice.Viewport.Height;
-
-            // left click
-            if (currentState.LeftButton == ButtonState.Pressed && previousState.LeftButton == ButtonState.Released)
+            MouseState currentMouseState = Mouse.GetState();
+            
+            if (currentMouseState.LeftButton == ButtonState.Pressed && 
+                previousMouseState.LeftButton == ButtonState.Released)
             {
-                Vector2 position = new Vector2(currentState.X, currentState.Y);
-                if (position.X < width / 2 && position.Y < height / 2)
+                int prevRoom = Math.Max(1, roomManager.CurrentRoomId - 1);
+                if (prevRoom != roomManager.CurrentRoomId)
                 {
-                
-                }
-                else if (position.X >= width / 2 && position.Y < height / 2)
-                {
-                    
-                }
-                else if (position.X < width / 2 && position.Y >= height / 2)
-                {
-                
-                }
-                else
-                {
-                
+                    roomManager.TransitionToRoom(prevRoom, TransitionDirection.West, "Content");
                 }
             }
-
-            // Right click
-            if (currentState.RightButton == ButtonState.Pressed && previousState.RightButton == ButtonState.Released)
+            
+            if (currentMouseState.RightButton == ButtonState.Pressed && 
+                previousMouseState.RightButton == ButtonState.Released)
             {
-                game.Exit();
+                int nextRoom = Math.Min(17, roomManager.CurrentRoomId + 1);
+                if (nextRoom != roomManager.CurrentRoomId)
+                {
+                    roomManager.TransitionToRoom(nextRoom, TransitionDirection.East, "Content");
+                }
             }
-
-            previousState = currentState;
+            
+            previousMouseState = currentMouseState;
         }
     }
 }

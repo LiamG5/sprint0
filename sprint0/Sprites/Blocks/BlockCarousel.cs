@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Interfaces;
 using sprint0.Sprites;
@@ -27,7 +28,7 @@ namespace sprint0.Sprites
         {
             this.blockFactory = blockFactory;
             this.spriteBatch = spriteBatch;
-            currentBlock = blockFactory.BuildTileBlock(spriteBatch);
+            currentBlock = blockFactory.BuildTileBlock(spriteBatch, Vector2.Zero);
         }
 
         public void Next()
@@ -47,34 +48,34 @@ namespace sprint0.Sprites
             switch (blockTypes[currentIndex])
             {
                 case BlockFactory.BlockType.Tile:
-                    currentBlock = blockFactory.BuildTileBlock(spriteBatch);
+                    currentBlock = blockFactory.BuildTileBlock(spriteBatch, Vector2.Zero);
                     break;
                 case BlockFactory.BlockType.ChiseledTile:
-                    currentBlock = blockFactory.BuildChiseledTileBlock(spriteBatch);
+                    currentBlock = blockFactory.BuildChiseledTileBlock(spriteBatch, Vector2.Zero);
                     break;
                 case BlockFactory.BlockType.Fish:
-                    currentBlock = blockFactory.BuildFishBlock(spriteBatch);
+                    currentBlock = blockFactory.BuildFishBlock(spriteBatch, Vector2.Zero);
                     break;
                 case BlockFactory.BlockType.Dragon:
-                    currentBlock = blockFactory.BuildDragonBlock(spriteBatch);
+                    currentBlock = blockFactory.BuildDragonBlock(spriteBatch, Vector2.Zero);
                     break;
                 case BlockFactory.BlockType.Void:
-                    currentBlock = blockFactory.BuildVoidBlock(spriteBatch);
+                    currentBlock = blockFactory.BuildVoidBlock(spriteBatch, Vector2.Zero);
                     break;
                 case BlockFactory.BlockType.Dirt:
-                    currentBlock = blockFactory.BuildDirtBlock(spriteBatch);
+                    currentBlock = blockFactory.BuildDirtBlock(spriteBatch, Vector2.Zero);
                     break;
                 case BlockFactory.BlockType.Solid:
-                    currentBlock = blockFactory.BuildSolidBlock(spriteBatch);
+                    currentBlock = blockFactory.BuildSolidBlock(spriteBatch, Vector2.Zero);
                     break;
                 case BlockFactory.BlockType.Stair:
-                    currentBlock = blockFactory.BuildStairBlock(spriteBatch);
+                    currentBlock = blockFactory.BuildStairBlock(spriteBatch, Vector2.Zero);
                     break;
                 case BlockFactory.BlockType.Brick:
-                    currentBlock = blockFactory.BuildBrickBlock(spriteBatch);
+                    currentBlock = blockFactory.BuildBrickBlock(spriteBatch, Vector2.Zero);
                     break;
                 case BlockFactory.BlockType.Grate:
-                    currentBlock = blockFactory.BuildGrateBlock(spriteBatch);
+                    currentBlock = blockFactory.BuildGrateBlock(spriteBatch, Vector2.Zero);
                     break;
             }
         }

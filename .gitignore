@@ -1,9 +1,12 @@
 .vs/
-*.user
 
+Debug/
+DebugPublic/
 bin/
 obj/
-*.pdb
+
+sprint0/bin/
+sprint0/obj/
 
 Content/bin/
 Content/obj/

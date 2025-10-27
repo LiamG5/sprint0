@@ -28,7 +28,6 @@ namespace sprint0.Sprites
         private static BlockFactory instance = new BlockFactory(); 
         private BlockFactory() 
         { 
-            blockSpritesheet = sprint0.Sprites.Texture2DStorage.GetBlockSpriteSheet(); 
         } 
         public static BlockFactory Instance 
         { 
@@ -36,62 +35,85 @@ namespace sprint0.Sprites
                 return instance; 
             } 
         }
-        public ISprite BuildTileBlock(SpriteBatch sprite)
+
+        public void Initialize()
         {
+            if (blockSpritesheet == null)
+            {
+                blockSpritesheet = sprint0.Sprites.Texture2DStorage.GetBlockSpriteSheet();
+                if (blockSpritesheet == null)
+                {
+                    throw new InvalidOperationException("Block sprite sheet not loaded. Make sure Texture2DStorage.LoadAllTextures() is called before using BlockFactory.");
+                }
+            }
+        }
+        public ISprite BuildTileBlock(SpriteBatch sprite, Vector2 position)
+        {
+            Initialize();
             currBlock = BlockType.Tile;
-            return new BlockTile(blockSpritesheet);
+            
+            return new BlockTile(blockSpritesheet, position);
         }
 
-        public ISprite BuildChiseledTileBlock(SpriteBatch sprite)
+        public ISprite BuildChiseledTileBlock(SpriteBatch sprite, Vector2 position)
         {
+            Initialize();
             currBlock = BlockType.ChiseledTile;
-            return new BlockChiseledTile(blockSpritesheet);
+            return new BlockChiseledTile(blockSpritesheet, position);
         }
 
-        public ISprite BuildFishBlock(SpriteBatch sprite)
+        public ISprite BuildFishBlock(SpriteBatch sprite, Vector2 position)
         {
+            Initialize();
             currBlock = BlockType.Fish;
-            return new BlockFish(blockSpritesheet);
+            return new BlockFish(blockSpritesheet, position);
         }
 
-        public ISprite BuildDragonBlock(SpriteBatch sprite)
+        public ISprite BuildDragonBlock(SpriteBatch sprite, Vector2 position)
         {
+            Initialize();
             currBlock = BlockType.Dragon;
-            return new BlockDragon(blockSpritesheet);
+            return new BlockDragon(blockSpritesheet, position);
         }
 
-        public ISprite BuildVoidBlock(SpriteBatch sprite)
+        public ISprite BuildVoidBlock(SpriteBatch sprite, Vector2 position)
         {
+            Initialize();
             currBlock = BlockType.Void;
-            return new BlockVoid(blockSpritesheet);
+            return new BlockVoid(blockSpritesheet, position);
         }
-        public ISprite BuildDirtBlock(SpriteBatch sprite)
+        public ISprite BuildDirtBlock(SpriteBatch sprite, Vector2 position)
         {
+            Initialize();
             currBlock = BlockType.Dirt;
-            return new BlockDirt(blockSpritesheet);
+            return new BlockDirt(blockSpritesheet, position);
         }
         
-        public ISprite BuildSolidBlock(SpriteBatch sprite)
+        public ISprite BuildSolidBlock(SpriteBatch sprite, Vector2 position)
         {
+            Initialize();
             currBlock = BlockType.Solid;
-            return new BlockSolid(blockSpritesheet);
+            return new BlockSolid(blockSpritesheet, position);
         }
-        public ISprite BuildStairBlock(SpriteBatch sprite)
+        public ISprite BuildStairBlock(SpriteBatch sprite, Vector2 position)
         {
+            Initialize();
             currBlock = BlockType.Stair;
-            return new BlockStair(blockSpritesheet);
+            return new BlockStair(blockSpritesheet, position);
         }
 
-        public ISprite BuildBrickBlock(SpriteBatch sprite)
+        public ISprite BuildBrickBlock(SpriteBatch sprite, Vector2 position)
         {
+            Initialize();
             currBlock = BlockType.Brick;
-            return new BlockBrick(blockSpritesheet);
+            return new BlockBrick(blockSpritesheet, position);
         }
 
-        public ISprite BuildGrateBlock(SpriteBatch sprite)
+        public ISprite BuildGrateBlock(SpriteBatch sprite, Vector2 position)
         {
+            Initialize();
             currBlock = BlockType.Grate;
-            return new BlockGrate(blockSpritesheet);
+            return new BlockGrate(blockSpritesheet, position);
         }
     }
 }
