@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using sprint0.Collisions;
 
 namespace sprint0.Interfaces
 {
@@ -7,6 +8,6 @@ namespace sprint0.Interfaces
         public Rectangle GetBounds();
         public bool IsSolid();
         public Vector2 GetPosition();
-
+        public void OnCollision(ICollidable other, CollisionDirection direction);
     }
 }

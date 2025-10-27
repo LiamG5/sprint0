@@ -21,3 +21,7 @@ Cycle current enempy/NPC forward: P
 Other Controls:
 Quit: Q
 Reset to initial state: R
+
+Bugs:
+Link moves incorrectly when damaged because the damage state does not correctly handle movement.
+Movable block collision is in the incorrect direction on the corners of blocks, causing them to stop.

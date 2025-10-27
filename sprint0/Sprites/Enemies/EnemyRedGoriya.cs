@@ -11,8 +11,6 @@ namespace sprint0.Sprites
     public class EnemyRedGoriya : ISprite {
 
         private Texture2D enemySS;
-        // private static int enemyTypeX = 1;
-        // private static int enemyTypeY = 2;
         private static Vector2 enemyPos = new Vector2(200, 100);
         private static Rectangle frame1 = new Rectangle(16 * 0, 16 * 2, 16, 16);
         private static Rectangle frame2 = new Rectangle(16 * 1, 16 * 2, 16, 16);

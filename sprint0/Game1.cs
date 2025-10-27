@@ -131,6 +131,14 @@ public class Game1 : Game
 
         keyboard = new KeyboardController(this, null);
         controllers.Add(keyboard);
+            
+            Texture2D enemySheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet();
+            var testEnemy = new EnemyGel(enemySheet, new Vector2(400, 100));
+            dungeon.AddEnemy(testEnemy);
+
+            controllers = new List<IController>();
+            keyboard = new KeyboardController(this, null);
+            controllers.Add(keyboard);
 
         previousKeyboardState = Keyboard.GetState();
 
@@ -149,12 +157,17 @@ public class Game1 : Game
 
         link.Update(gameTime);
         collisionUpdater.Update();
+        dungeon.Update(gameTime);
 
         foreach (var controller in controllers)
         {
             controller.Update();
         }
 
+        foreach (var e in dungeon.GetEnemies())
+        {
+            e.Update(gameTime);
+        }
 
         enemy.Update(gameTime);
         item.Update(gameTime);
@@ -170,6 +183,15 @@ public class Game1 : Game
         _spriteBatch.Begin();
 
         dungeon.Draw(_spriteBatch, GraphicsDevice);
+        
+        foreach (var e in dungeon.GetEnemies())
+        {
+            if (!e.IsDead())
+            {
+                e.Draw(_spriteBatch, e.GetPosition());
+            }
+        }
+        
         enemy.Draw(_spriteBatch, new Vector2(400, 100));
         item.Draw(_spriteBatch, new Vector2(200, 100));
         link.Draw(_spriteBatch);
@@ -299,6 +321,11 @@ public class Game1 : Game
     LoadRoom(1);
 
     // Recreate collision updater for the new dungeon/link
+        
+        Texture2D enemySheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet();
+        var testEnemy = new EnemyGel(enemySheet, new Vector2(400, 100));
+        dungeon.AddEnemy(testEnemy);
+        
     collisionUpdater = new CollisionUpdater(dungeon, link);
     collisionUpdater.getList();
     }
