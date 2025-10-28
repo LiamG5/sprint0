@@ -85,7 +85,7 @@ public class Game1 : Game
             item = itemCarousel.GetCurrentItem();
             
             Texture2D enemySheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet();
-            var testEnemy = new EnemyGel(enemySheet, new Vector2(400, 100));
+            var testEnemy = new EnemyKeese(enemySheet, new Vector2(400, 100));
             dungeon.AddEnemy(testEnemy);
 
             controllers = new List<IController>();
@@ -170,7 +170,7 @@ public class Game1 : Game
         dungeon.LoadRectangles();
         
         Texture2D enemySheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet();
-        var testEnemy = new EnemyGel(enemySheet, new Vector2(400, 100));
+        var testEnemy = new EnemyKeese(enemySheet, new Vector2(400, 100));
         dungeon.AddEnemy(testEnemy);
         
         collisionUpdater = new CollisionUpdater(dungeon, link);
