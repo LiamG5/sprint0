@@ -20,6 +20,11 @@ namespace sprint0.Sprites
 
         private List<Rectangle> rectangles;
         private List<IBlock> blockObjects;
+        private List<IEnemy> enemies;
+        private List<Projectile> projectiles;
+        private List<IItem> items;
+        private List<ICollidable> boarders;
+        
 
         public Texture2D border;
         public DungeonLoader(BlockFactory blocks, string csvContent)
@@ -31,7 +36,12 @@ namespace sprint0.Sprites
             storageIdx = 0;
             this.rectangles = new List<Rectangle>();
             this.blockObjects = new List<IBlock>();
+            this.enemies = new List<IEnemy>();
+            this.projectiles = new List<Projectile>();
+            this.items = new List<IItem>();
             this.border = Texture2DStorage.GetDungeonBorder();
+            this.boarders = new List<ICollidable>();
+
         }
 
         public void LoadRectangles()
@@ -54,7 +64,6 @@ namespace sprint0.Sprites
                     int row = cellIndex / gridColumns;
                     Vector2 position = new Vector2((col + offset) * tileSize, (row + offset) * tileSize);
                     
-                    // Create block object based on type
                     IBlock block = null;
                     switch (blockType)
                     {
@@ -90,20 +99,41 @@ namespace sprint0.Sprites
                             break;
                     }
                     
-                    if (block != null && block.IsSolid())
+                    if (block != null)
                     {
-                        rectangles.Add(new Rectangle((int)position.X, (int)position.Y, 48, 48));
                         blockObjects.Add(block);
+                        if (block.IsSolid())
+                        {
+                            rectangles.Add(new Rectangle((int)position.X, (int)position.Y, 48, 48));
+                        }
                     }
-                    
+
                     cellIndex++;
                 }
             }
+            for (int i = 0; i < 2; i++)
+            {
+            boarders.Add(new DungeonLongWall(new Vector2(0+ i * 424, 48)));// top
+            boarders.Add(new DungeonLongWall(new Vector2(0 + i * 424, 432)));//bottom
+            boarders.Add(new DungeonTallWall(new Vector2(48 + i* 634, 0)));//top
+            boarders.Add(new DungeonTallWall(new Vector2(48 + i *634, 294)));//bottom
+            boarders.Add(new DungeonDoor(new Vector2(352, 24 + i * 408)));// top
+            boarders.Add(new DungeonDoor(new Vector2(24 + i*658 ,222)));//side
+            
+            }
+
+
         }
 
         public void Update(GameTime gameTime)
         {
-
+            foreach (var block in blockObjects)
+            {
+                if (block is ISprite sprite)
+                {
+                    sprite.Update(gameTime);
+                }
+            }
         }
         public void Draw(SpriteBatch sprite, GraphicsDevice graphics)
         {
@@ -114,66 +144,100 @@ namespace sprint0.Sprites
             const int tileSize = 48;
             const int offset = 2;
 
-            storageIdx = 0;
-            string[] lines = path.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-            int maxCells = Math.Min(storage.Length, gridColumns * gridRows);
-
-            foreach (string line in lines)
+            ISprite baseTile = blocks.BuildTileBlock(sprite, Vector2.Zero);
+            for (int row = 0; row < gridRows; row++)
             {
-                string[] columns = line.Split(',');
-                foreach (string block in columns)
+                for (int col = 0; col < gridColumns; col++)
                 {
-                    
-                    switch (block)
-                    {
-                        case "Tile":
-                            storage[storageIdx] = blocks.BuildTileBlock(sprite, Vector2.Zero);
-                            break;
-                        case "ChiseledTile":
-                            storage[storageIdx] = blocks.BuildChiseledTileBlock(sprite, Vector2.Zero);
-                            break;
-                        case "Fish":
-                            storage[storageIdx] = blocks.BuildFishBlock(sprite, Vector2.Zero);
-                            break;
-                        case "Dragon":
-                            storage[storageIdx] = blocks.BuildDragonBlock(sprite, Vector2.Zero);
-                            break;
-                        case "Void":
-                            storage[storageIdx] = blocks.BuildVoidBlock(sprite, Vector2.Zero);
-                            break;
-                        case "Dirt":
-                            storage[storageIdx] = blocks.BuildDirtBlock(sprite, Vector2.Zero);
-                            break;
-                        case "Solid":
-                            storage[storageIdx] = blocks.BuildSolidBlock(sprite, Vector2.Zero);
-                            break;
-                        case "Stair":
-                            storage[storageIdx] = blocks.BuildStairBlock(sprite, Vector2.Zero);
-                            break;
-                        case "Brick":
-                            storage[storageIdx] = blocks.BuildBrickBlock(sprite, Vector2.Zero);
-                            break;
-                        case "Grate":
-                            storage[storageIdx] = blocks.BuildGrateBlock(sprite, Vector2.Zero);
-                            break;
-                    }
-
-                    int col = storageIdx % gridColumns;
-                    int row = storageIdx / gridColumns;
                     Vector2 position = new Vector2((col + offset) * tileSize, (row + offset) * tileSize);
-                    rectangles.Add(new Rectangle((int)position.X, (int)position.Y, 48, 48));
-                    storage[storageIdx].Draw(sprite, position);
-                    storageIdx++;
-                    
+                    baseTile.Draw(sprite, position);
                 }
-
-                if (storageIdx >= maxCells) break;
             }
+
+            List <BlockChiseledTile> chiseledTiles = new List<BlockChiseledTile>();
+            foreach (var block in blockObjects)
+            {
+                if (block is ISprite blockSprite)
+                {
+                    if (!(block is BlockTile)) {
+                        blockSprite.Draw(sprite, block.GetPosition());
+                    }
+                    if (block is BlockChiseledTile) {
+                        chiseledTiles.Add(block as BlockChiseledTile);
+                    }
+                }
+            }
+            foreach (var chiseledTile in chiseledTiles) {
+                chiseledTile.Draw(sprite, chiseledTile.GetPosition());
+            }
+
+
+
         }
         public List<Rectangle> GetBlockList()
 		{
             return rectangles;
 		}
+		
+		public List<IBlock> GetBlocks()
+		{
+			return blockObjects;
+		}
+		
+		public List<IEnemy> GetEnemies()
+		{
+			return enemies;
+		}
+
+        public List<Projectile> GetProjectiles()
+        {
+            return projectiles;
+        }
+        public List<ICollidable> GetBoarders()
+        {
+            return boarders;
+        }
+		
+		public void AddEnemy(IEnemy enemy)
+		{
+			enemies.Add(enemy);
+		}
+		
+		public void RemoveEnemy(IEnemy enemy)
+		{
+			enemies.Remove(enemy);
+		}
+		
+		public void AddProjectile(Projectile projectile)
+		{
+			projectiles.Add(projectile);
+		}
+		
+		public void RemoveProjectile(Projectile projectile)
+		{
+			projectiles.Remove(projectile);
+		}
+		
+	public void CleanupDeadEntities()
+	{
+		enemies.RemoveAll(e => e.IsDead());
+		projectiles.RemoveAll(p => p.ShouldDestroy);
+		items.RemoveAll(i => i.IsCollected());
+	}
+	
+	public List<IItem> GetItems()
+	{
+		return items;
+	}
+	
+	public void AddItem(IItem item)
+	{
+		items.Add(item);
+	}
+	
+	public void RemoveItem(IItem item)
+	{
+		items.Remove(item);
+	}
     }
 }

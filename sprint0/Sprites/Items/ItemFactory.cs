@@ -24,7 +24,7 @@ namespace sprint0.Sprites
             Raft, BookOfMagic, BlueRing, RedRing, Stepladder, MagicalKey, PowerBracelet,
 
             // Dungeon
-            Compass, DungeonMap, SmallKey, TriforceFragmentBlue, TriforceFragmentYellow,
+            Compass, DungeonMap, SmallKey, TriforceFragment,
 
             // Miscellaneous
             RecoveryHeart, HeartContainer, Clock, RupeeRed, RupeeBlue, Fairy
@@ -53,208 +53,203 @@ namespace sprint0.Sprites
         }
 
         // Equipment Items
-        public ISprite BuildSword(SpriteBatch spriteBatch)
+        public ISprite BuildSword()
         {
             currItem = ItemType.Sword;
             return new ItemSword(itemSpritesheet);
         }
 
-        public ISprite BuildWhiteSword(SpriteBatch spriteBatch)
+        public ISprite BuildWhiteSword()
         {
             currItem = ItemType.WhiteSword;
             return new ItemWhiteSword(itemSpritesheet);
         }
 
-        public ISprite BuildBoomerang(SpriteBatch spriteBatch)
+        public ISprite BuildBoomerang()
         {
             currItem = ItemType.Boomerang;
             return new ItemBoomerang(itemSpritesheet);
         }
 
-        public ISprite BuildMagicalBoomerang(SpriteBatch spriteBatch)
+        public ISprite BuildMagicalBoomerang()
         {
             currItem = ItemType.MagicalBoomerang;
             return new ItemMagicalBoomerang(itemSpritesheet);
         }
 
-        public ISprite BuildBomb(SpriteBatch spriteBatch)
+        public ISprite BuildBomb()
         {
             currItem = ItemType.Bomb;
             return new ItemBomb(itemSpritesheet);
         }
 
-        public ISprite BuildBow(SpriteBatch spriteBatch)
+        public ISprite BuildBow()
         {
             currItem = ItemType.Bow;
             return new ItemBow(itemSpritesheet);
         }
 
-        public ISprite BuildArrow(SpriteBatch spriteBatch)
+        public ISprite BuildArrow()
         {
             currItem = ItemType.Arrow;
             return new ItemArrow(itemSpritesheet);
         }
 
-        public ISprite BuildSilverArrow(SpriteBatch spriteBatch)
+        public ISprite BuildSilverArrow()
         {
             currItem = ItemType.SilverArrow;
             return new ItemSilverArrow(itemSpritesheet);
         }
 
-        public ISprite BuildCandleRed(SpriteBatch spriteBatch)
+        public ISprite BuildCandleRed()
         {
             currItem = ItemType.CandleRed;
             return new ItemCandleRed(itemSpritesheet);
         }
 
-        public ISprite BuildCandleBlue(SpriteBatch spriteBatch)
+        public ISprite BuildCandleBlue()
         {
             currItem = ItemType.CandleBlue;
             return new ItemCandleBlue(itemSpritesheet);
         }
 
-        public ISprite BuildRecorder(SpriteBatch spriteBatch)
+        public ISprite BuildRecorder()
         {
             currItem = ItemType.Recorder;
             return new ItemRecorder(itemSpritesheet);
         }
 
-        public ISprite BuildFood(SpriteBatch spriteBatch)
+        public ISprite BuildFood()
         {
             currItem = ItemType.Food;
             return new ItemFood(itemSpritesheet);
         }
 
-        public ISprite BuildLetter(SpriteBatch spriteBatch)
+        public ISprite BuildLetter()
         {
             currItem = ItemType.Letter;
             return new ItemLetter(itemSpritesheet);
         }
 
-        public ISprite BuildPotionRed(SpriteBatch spriteBatch)
+        public ISprite BuildPotionRed()
         {
             currItem = ItemType.PotionRed;
             return new ItemPotionRed(itemSpritesheet);
         }
 
-        public ISprite BuildPotionBlue(SpriteBatch spriteBatch)
+        public ISprite BuildPotionBlue()
         {
             currItem = ItemType.PotionBlue;
             return new ItemPotionBlue(itemSpritesheet);
         }
 
-        public ISprite BuildMagicalRod(SpriteBatch spriteBatch)
+        public ISprite BuildMagicalRod()
         {
             currItem = ItemType.MagicalRod;
             return new ItemMagicalRod(itemSpritesheet);
         }
 
         // Inventory Items
-        public ISprite BuildRaft(SpriteBatch spriteBatch)
+        public ISprite BuildRaft()
         {
             currItem = ItemType.Raft;
             return new ItemRaft(itemSpritesheet);
         }
 
-        public ISprite BuildBookOfMagic(SpriteBatch spriteBatch)
+        public ISprite BuildBookOfMagic()
         {
             currItem = ItemType.BookOfMagic;
             return new ItemBookOfMagic(itemSpritesheet);
         }
 
-        public ISprite BuildBlueRing(SpriteBatch spriteBatch)
+        public ISprite BuildBlueRing()
         {
             currItem = ItemType.BlueRing;
             return new ItemBlueRing(itemSpritesheet);
         }
 
-        public ISprite BuildRedRing(SpriteBatch spriteBatch)
+        public ISprite BuildRedRing()
         {
             currItem = ItemType.RedRing;
             return new ItemRedRing(itemSpritesheet);
         }
 
-        public ISprite BuildStepladder(SpriteBatch spriteBatch)
+        public ISprite BuildStepladder()
         {
             currItem = ItemType.Stepladder;
             return new ItemStepladder(itemSpritesheet);
         }
         
 
-        public ISprite BuildMagicalKey(SpriteBatch spriteBatch)
+        public ISprite BuildMagicalKey()
         {
             currItem = ItemType.MagicalKey;
             return new ItemMagicalKey(itemSpritesheet);
         }
 
-        public ISprite BuildPowerBracelet(SpriteBatch spriteBatch)
+        public ISprite BuildPowerBracelet()
         {
             currItem = ItemType.PowerBracelet;
             return new ItemPowerBracelet(itemSpritesheet);
         }
 
         // Dungeon Items
-        public ISprite BuildCompass(SpriteBatch spriteBatch)
+        public ISprite BuildCompass()
         {
             currItem = ItemType.Compass;
             return new ItemCompass(itemSpritesheet);
         }
 
-        public ISprite BuildDungeonMap(SpriteBatch spriteBatch)
+        public ISprite BuildDungeonMap()
         {
             currItem = ItemType.DungeonMap;
             return new ItemDungeonMap(itemSpritesheet);
         }
 
-        public ISprite BuildSmallKey(SpriteBatch spriteBatch)
+        public ISprite BuildSmallKey()
         {
             currItem = ItemType.SmallKey;
             return new ItemSmallKey(itemSpritesheet);
         }
 
-        public ISprite BuildTriforceFragmentBlue(SpriteBatch spriteBatch)
-        {
-            currItem = ItemType.TriforceFragmentBlue;
-            return new ItemTriforceFragmentBlue(itemSpritesheet);
-        }
 
-        public ISprite BuildTriforceFragmentYellow(SpriteBatch spriteBatch)
+        public ISprite BuildTriforceFragment()
         {
-            currItem = ItemType.TriforceFragmentYellow;
-            return new ItemTriforceFragmentYellow(itemSpritesheet);
+            currItem = ItemType.TriforceFragment;
+            return new ItemTriforceFragment(itemSpritesheet);
         }
 
         // Miscellaneous Items
-        public ISprite BuildRecoveryHeart(SpriteBatch spriteBatch)
+        public ISprite BuildRecoveryHeart()
         {
             currItem = ItemType.RecoveryHeart;
             return new ItemRecoveryHeart(itemSpritesheet);
         }
 
-        public ISprite BuildHeartContainer(SpriteBatch spriteBatch)
+        public ISprite BuildHeartContainer()
         {
             currItem = ItemType.HeartContainer;
             return new ItemHeartContainer(itemSpritesheet);
         }
 
-        public ISprite BuildClock(SpriteBatch spriteBatch)
+        public ISprite BuildClock()
         {
             currItem = ItemType.Clock;
             return new ItemClock(itemSpritesheet);
         }
 
-        public ISprite BuildRupeeRed(SpriteBatch spriteBatch)
+        public ISprite BuildRupeeRed()
         {
             currItem = ItemType.RupeeRed;
             return new ItemRupeeRed(itemSpritesheet);
         }
 
-        public ISprite BuildRupeeBlue(SpriteBatch spriteBatch)
+        public ISprite BuildRupeeBlue()
         {
             currItem = ItemType.RupeeBlue;
             return new ItemRupeeBlue(itemSpritesheet);
         }
-         public ISprite BuildFairy(SpriteBatch spriteBatch)
+         public ISprite BuildFairy()
         {
             currItem = ItemType.Fairy;
             return new ItemFairy(itemSpritesheet);

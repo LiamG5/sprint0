@@ -43,5 +43,9 @@ namespace sprint0.Sprites
         {
             return position;
         }
+        
+        public void OnCollision(sprint0.Interfaces.ICollidable other, sprint0.Collisions.CollisionDirection direction)
+        {
+        }
     }
 }
