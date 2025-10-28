@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Interfaces;
+using sprint0.Sprites;
 using System;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -13,40 +14,55 @@ namespace sprint0.Classes
         public Rectangle sourceRectangle;
         public Rectangle nextRectangle;
 
+        private ItemFactory itemFactory;
+        private ISprite item;
+        private Boolean show;
+        private static Vector2 positionOffset = new Vector2(0,-12);
         
-
         
         public LinkObjectSprite()
         {
-            this.spriteSheet = sprint0.Sprites.Texture2DStorage.GetLinkSpriteSheet();
+            this.spriteSheet = sprint0.Sprites.Texture2DStorage.GetItemSpriteSheet();
             this.sourceRectangle = new Rectangle(0, 0, 16, 16);
             this.nextRectangle = sourceRectangle;
+            this.itemFactory = ItemFactory.Instance;
+            show = false;
+            item = itemFactory.BuildSword();
+            
         }
 
         //sword
         public void LinkObjDrawItem1()
         {
-            nextRectangle = new Rectangle(30, 60, 16, 16);
+            item = itemFactory.BuildSmallKey();
+            show = true;
         }
         //heart
          public void LinkObjDrawItem2()
         {
-            nextRectangle = new Rectangle(300, 195, 16, 16);
+            item = itemFactory.BuildBoomerang();
+            show = true;
         }
         //rupee
          public void LinkObjDrawItem3()
         {
-            nextRectangle = new Rectangle(240, 225, 16, 16);
+            item = itemFactory.BuildCompass();
+            show = true;
         }
         
         public void Update(GameTime gameTime)
         {
-            sourceRectangle = nextRectangle;
+            
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
-            spriteBatch.Draw(spriteSheet, position, sourceRectangle, Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+            if (show)
+            {
+                Vector2 drawPosition = position + (positionOffset * 3.0f);
+                item.Draw(spriteBatch, drawPosition);
+            }
+            show = false;
         }
     }
 }

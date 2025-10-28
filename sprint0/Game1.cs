@@ -2,7 +2,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using sprint0.Classes;
+<<<<<<< HEAD
 using sprint0.Controllers;
+=======
+>>>>>>> 98ffd68f04505072a92d6ad779354f7b6a1172af
 using sprint0.Interfaces;
 using sprint0.PlayerStates;
 using sprint0.Sprites;
@@ -29,7 +32,10 @@ public class Game1 : Game
     public ISprite enemy;
     public ISprite item;
     private DungeonLoader dungeon;
+<<<<<<< HEAD
     private RoomManager roomManager;
+=======
+>>>>>>> 98ffd68f04505072a92d6ad779354f7b6a1172af
     private BlockFactory blocks;
     private EnemySpriteFactory enemies;
     private ItemFactory items;
@@ -65,6 +71,7 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+<<<<<<< HEAD
 
         sprint0.Sprites.Texture2DStorage.LoadAllTextures(Content);
         
@@ -100,6 +107,43 @@ public class Game1 : Game
         collisionUpdater.getList();  
         
         previousKeyboardState = Keyboard.GetState();
+=======
+
+            sprint0.Sprites.Texture2DStorage.LoadAllTextures(Content);
+            
+            link = new Link(_spriteBatch);
+            
+            blocks = BlockFactory.Instance;
+            enemies = EnemySpriteFactory.Instance;
+            items = ItemFactory.Instance;
+            
+            blockCarousel = new BlockCarousel(blocks, _spriteBatch);
+            enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
+            itemCarousel = new ItemCarousel(items, _spriteBatch);
+
+            string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
+
+            dungeon = new DungeonLoader(blocks, File.ReadAllText(dungeonPath));
+            dungeon.LoadRectangles();
+
+            tile = blockCarousel.GetCurrentBlock();
+            enemy = enemyCarousel.GetCurrentEnemy();
+            item = itemCarousel.GetCurrentItem();
+            
+            Texture2D enemySheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet();
+            var testEnemy = new EnemyKeese(enemySheet, new Vector2(400, 100));
+            dungeon.AddEnemy(testEnemy);
+
+            controllers = new List<IController>();
+            keyboard = new KeyboardController(this, null);
+            controllers.Add(keyboard);
+
+            collisionUpdater = new CollisionUpdater(dungeon, link);
+            collisionUpdater.getList();  
+            
+            previousKeyboardState = Keyboard.GetState();
+
+>>>>>>> 98ffd68f04505072a92d6ad779354f7b6a1172af
     }
 
     protected override void Update(GameTime gameTime)
@@ -147,7 +191,11 @@ public class Game1 : Game
             }
         }
         
+<<<<<<< HEAD
         enemy.Draw(_spriteBatch, new Vector2(400, 100));
+=======
+        // enemy.Draw(_spriteBatch, new Vector2(400, 100));
+>>>>>>> 98ffd68f04505072a92d6ad779354f7b6a1172af
         item.Draw(_spriteBatch, new Vector2(200, 100));
         link.Draw(_spriteBatch);
         _spriteBatch.End();
@@ -177,9 +225,17 @@ public class Game1 : Game
         controllers.Add(new MouseController(roomManager));
         
         previousKeyboardState = Keyboard.GetState();
+<<<<<<< HEAD
         
         Texture2D enemySheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet();
         var testEnemy = new EnemyGel(enemySheet, new Vector2(400, 100));
+=======
+
+        dungeon.LoadRectangles();
+        
+        Texture2D enemySheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet();
+        var testEnemy = new EnemyKeese(enemySheet, new Vector2(400, 100));
+>>>>>>> 98ffd68f04505072a92d6ad779354f7b6a1172af
         dungeon.AddEnemy(testEnemy);
         
         collisionUpdater = new CollisionUpdater(dungeon, link);

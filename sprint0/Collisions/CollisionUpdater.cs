@@ -42,12 +42,19 @@ namespace sprint0.Collisions
             
             allCollidables.Clear();
             allCollidables.Add(link);
+<<<<<<< HEAD
+=======
+            allCollidables.AddRange(dungeonLoader.GetBoarders());
+>>>>>>> 98ffd68f04505072a92d6ad779354f7b6a1172af
             allCollidables.AddRange(dungeonLoader.GetBlocks());
             allCollidables.AddRange(dungeonLoader.GetEnemies());
             allCollidables.AddRange(dungeonLoader.GetProjectiles());
             allCollidables.AddRange(dungeonLoader.GetItems());
+<<<<<<< HEAD
             allCollidables.AddRange(dungeonLoader.GetBoarders());
             allCollidables.AddRange(dungeonLoader.GetTransitionZones());
+=======
+>>>>>>> 98ffd68f04505072a92d6ad779354f7b6a1172af
             
             for (int i = 0; i < allCollidables.Count; i++)
             {

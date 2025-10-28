@@ -11,7 +11,10 @@ namespace sprint0.Sprites
     public class EnemyWallmaster : ISprite {
 
         private Texture2D enemySS;
+<<<<<<< HEAD
         private static Vector2 enemyPos = new Vector2(200, 100);
+=======
+>>>>>>> 98ffd68f04505072a92d6ad779354f7b6a1172af
         private static Rectangle frame1 = new Rectangle(16 * 0, 16 * 14, 16, 16);
         private static Rectangle frame2 = new Rectangle(16 * 1, 16 * 14, 16, 16);
         private EnemyAnimationHelper animation = new EnemyAnimationHelper(frame1, frame2);
