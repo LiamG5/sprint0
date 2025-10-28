@@ -42,8 +42,8 @@ namespace sprint0.Sprites
             ItemFactory.ItemType.Compass,
             ItemFactory.ItemType.DungeonMap,
             ItemFactory.ItemType.SmallKey,
-            ItemFactory.ItemType.TriforceFragment,
-            
+            ItemFactory.ItemType.TriforceFragmentBlue,
+            ItemFactory.ItemType.TriforceFragmentYellow,
             
             // Miscellaneous
             ItemFactory.ItemType.RecoveryHeart,
@@ -58,7 +58,7 @@ namespace sprint0.Sprites
         {
             this.itemFactory = itemFactory;
             this.spriteBatch = spriteBatch;
-            currentItem = itemFactory.BuildSword();
+            currentItem = itemFactory.BuildSword(spriteBatch);
         }
 
         public void Next()
@@ -79,108 +79,112 @@ namespace sprint0.Sprites
             {
                 // Equipment
                 case ItemFactory.ItemType.Sword:
-                    currentItem = itemFactory.BuildSword();
+                    currentItem = itemFactory.BuildSword(spriteBatch);
                     break;
                 case ItemFactory.ItemType.WhiteSword:
-                    currentItem = itemFactory.BuildWhiteSword();
+                    currentItem = itemFactory.BuildWhiteSword(spriteBatch);
                     break;
                 case ItemFactory.ItemType.Boomerang:
-                    currentItem = itemFactory.BuildBoomerang();
+                    currentItem = itemFactory.BuildBoomerang(spriteBatch);
                     break;
                 case ItemFactory.ItemType.MagicalBoomerang:
-                    currentItem = itemFactory.BuildMagicalBoomerang();
+                    currentItem = itemFactory.BuildMagicalBoomerang(spriteBatch);
                     break;
                 case ItemFactory.ItemType.Bomb:
-                    currentItem = itemFactory.BuildBomb();
+                    currentItem = itemFactory.BuildBomb(spriteBatch);
                     break;
                 case ItemFactory.ItemType.Bow:
-                    currentItem = itemFactory.BuildBow();
+                    currentItem = itemFactory.BuildBow(spriteBatch);
                     break;
                 case ItemFactory.ItemType.Arrow:
-                    currentItem = itemFactory.BuildArrow();
+                    currentItem = itemFactory.BuildArrow(spriteBatch);
                     break;
                 case ItemFactory.ItemType.SilverArrow:
-                    currentItem = itemFactory.BuildSilverArrow();
+                    currentItem = itemFactory.BuildSilverArrow(spriteBatch);
                     break;
                 case ItemFactory.ItemType.CandleRed:
-                    currentItem = itemFactory.BuildCandleRed();
+                    currentItem = itemFactory.BuildCandleRed(spriteBatch);
                     break;
                 case ItemFactory.ItemType.CandleBlue:
-                    currentItem = itemFactory.BuildCandleBlue();
+                    currentItem = itemFactory.BuildCandleBlue(spriteBatch);
                     break;
                 case ItemFactory.ItemType.Recorder:
-                    currentItem = itemFactory.BuildRecorder();
+                    currentItem = itemFactory.BuildRecorder(spriteBatch);
                     break;
                 case ItemFactory.ItemType.Food:
-                    currentItem = itemFactory.BuildFood();
+                    currentItem = itemFactory.BuildFood(spriteBatch);
                     break;
                 case ItemFactory.ItemType.Letter:
-                    currentItem = itemFactory.BuildLetter();
+                    currentItem = itemFactory.BuildLetter(spriteBatch);
                     break;
                 case ItemFactory.ItemType.PotionRed:
-                    currentItem = itemFactory.BuildPotionRed();
+                    currentItem = itemFactory.BuildPotionRed(spriteBatch);
                     break;
                 case ItemFactory.ItemType.PotionBlue:
-                    currentItem = itemFactory.BuildPotionBlue();
+                    currentItem = itemFactory.BuildPotionBlue(spriteBatch);
                     break;
                 case ItemFactory.ItemType.MagicalRod:
-                    currentItem = itemFactory.BuildMagicalRod();
+                    currentItem = itemFactory.BuildMagicalRod(spriteBatch);
                     break;
                 
                 // Inventory
                 case ItemFactory.ItemType.Raft:
-                    currentItem = itemFactory.BuildRaft();
+                    currentItem = itemFactory.BuildRaft(spriteBatch);
                     break;
                 case ItemFactory.ItemType.BookOfMagic:
-                    currentItem = itemFactory.BuildBookOfMagic();
+                    currentItem = itemFactory.BuildBookOfMagic(spriteBatch);
                     break;
                 case ItemFactory.ItemType.BlueRing:
-                    currentItem = itemFactory.BuildBlueRing();
+                    currentItem = itemFactory.BuildBlueRing(spriteBatch);
                     break;
                 case ItemFactory.ItemType.RedRing:
-                    currentItem = itemFactory.BuildRedRing();
+                    currentItem = itemFactory.BuildRedRing(spriteBatch);
                     break;
                 case ItemFactory.ItemType.Stepladder:
-                    currentItem = itemFactory.BuildStepladder();
+                    currentItem = itemFactory.BuildStepladder(spriteBatch);
                     break;
                 case ItemFactory.ItemType.MagicalKey:
-                    currentItem = itemFactory.BuildMagicalKey();
+                    currentItem = itemFactory.BuildMagicalKey(spriteBatch);
                     break;
                 case ItemFactory.ItemType.PowerBracelet:
-                    currentItem = itemFactory.BuildPowerBracelet();
+                    currentItem = itemFactory.BuildPowerBracelet(spriteBatch);
                     break;
                 
                 // Dungeon
                 case ItemFactory.ItemType.Compass:
-                    currentItem = itemFactory.BuildCompass();
+                    currentItem = itemFactory.BuildCompass(spriteBatch);
                     break;
                 case ItemFactory.ItemType.DungeonMap:
-                    currentItem = itemFactory.BuildDungeonMap();
+                    currentItem = itemFactory.BuildDungeonMap(spriteBatch);
                     break;
                 case ItemFactory.ItemType.SmallKey:
-                    currentItem = itemFactory.BuildSmallKey();
+                    currentItem = itemFactory.BuildSmallKey(spriteBatch);
                     break;
-                case ItemFactory.ItemType.TriforceFragment:
-                    currentItem = itemFactory.BuildTriforceFragment();
+                case ItemFactory.ItemType.TriforceFragmentBlue:
+                    currentItem = itemFactory.BuildTriforceFragmentBlue(spriteBatch);
                     break;
+                case ItemFactory.ItemType.TriforceFragmentYellow:
+                    currentItem = itemFactory.BuildTriforceFragmentYellow(spriteBatch);
+                    break;
+                
                 // Miscellaneous
                 case ItemFactory.ItemType.RecoveryHeart:
-                    currentItem = itemFactory.BuildRecoveryHeart();
+                    currentItem = itemFactory.BuildRecoveryHeart(spriteBatch);
                     break;
                 case ItemFactory.ItemType.HeartContainer:
-                    currentItem = itemFactory.BuildHeartContainer();
+                    currentItem = itemFactory.BuildHeartContainer(spriteBatch);
                     break;
                 case ItemFactory.ItemType.Clock:
-                    currentItem = itemFactory.BuildClock();
+                    currentItem = itemFactory.BuildClock(spriteBatch);
                     break;
                 case ItemFactory.ItemType.RupeeRed:
-                    currentItem = itemFactory.BuildRupeeRed();
+                    currentItem = itemFactory.BuildRupeeRed(spriteBatch);
                     break;
                 case ItemFactory.ItemType.RupeeBlue:
-                    currentItem = itemFactory.BuildRupeeBlue();
+                    currentItem = itemFactory.BuildRupeeBlue(spriteBatch);
                     break;
                 case ItemFactory.ItemType.Fairy:
-                    currentItem = itemFactory.BuildFairy();
+                    currentItem = itemFactory.BuildFairy(spriteBatch);
                     break;
             }
         }

@@ -205,20 +205,19 @@ namespace sprint0.Classes
 
         public void LinkUseItem1(float totalTime, float currentTime)
         {
-            
-            linkSprite.LinkDrawUseItem1();
-            linkObjSprite.LinkObjDrawItem1(); 
+            linkObjSprite.LinkObjDrawItem1();
+                linkSprite.LinkDrawUseItem1();
             
         }
         public void LinkUseItem2(float totalTime, float currentTime)
         {
-            linkObjSprite.LinkObjDrawItem2();
+            linkObjSprite.LinkObjDrawItem1();
                 linkSprite.LinkDrawUseItem1();
             
         }
         public void LinkUseItem3(float totalTime, float currentTime)
         {
-            linkObjSprite.LinkObjDrawItem3();
+            linkObjSprite.LinkObjDrawItem1();
                 linkSprite.LinkDrawUseItem1();
             
         }
@@ -333,7 +332,6 @@ namespace sprint0.Classes
         {
             linkSprite.UpdateColor(color);
             linkSprite.Draw(spriteBatch, position);
-            linkObjSprite.Draw(spriteBatch, position);
             
         }
     }
