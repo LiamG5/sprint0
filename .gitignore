@@ -1,0 +1,14 @@
+.vs/
+
+Debug/
+DebugPublic/
+bin/
+obj/
+
+sprint0/bin/
+sprint0/obj/
+
+Content/bin/
+Content/obj/
+*.mgcontent
+*.mgstats
