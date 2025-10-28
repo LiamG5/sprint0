@@ -141,7 +141,7 @@ public class Game1 : Game
             }
         }
         
-        enemy.Draw(_spriteBatch, new Vector2(400, 100));
+        // enemy.Draw(_spriteBatch, new Vector2(400, 100));
         item.Draw(_spriteBatch, new Vector2(200, 100));
         link.Draw(_spriteBatch);
         _spriteBatch.End();

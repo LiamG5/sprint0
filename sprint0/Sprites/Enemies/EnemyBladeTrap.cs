@@ -12,7 +12,6 @@ namespace sprint0.Sprites
         private Texture2D enemySS;
         private static int enemyTypeX = 2;
         private static int enemyTypeY = 21;
-        private static Vector2 enemyPos = new Vector2(200, 100);
         private static Rectangle enemy = new Rectangle(16 * enemyTypeX, 16 * enemyTypeY, 16, 16);
         public EnemyBladeTrap (Texture2D sheet)
         {
