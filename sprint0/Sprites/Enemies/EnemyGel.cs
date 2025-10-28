@@ -12,10 +12,10 @@ namespace sprint0.Sprites
     public class EnemyGel : ISprite, IEnemy
     {
         private Texture2D enemySS;
-        private Vector2 position;
         private static Rectangle frame1 = new Rectangle(16 * 4, 16 * 18, 16, 16);
         private static Rectangle frame2 = new Rectangle(16 * 5, 16 * 18, 16, 16);
         private EnemyAnimationHelper animation = new EnemyAnimationHelper(frame1, frame2);
+        private EnemyMovementCycle movement;
         private bool isDead = false;
         private const int ENEMY_WIDTH = 48;  // 16 * 3.0f scale
         private const int ENEMY_HEIGHT = 48;
@@ -23,7 +23,7 @@ namespace sprint0.Sprites
         public EnemyGel(Texture2D sheet, Vector2 startPosition)
         { 
             enemySS = sheet;
-            position = startPosition;
+            movement = new EnemyMovementCycle(startPosition);
         }
 
         public EnemyGel(Texture2D sheet) : this(sheet, new Vector2(200, 100))
@@ -32,6 +32,7 @@ namespace sprint0.Sprites
 
         public void Update(GameTime gameTime)
         {
+            movement.Move();
             animation.Update(gameTime);
         }
 
@@ -39,7 +40,7 @@ namespace sprint0.Sprites
         {
             if (!isDead)
             {
-                spriteBatch.Draw(enemySS, drawPosition, animation.GetFrame(), Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(enemySS, movement.GetPosition(), animation.GetFrame(), Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
             }
         }
 
@@ -55,7 +56,7 @@ namespace sprint0.Sprites
 
         public Rectangle GetBounds()
         {
-            return new Rectangle((int)position.X, (int)position.Y, ENEMY_WIDTH, ENEMY_HEIGHT);
+            return new Rectangle((int)movement.GetPosition().X, (int)movement.GetPosition().Y, ENEMY_WIDTH, ENEMY_HEIGHT);
         }
 
         public bool IsSolid()
@@ -65,7 +66,7 @@ namespace sprint0.Sprites
 
         public Vector2 GetPosition()
         {
-            return position;
+            return movement.GetPosition();
         }
 
         public void OnCollision(ICollidable other, CollisionDirection direction)
@@ -76,7 +77,16 @@ namespace sprint0.Sprites
                     link.TakeDamage();
                     break;
 
+                case DungeonLongWall wall when wall.IsSolid():
+                    movement.ChangeDirection();
+                    break;
+
+                case DungeonTallWall wall when wall.IsSolid():
+                    movement.ChangeDirection();
+                    break;
+
                 case IBlock block when block.IsSolid():
+                    movement.ChangeDirection();
                     break;
             }
         }
