@@ -71,7 +71,7 @@ namespace sprint0.Sprites
                             break;
                     }
                     break;
-                case IBlock block:
+                case ICollidable block:
                     if (block.IsSolid()) 
                     {
                         Vector2 newVelocity = velocity;

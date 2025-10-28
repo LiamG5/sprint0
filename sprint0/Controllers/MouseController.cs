@@ -1,46 +1,47 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 using sprint0.Interfaces;
-using sprint0.Managers;
-using System;
 
-namespace sprint0.Controllers
+namespace sprint0.Classes
 {
-    public class MouseController : IController
+    public sealed class MouseController : IController
     {
-        private MouseState previousMouseState;
-        private RoomManager roomManager;
-        
-        public MouseController(RoomManager roomManager)
+        private readonly Rectangle mapRect;
+        private readonly int rows, cols;
+        private readonly Dictionary<int, ICommand> cellCommands;
+        private MouseState previousState;
+
+        public MouseController(Rectangle mapRect, int rows, int cols, Dictionary<int, ICommand> cellCommands)
         {
-            this.roomManager = roomManager;
-            this.previousMouseState = Mouse.GetState();
+            this.mapRect = mapRect;
+            this.rows = rows;
+            this.cols = cols;
+            this.cellCommands = cellCommands;
+            previousState = Mouse.GetState();
         }
-        
+
         public void Update()
         {
-            MouseState currentMouseState = Mouse.GetState();
-            
-            if (currentMouseState.LeftButton == ButtonState.Pressed && 
-                previousMouseState.LeftButton == ButtonState.Released)
+            var current = Mouse.GetState();
+            var pos = new Point(current.X, current.Y);
+
+            // Left click edge
+            if (current.LeftButton == ButtonState.Pressed && previousState.LeftButton == ButtonState.Released)
             {
-                int prevRoom = Math.Max(1, roomManager.CurrentRoomId - 1);
-                if (prevRoom != roomManager.CurrentRoomId)
+                if (mapRect.Contains(pos))
                 {
-                    roomManager.TransitionToRoom(prevRoom, TransitionDirection.West, "Content");
+                    int cellW = mapRect.Width / cols;
+                    int cellH = mapRect.Height / rows;
+                    int col = (pos.X - mapRect.X) / cellW;
+                    int row = (pos.Y - mapRect.Y) / cellH;
+                    int index = row * cols + col;
+
+                    if (cellCommands.TryGetValue(index, out var cmd))
+                        cmd.Execute();
                 }
             }
-            
-            if (currentMouseState.RightButton == ButtonState.Pressed && 
-                previousMouseState.RightButton == ButtonState.Released)
-            {
-                int nextRoom = Math.Min(17, roomManager.CurrentRoomId + 1);
-                if (nextRoom != roomManager.CurrentRoomId)
-                {
-                    roomManager.TransitionToRoom(nextRoom, TransitionDirection.East, "Content");
-                }
-            }
-            
-            previousMouseState = currentMouseState;
+            previousState = current;
         }
     }
 }

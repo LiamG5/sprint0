@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Interfaces;
-using sprint0.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,17 +24,13 @@ namespace sprint0.Sprites
         private List<Projectile> projectiles;
         private List<IItem> items;
         private List<ICollidable> boarders;
-        private List<TransitionZone> transitionZones;
-        private int roomId;
-        private RoomManager roomManager;
+        
 
         public Texture2D border;
-        
-        public DungeonLoader(BlockFactory blocks, string csvContent, int roomId)
+        public DungeonLoader(BlockFactory blocks, string csvContent)
         {
             this.blocks = blocks;
             this.path = csvContent;
-            this.roomId = roomId;
             int totalCells = 84;
             storage = new ISprite[totalCells];
             storageIdx = 0;
@@ -46,52 +41,7 @@ namespace sprint0.Sprites
             this.items = new List<IItem>();
             this.border = Texture2DStorage.GetDungeonBorder();
             this.boarders = new List<ICollidable>();
-            this.transitionZones = new List<TransitionZone>();
-        }
 
-        public void SetRoomManager(RoomManager manager, string contentRoot)
-        {
-            this.roomManager = manager;
-            CreateTransitionZones(contentRoot);
-        }
-
-        private void CreateTransitionZones(string contentRoot)
-        {
-            if (roomManager == null) return;
-            
-            transitionZones.Clear();
-            
-            transitionZones.Add(new TransitionZone(
-                new Rectangle(352, 0, 80, 48),
-                TransitionDirection.North,
-                roomId - 4,
-                roomManager,
-                contentRoot
-            ));
-            
-            transitionZones.Add(new TransitionZone(
-                new Rectangle(352, 432, 80, 48),
-                TransitionDirection.South,
-                roomId + 4,
-                roomManager,
-                contentRoot
-            ));
-            
-            transitionZones.Add(new TransitionZone(
-                new Rectangle(0, 200, 48, 80),
-                TransitionDirection.West,
-                roomId - 1,
-                roomManager,
-                contentRoot
-            ));
-            
-            transitionZones.Add(new TransitionZone(
-                new Rectangle(688, 200, 48, 80),
-                TransitionDirection.East,
-                roomId + 1,
-                roomManager,
-                contentRoot
-            ));
         }
 
         public void LoadRectangles()
@@ -163,11 +113,16 @@ namespace sprint0.Sprites
             }
             for (int i = 0; i < 2; i++)
             {
-                boarders.Add(new DungeonLongWall(new Vector2(0 + i * 424, 48)));
-                boarders.Add(new DungeonLongWall(new Vector2(0 + i * 424, 432)));
-                boarders.Add(new DungeonTallWall(new Vector2(48 + i * 634, 0)));
-                boarders.Add(new DungeonTallWall(new Vector2(48 + i * 634, 294)));
+            boarders.Add(new DungeonLongWall(new Vector2(0+ i * 424, 48)));// top
+            boarders.Add(new DungeonLongWall(new Vector2(0 + i * 424, 432)));//bottom
+            boarders.Add(new DungeonTallWall(new Vector2(48 + i* 634, 0)));//top
+            boarders.Add(new DungeonTallWall(new Vector2(48 + i *634, 294)));//bottom
+            boarders.Add(new DungeonDoor(new Vector2(352, 24 + i * 408)));// top
+            boarders.Add(new DungeonDoor(new Vector2(24 + i*658 ,222)));//side
+            
             }
+
+
         }
 
         public void Update(GameTime gameTime)
@@ -180,7 +135,6 @@ namespace sprint0.Sprites
                 }
             }
         }
-        
         public void Draw(SpriteBatch sprite, GraphicsDevice graphics)
         {
             sprite.Draw(border, new Vector2(0, 0), new Rectangle(0, 0, graphics.Viewport.Width, graphics.Viewport.Height), Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
@@ -216,78 +170,74 @@ namespace sprint0.Sprites
             foreach (var chiseledTile in chiseledTiles) {
                 chiseledTile.Draw(sprite, chiseledTile.GetPosition());
             }
+
+
+
         }
-        
         public List<Rectangle> GetBlockList()
-        {
+		{
             return rectangles;
-        }
-        
-        public List<IBlock> GetBlocks()
-        {
-            return blockObjects;
-        }
-        
-        public List<IEnemy> GetEnemies()
-        {
-            return enemies;
-        }
+		}
+		
+		public List<IBlock> GetBlocks()
+		{
+			return blockObjects;
+		}
+		
+		public List<IEnemy> GetEnemies()
+		{
+			return enemies;
+		}
 
         public List<Projectile> GetProjectiles()
         {
             return projectiles;
         }
-        
         public List<ICollidable> GetBoarders()
         {
             return boarders;
         }
-        
-        public List<ICollidable> GetTransitionZones()
-        {
-            return new List<ICollidable>(transitionZones);
-        }
-        
-        public void AddEnemy(IEnemy enemy)
-        {
-            enemies.Add(enemy);
-        }
-        
-        public void RemoveEnemy(IEnemy enemy)
-        {
-            enemies.Remove(enemy);
-        }
-        
-        public void AddProjectile(Projectile projectile)
-        {
-            projectiles.Add(projectile);
-        }
-        
-        public void RemoveProjectile(Projectile projectile)
-        {
-            projectiles.Remove(projectile);
-        }
-        
-        public void CleanupDeadEntities()
-        {
-            enemies.RemoveAll(e => e.IsDead());
-            projectiles.RemoveAll(p => p.ShouldDestroy);
-            items.RemoveAll(i => i.IsCollected());
-        }
-        
-        public List<IItem> GetItems()
-        {
-            return items;
-        }
-        
-        public void AddItem(IItem item)
-        {
-            items.Add(item);
-        }
-        
-        public void RemoveItem(IItem item)
-        {
-            items.Remove(item);
-        }
+		
+		public void AddEnemy(IEnemy enemy)
+		{
+			enemies.Add(enemy);
+		}
+		
+		public void RemoveEnemy(IEnemy enemy)
+		{
+			enemies.Remove(enemy);
+		}
+		
+		public void AddProjectile(Projectile projectile)
+		{
+			projectiles.Add(projectile);
+		}
+		
+		public void RemoveProjectile(Projectile projectile)
+		{
+			projectiles.Remove(projectile);
+		}
+		
+	public void CleanupDeadEntities()
+	{
+		enemies.RemoveAll(e => e.IsDead());
+		projectiles.RemoveAll(p => p.ShouldDestroy);
+		items.RemoveAll(i => i.IsCollected());
+	}
+	
+	public List<IItem> GetItems()
+	{
+		return items;
+	}
+	
+	public void AddItem(IItem item)
+	{
+		items.Add(item);
+	}
+	
+	public void RemoveItem(IItem item)
+	{
+		items.Remove(item);
+	}
     }
 }
