@@ -4,15 +4,15 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/kevin/Project 3902/sprint3/sprint0/Content/Font/File.spritefont</File>
-    <File>C:/Users/kevin/Project 3902/sprint3/sprint0/Content/Room2Border.png</File>
-    <File>C:/Users/kevin/Project 3902/sprint3/sprint0/Content/Sprites/legendofzelda_blocks_sheet.png</File>
-    <File>C:/Users/kevin/Project 3902/sprint3/sprint0/Content/Sprites/legendofzelda_bosses_sheet.png</File>
-    <File>C:/Users/kevin/Project 3902/sprint3/sprint0/Content/Sprites/legendofzelda_enemies_sheet_final.png</File>
-    <File>C:/Users/kevin/Project 3902/sprint3/sprint0/Content/Sprites/legendofzelda_items_sheet.png</File>
-    <File>C:/Users/kevin/Project 3902/sprint3/sprint0/Content/Sprites/legendofzelda_link_sheet.png</File>
-    <File>C:/Users/kevin/Project 3902/sprint3/sprint0/Content/Sprites/legendofzelda_misccharacters_sheet.png</File>
-    <File>C:/Users/kevin/Project 3902/sprint3/sprint0/Content/Sprites/room_2_border.png</File>
+    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/Content/Font/File.spritefont</File>
+    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/Content/Room2Border.png</File>
+    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/Content/Sprites/legendofzelda_blocks_sheet.png</File>
+    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/Content/Sprites/legendofzelda_bosses_sheet.png</File>
+    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/Content/Sprites/legendofzelda_enemies_sheet_final.png</File>
+    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/Content/Sprites/legendofzelda_items_sheet.png</File>
+    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/Content/Sprites/legendofzelda_link_sheet.png</File>
+    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/Content/Sprites/legendofzelda_misccharacters_sheet.png</File>
+    <File>c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/Content/Sprites/room_2_border.png</File>
   </SourceFiles>
   <DestFiles>
     <File>Font/font.spritefont</File>
