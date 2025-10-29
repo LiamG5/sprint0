@@ -52,3 +52,4 @@ C:\Users\kevin\Project 3902\sprint3\sprint0\obj\Debug\net8.0\refint\sprint0.dll
 C:\Users\kevin\Project 3902\sprint3\sprint0\obj\Debug\net8.0\sprint0.pdb
 C:\Users\kevin\Project 3902\sprint3\sprint0\obj\Debug\net8.0\sprint0.genruntimeconfig.cache
 C:\Users\kevin\Project 3902\sprint3\sprint0\obj\Debug\net8.0\ref\sprint0.dll
+C:\Users\kevin\Project 3902\sprint3\sprint0\obj\Debug\net8.0\sprint0.sourcelink.json
