@@ -14,6 +14,7 @@ using static sprint0.Sprites.BlockFactory;
 using static sprint0.Sprites.DungeonCarousel;
 using static sprint0.Sprites.EnemySpriteFactory;
 using sprint0.Collisions;
+using sprint0.HUD;
 
 namespace sprint0;
 
@@ -48,6 +49,19 @@ public class Game1 : Game
     private KeyboardState previousKeyboardState;
     private CollisionUpdater collisionUpdater;
     private RoomManager roomManager;
+    
+    // HUD
+    private HUD.HudManager hud;
+    private SpriteFont hudFont;
+
+    // temp HUD data (add with PlayerData)
+    private int hearts = 3;
+    private int maxHearts = 3;
+    private int bombs = 0;
+    private int arrows = 0;
+    private int rupees = 0;
+    private int keys = 0;
+    private string levelName = "Level 1";
 
     // Minimap click area
     private Rectangle mapRect = new Rectangle(32, 32, 6 * 24, 3 * 24);
@@ -77,6 +91,33 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+        sprint0.Sprites.Texture2DStorage.Init(GraphicsDevice);
+
+        hudFont = Content.Load<SpriteFont>("Font/font");
+
+        hud = new HUD.HudManager();
+
+        hud.Add(new HUD.LevelLabelHud(() => levelName, hudFont, HUD.HudConstants.LevelLabelPos));
+
+        hud.Add(new HUD.InventorySlotsHud(
+    () => sprint0.Sprites.Texture2DStorage.GetTexture("icon_boomerang"), // B (left)
+    () => sprint0.Sprites.Texture2DStorage.GetTexture("icon_sword"),     // A (right)
+    HUD.HudConstants.SlotAPos, HUD.HudConstants.SlotBPos));
+
+    hud.Add(new HUD.HeartMeter(() => hearts, () => maxHearts, HUD.HudConstants.HeartsPos));
+
+    hud.Add(new HUD.CounterIcon(
+    sprint0.Sprites.Texture2DStorage.GetTexture("icon_rupee"),
+    () => rupees, hudFont, HUD.HudConstants.CountersPos));
+
+    hud.Add(new HUD.CounterIcon(
+    sprint0.Sprites.Texture2DStorage.GetTexture("icon_key"),
+    () => keys, hudFont, HUD.HudConstants.CountersPos + new Vector2(0, 1 * HUD.HudConstants.CounterLineHeight)));
+
+    hud.Add(new HUD.CounterIcon(
+    sprint0.Sprites.Texture2DStorage.GetTexture("icon_bomb"),
+    () => bombs, hudFont, HUD.HudConstants.CountersPos + new Vector2(0, 2 * HUD.HudConstants.CounterLineHeight)));
 
         try
         {
@@ -190,6 +231,7 @@ public class Game1 : Game
 
         enemy.Update(gameTime);
         item.Update(gameTime);
+        hud?.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -198,16 +240,13 @@ public class Game1 : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        _spriteBatch.Begin();
-
+        // --- Draw world (whatever batching your draw methods do internally) ---
         dungeon.Draw(_spriteBatch, GraphicsDevice);
 
         foreach (var e in dungeon.GetEnemies())
         {
             if (!e.IsDead())
-            {
                 e.Draw(_spriteBatch, e.GetPosition());
-            }
         }
 
         enemy.Draw(_spriteBatch, new Vector2(400, 100));
@@ -219,9 +258,14 @@ public class Game1 : Game
 
         DrawMinimapNumbers(_spriteBatch);
 
+        // --- HUD LAST: own batch so it always shows on top ---
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        hud?.Draw(_spriteBatch);
         _spriteBatch.End();
+
         base.Draw(gameTime);
     }
+
 
     public void GoToRoom1()  => LoadRoom(1);
     public void GoToRoom2()  => LoadRoom(2);
@@ -243,21 +287,25 @@ public class Game1 : Game
 
     private void LoadRoom(int roomIndex)
     {
-        var csvPath = System.IO.Path.Combine("Content", "Dungeon", $"Room{roomIndex}.csv");
-        if (!System.IO.File.Exists(csvPath))
-        {
-            System.Console.WriteLine($"[LoadRoom] Missing CSV: {csvPath}");
-            return;
-        }
-        var csv = System.IO.File.ReadAllText(csvPath);
-        dungeon = new DungeonLoader(BlockFactory.Instance, csv);
-        dungeon.LoadRectangles();
-        
-        if (roomManager != null)
-        {
-            roomManager.SetCurrentRoom(roomIndex);
-            dungeon.SetRoomManager(roomManager, roomIndex);
-        }
+        var csvPath = (roomIndex == 1)
+        ? System.IO.Path.Combine("Content", "dungeon.csv")
+        : System.IO.Path.Combine("Content", "Dungeon", $"Room{roomIndex}.csv");
+
+    if (!System.IO.File.Exists(csvPath))
+    {
+        System.Console.WriteLine($"[LoadRoom] Missing CSV: {csvPath}");
+        return;
+    }
+
+    var csv = System.IO.File.ReadAllText(csvPath);
+    dungeon = new DungeonLoader(BlockFactory.Instance, csv);
+    dungeon.LoadRectangles();
+
+    if (roomManager != null)
+    {
+        roomManager.SetCurrentRoom(roomIndex);
+        dungeon.SetRoomManager(roomManager, roomIndex);
+    }
         
         collisionUpdater = new CollisionUpdater(dungeon, link);
         System.Console.WriteLine($"[LoadRoom] Loaded Room {roomIndex}");

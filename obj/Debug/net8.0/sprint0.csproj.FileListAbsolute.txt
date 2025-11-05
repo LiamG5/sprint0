@@ -108,6 +108,13 @@ c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/bin/Debug/net8.0/runtimes/win
 c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/obj/Debug/net8.0/sprint0.csproj.Up2Date
 c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/obj/Debug/net8.0/sprint0.genruntimeconfig.cache
 c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/obj/Debug/net8.0/ref/sprint0.dll
+/Users/krushpatel/Documents/CSE3902/sprint0/obj/Debug/net8.0/mgcb.tool.restore
+/Users/krushpatel/Documents/CSE3902/sprint0/obj/Debug/net8.0/sprint0.csproj.AssemblyReference.cache
+/Users/krushpatel/Documents/CSE3902/sprint0/obj/Debug/net8.0/sprint0.GeneratedMSBuildEditorConfig.editorconfig
+/Users/krushpatel/Documents/CSE3902/sprint0/obj/Debug/net8.0/sprint0.AssemblyInfoInputs.cache
+/Users/krushpatel/Documents/CSE3902/sprint0/obj/Debug/net8.0/sprint0.AssemblyInfo.cs
+/Users/krushpatel/Documents/CSE3902/sprint0/obj/Debug/net8.0/sprint0.csproj.CoreCompileInputs.cache
+/Users/krushpatel/Documents/CSE3902/sprint0/obj/Debug/net8.0/sprint0.sourcelink.json
 /Users/krushpatel/Documents/CSE3902/sprint0/bin/Debug/net8.0/Content/dungeon.csv
 /Users/krushpatel/Documents/CSE3902/sprint0/bin/Debug/net8.0/Content/font.xnb
 /Users/krushpatel/Documents/CSE3902/sprint0/bin/Debug/net8.0/Content/Font/font.xnb
@@ -150,13 +157,6 @@ c:/Users/liame/OneDrive/Documents/cse 3902/sprint0/obj/Debug/net8.0/ref/sprint0.
 /Users/krushpatel/Documents/CSE3902/sprint0/bin/Debug/net8.0/runtimes/linux-x64/native/libSDL2-2.0.so.0
 /Users/krushpatel/Documents/CSE3902/sprint0/bin/Debug/net8.0/runtimes/osx/native/libSDL2-2.0.0.dylib
 /Users/krushpatel/Documents/CSE3902/sprint0/bin/Debug/net8.0/runtimes/win-x64/native/SDL2.dll
-/Users/krushpatel/Documents/CSE3902/sprint0/obj/Debug/net8.0/mgcb.tool.restore
-/Users/krushpatel/Documents/CSE3902/sprint0/obj/Debug/net8.0/sprint0.csproj.AssemblyReference.cache
-/Users/krushpatel/Documents/CSE3902/sprint0/obj/Debug/net8.0/sprint0.GeneratedMSBuildEditorConfig.editorconfig
-/Users/krushpatel/Documents/CSE3902/sprint0/obj/Debug/net8.0/sprint0.AssemblyInfoInputs.cache
-/Users/krushpatel/Documents/CSE3902/sprint0/obj/Debug/net8.0/sprint0.AssemblyInfo.cs
-/Users/krushpatel/Documents/CSE3902/sprint0/obj/Debug/net8.0/sprint0.csproj.CoreCompileInputs.cache
-/Users/krushpatel/Documents/CSE3902/sprint0/obj/Debug/net8.0/sprint0.sourcelink.json
 /Users/krushpatel/Documents/CSE3902/sprint0/obj/Debug/net8.0/sprint0.csproj.Up2Date
 /Users/krushpatel/Documents/CSE3902/sprint0/obj/Debug/net8.0/sprint0.dll
 /Users/krushpatel/Documents/CSE3902/sprint0/obj/Debug/net8.0/refint/sprint0.dll
