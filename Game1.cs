@@ -91,7 +91,7 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+        
         sprint0.Sprites.Texture2DStorage.Init(GraphicsDevice);
 
         hudFont = Content.Load<SpriteFont>("Font/font");
@@ -237,34 +237,29 @@ public class Game1 : Game
     }
 
     protected override void Draw(GameTime gameTime)
-    {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
+{
+    GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        // --- Draw world (whatever batching your draw methods do internally) ---
-        dungeon.Draw(_spriteBatch, GraphicsDevice);
+    dungeon.Draw(_spriteBatch, GraphicsDevice);
 
-        foreach (var e in dungeon.GetEnemies())
-        {
-            if (!e.IsDead())
-                e.Draw(_spriteBatch, e.GetPosition());
-        }
+    foreach (var e in dungeon.GetEnemies())
+        if (!e.IsDead()) e.Draw(_spriteBatch, e.GetPosition());
 
-        enemy.Draw(_spriteBatch, new Vector2(400, 100));
-        item.Draw(_spriteBatch, new Vector2(200, 100));
-        link.Draw(_spriteBatch);
+    enemy.Draw(_spriteBatch, new Vector2(400, 100));
+    item.Draw(_spriteBatch, new Vector2(200, 100));
+    link.Draw(_spriteBatch);
 
-        if (_minimapOverlay != null)
-            _spriteBatch.Draw(_minimapOverlay, mapRect, _minimapColor);
+    if (_minimapOverlay != null)
+        _spriteBatch.Draw(_minimapOverlay, mapRect, _minimapColor);
 
-        DrawMinimapNumbers(_spriteBatch);
+    DrawMinimapNumbers(_spriteBatch);
 
-        // --- HUD LAST: own batch so it always shows on top ---
-        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-        hud?.Draw(_spriteBatch);
-        _spriteBatch.End();
+    _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+    hud?.Draw(_spriteBatch);
+    _spriteBatch.End();
 
-        base.Draw(gameTime);
-    }
+    base.Draw(gameTime);
+}
 
 
     public void GoToRoom1()  => LoadRoom(1);
