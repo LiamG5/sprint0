@@ -23,9 +23,13 @@ namespace sprint0.HUD
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(icon, new Rectangle((int)pos.X, (int)pos.Y, 12, 12), Color.White);
-            var textPos = new Vector2(pos.X + 18, pos.Y - 2);
-            spriteBatch.DrawString(font, "x" + getValue(), textPos, Color.White);
+            if (icon == null) return;
+            
+            // Increased icon size from 12x12 to 16x16
+            spriteBatch.Draw(icon, new Rectangle((int)pos.X, (int)pos.Y, 16, 16), Color.White);
+            var textPos = new Vector2(pos.X + 22, pos.Y - 1); // Increased spacing and adjusted position
+            float textScale = 1.2f; // Increased text size
+            spriteBatch.DrawString(font, "x" + getValue(), textPos, Color.White, 0f, Vector2.Zero, textScale, SpriteEffects.None, 0f);
         }
     }
 }

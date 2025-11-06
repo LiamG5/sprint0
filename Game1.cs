@@ -52,6 +52,7 @@ public class Game1 : Game
     
     // HUD
     private HUD.HudManager hud;
+    private HUD.MinimapHud minimapHud;
     private SpriteFont hudFont;
 
     // temp HUD data (add with PlayerData)
@@ -61,6 +62,7 @@ public class Game1 : Game
     private int arrows = 0;
     private int rupees = 0;
     private int keys = 0;
+    private bool hasMap = true; // TODO: Connect to actual map item
     private string levelName = "Level 1";
 
     // Minimap click area
@@ -81,6 +83,13 @@ public class Game1 : Game
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+        
+        // Set window size to fit HUD (96px) + game world (7 rows * 48px + 2 tile offset = ~432px)
+        // Total: 768 width (standard game width) x 600 height to ensure everything fits comfortably
+        _graphics.PreferredBackBufferWidth = 768;
+        _graphics.PreferredBackBufferHeight = 620; // 96 (HUD) + 504 (game world - extra space for comfortable viewing)
+        _graphics.IsFullScreen = false;
+        _graphics.ApplyChanges();
     }
 
     protected override void Initialize()
@@ -92,33 +101,12 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         
+        // Debug: Print actual viewport size
+        System.Console.WriteLine($"[Window Size] Requested: 768x620, Actual: {GraphicsDevice.Viewport.Width}x{GraphicsDevice.Viewport.Height}");
+        
         sprint0.Sprites.Texture2DStorage.Init(GraphicsDevice);
 
-        hudFont = Content.Load<SpriteFont>("Font/font");
-
-        hud = new HUD.HudManager();
-
-        hud.Add(new HUD.LevelLabelHud(() => levelName, hudFont, HUD.HudConstants.LevelLabelPos));
-
-        hud.Add(new HUD.InventorySlotsHud(
-    () => sprint0.Sprites.Texture2DStorage.GetTexture("icon_boomerang"), // B (left)
-    () => sprint0.Sprites.Texture2DStorage.GetTexture("icon_sword"),     // A (right)
-    HUD.HudConstants.SlotAPos, HUD.HudConstants.SlotBPos));
-
-    hud.Add(new HUD.HeartMeter(() => hearts, () => maxHearts, HUD.HudConstants.HeartsPos));
-
-    hud.Add(new HUD.CounterIcon(
-    sprint0.Sprites.Texture2DStorage.GetTexture("icon_rupee"),
-    () => rupees, hudFont, HUD.HudConstants.CountersPos));
-
-    hud.Add(new HUD.CounterIcon(
-    sprint0.Sprites.Texture2DStorage.GetTexture("icon_key"),
-    () => keys, hudFont, HUD.HudConstants.CountersPos + new Vector2(0, 1 * HUD.HudConstants.CounterLineHeight)));
-
-    hud.Add(new HUD.CounterIcon(
-    sprint0.Sprites.Texture2DStorage.GetTexture("icon_bomb"),
-    () => bombs, hudFont, HUD.HudConstants.CountersPos + new Vector2(0, 2 * HUD.HudConstants.CounterLineHeight)));
-
+        // Load all textures FIRST before creating Link (which needs textures)
         try
         {
             sprint0.Sprites.Texture2DStorage.LoadAllTextures(Content);
@@ -128,10 +116,51 @@ public class Game1 : Game
             System.Console.WriteLine("[LoadAllTextures] " + ex);
         }
 
-        _minimapOverlay = new Texture2D(GraphicsDevice, 1, 1);
-        _minimapOverlay.SetData(new[] { Color.White });
+        hudFont = Content.Load<SpriteFont>("Font/font");
 
         link = new Link(_spriteBatch);
+        roomManager = new RoomManager(link, this);
+
+        hud = new HUD.HudManager();
+
+        // Add HUD background first (so it draws behind everything)
+        hud.Add(new HUD.HudBackground(GraphicsDevice.Viewport.Width, HUD.HudConstants.HudHeight, GraphicsDevice));
+
+        hud.Add(new HUD.LevelLabelHud(() => levelName, hudFont, HUD.HudConstants.LevelLabelPos));
+        
+        minimapHud = new HUD.MinimapHud(
+            () => roomManager.CurrentRoomId,
+            () => hasMap, // Check if player has map item
+            (roomId) => roomManager.GetRoomConnections(roomId), // Get room connections
+            HUD.HudConstants.MinimapPos,
+            GraphicsDevice,
+            rows: 3,
+            cols: 6,
+            cellSize: 14); // Increased from default 8 to 14 for bigger minimap
+        hud.Add(minimapHud);
+
+        hud.Add(new HUD.InventorySlotsHud(
+            () => sprint0.Sprites.Texture2DStorage.GetTexture("icon_boomerang"),
+            () => sprint0.Sprites.Texture2DStorage.GetTexture("icon_sword"),
+            HUD.HudConstants.SlotAPos, HUD.HudConstants.SlotBPos,
+            hudFont));
+
+        hud.Add(new HUD.CounterIcon(
+            sprint0.Sprites.Texture2DStorage.GetTexture("icon_rupee"),
+            () => rupees, hudFont, HUD.HudConstants.CountersPos));
+
+        hud.Add(new HUD.CounterIcon(
+            sprint0.Sprites.Texture2DStorage.GetTexture("icon_key"),
+            () => keys, hudFont, HUD.HudConstants.CountersPos + new Vector2(0, 1 * HUD.HudConstants.CounterLineHeight)));
+
+        hud.Add(new HUD.CounterIcon(
+            sprint0.Sprites.Texture2DStorage.GetTexture("icon_bomb"),
+            () => bombs, hudFont, HUD.HudConstants.CountersPos + new Vector2(0, 2 * HUD.HudConstants.CounterLineHeight)));
+
+        hud.Add(new HUD.HeartMeter(() => hearts, () => maxHearts, HUD.HudConstants.HeartsPos, hudFont));
+
+        _minimapOverlay = new Texture2D(GraphicsDevice, 1, 1);
+        _minimapOverlay.SetData(new[] { Color.White });
 
         blocks = BlockFactory.Instance;
         enemies = EnemySpriteFactory.Instance;
@@ -163,7 +192,6 @@ public class Game1 : Game
 
         try
         {
-            // We'll reuse this font for the minimap labels.
             font = Content.Load<SpriteFont>("Font/font");
         }
         catch (Exception ex)
@@ -174,8 +202,6 @@ public class Game1 : Game
         controllers = new List<IController>();
         keyboard = new KeyboardController(this, null);
         controllers.Add(keyboard);
-
-        roomManager = new RoomManager(link, this);
 
         mapCellCommands = new Dictionary<int, ICommand>
         {
@@ -198,7 +224,6 @@ public class Game1 : Game
             { 16, new GoToRoom17Command(this) },
         };
 
-        // Mouse controller for minimap clicks
         mouse = new MouseController(mapRect, MapRows, MapCols, mapCellCommands);
         controllers.Add(mouse);
 
@@ -206,6 +231,7 @@ public class Game1 : Game
         collisionUpdater.getList();
 
         previousKeyboardState = Keyboard.GetState();
+        previousMouseState = Mouse.GetState();
 
         System.Console.WriteLine("[LoadContent] completed");
     }
@@ -223,6 +249,9 @@ public class Game1 : Game
         {
             controller.Update();
         }
+        
+        // Handle minimap room clicks
+        HandleMinimapClicks();
 
         foreach (var e in dungeon.GetEnemies())
         {
@@ -240,26 +269,48 @@ public class Game1 : Game
 {
     GraphicsDevice.Clear(Color.CornflowerBlue);
 
-    dungeon.Draw(_spriteBatch, GraphicsDevice);
-
-    foreach (var e in dungeon.GetEnemies())
-        if (!e.IsDead()) e.Draw(_spriteBatch, e.GetPosition());
-
-    enemy.Draw(_spriteBatch, new Vector2(400, 100));
-    item.Draw(_spriteBatch, new Vector2(200, 100));
-    link.Draw(_spriteBatch);
-
-    if (_minimapOverlay != null)
-        _spriteBatch.Draw(_minimapOverlay, mapRect, _minimapColor);
-
-    DrawMinimapNumbers(_spriteBatch);
-
+    // Draw HUD first (at the top in black box)
     _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
     hud?.Draw(_spriteBatch);
     _spriteBatch.End();
 
+    // Draw game world below the HUD box
+    // Use a transform matrix to offset everything down by HUD height
+    Matrix transform = Matrix.CreateTranslation(0, HUD.HudConstants.HudHeight, 0);
+    
+    _spriteBatch.Begin(
+        samplerState: SamplerState.PointClamp,
+        transformMatrix: transform);
+
+    if (dungeon != null)
+    {
+        dungeon.Draw(_spriteBatch, GraphicsDevice);
+
+        foreach (var e in dungeon.GetEnemies())
+        {
+            if (!e.IsDead())
+                e.Draw(_spriteBatch, e.GetPosition());
+        }
+    }
+
+    if (enemy != null)
+        enemy.Draw(_spriteBatch, new Vector2(400, 100));
+    if (item != null)
+        item.Draw(_spriteBatch, new Vector2(200, 100));
+    if (link != null)
+        link.Draw(_spriteBatch);
+
+    // Note: The minimap overlay is part of the old system, 
+    // we now have MinimapHud in the HUD box, but keeping this for now
+    // if (_minimapOverlay != null)
+    //     _spriteBatch.Draw(_minimapOverlay, mapRect, _minimapColor);
+    // DrawMinimapNumbers(_spriteBatch);
+
+    _spriteBatch.End();
+
     base.Draw(gameTime);
 }
+
 
 
     public void GoToRoom1()  => LoadRoom(1);
@@ -334,6 +385,31 @@ public class Game1 : Game
 
         collisionUpdater = new CollisionUpdater(dungeon, link);
         collisionUpdater.getList();
+    }
+
+    private MouseState previousMouseState;
+    
+    private void HandleMinimapClicks()
+    {
+        if (minimapHud == null || !hasMap) return;
+        
+        var currentMouse = Mouse.GetState();
+        var pos = new Point(currentMouse.X, currentMouse.Y);
+        
+        // Check if mouse was just clicked
+        if (currentMouse.LeftButton == ButtonState.Pressed && 
+            previousMouseState.LeftButton == ButtonState.Released)
+        {
+            // Check if click is on a room in the minimap
+            var roomNum = minimapHud.GetRoomAtPoint(pos);
+            if (roomNum.HasValue && roomNum.Value >= 1 && roomNum.Value <= 17)
+            {
+                // Go to the clicked room
+                LoadRoom(roomNum.Value);
+            }
+        }
+        
+        previousMouseState = currentMouse;
     }
 
     private void DrawMinimapNumbers(SpriteBatch sb)

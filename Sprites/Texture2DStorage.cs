@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using sprint0.Interfaces;
 using sprint0.Classes;
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
 
 namespace sprint0.Sprites
@@ -17,6 +18,10 @@ namespace sprint0.Sprites
 	public static Texture2D miscSpriteSheet;
 	public static Texture2D dungeonBorder;
 	public static SpriteFont font;
+	
+	private static GraphicsDevice graphicsDevice;
+	private static Dictionary<string, Texture2D> textureCache;
+	private static Texture2D whitePixel;
 
 	public static void LoadAllTextures(ContentManager Content)
 	{
@@ -63,6 +68,41 @@ namespace sprint0.Sprites
 	public static SpriteFont GetFont()
 	{
 		return font;
+	}
+	
+	public static void Init(GraphicsDevice device)
+	{
+		graphicsDevice = device;
+		textureCache = new Dictionary<string, Texture2D>();
+		
+		// Create a white pixel texture for fallback drawing
+		whitePixel = new Texture2D(device, 1, 1);
+		whitePixel.SetData(new[] { Color.White });
+	}
+	
+	public static Texture2D GetTexture(string name)
+	{
+		// Return cached texture if available
+		if (textureCache != null && textureCache.ContainsKey(name))
+		{
+			return textureCache[name];
+		}
+		
+		// For now, return white pixel as fallback
+		// You'll need to load actual textures from sprite sheets or content pipeline
+		if (whitePixel != null)
+			return whitePixel;
+		
+		// If Init() hasn't been called, return null
+		// This should be handled by the caller
+		return null;
+	}
+	
+	public static void RegisterTexture(string name, Texture2D texture)
+	{
+		if (textureCache == null)
+			textureCache = new Dictionary<string, Texture2D>();
+		textureCache[name] = texture;
 	}
 }
 }

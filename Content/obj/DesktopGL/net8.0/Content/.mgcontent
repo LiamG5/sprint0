@@ -4,15 +4,15 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>/Users/krushpatel/Documents/CSE3902/sprint0/Content/Font/File.spritefont</File>
-    <File>/Users/krushpatel/Documents/CSE3902/sprint0/Content/Room2Border.png</File>
-    <File>/Users/krushpatel/Documents/CSE3902/sprint0/Content/Sprites/legendofzelda_blocks_sheet.png</File>
-    <File>/Users/krushpatel/Documents/CSE3902/sprint0/Content/Sprites/legendofzelda_bosses_sheet.png</File>
-    <File>/Users/krushpatel/Documents/CSE3902/sprint0/Content/Sprites/legendofzelda_enemies_sheet_final.png</File>
-    <File>/Users/krushpatel/Documents/CSE3902/sprint0/Content/Sprites/legendofzelda_items_sheet.png</File>
-    <File>/Users/krushpatel/Documents/CSE3902/sprint0/Content/Sprites/legendofzelda_link_sheet.png</File>
-    <File>/Users/krushpatel/Documents/CSE3902/sprint0/Content/Sprites/legendofzelda_misccharacters_sheet.png</File>
-    <File>/Users/krushpatel/Documents/CSE3902/sprint0/Content/Sprites/room_2_border.png</File>
+    <File>/Users/krushpatel/Documents/CSE3902/sprint0-1/Content/Font/File.spritefont</File>
+    <File>/Users/krushpatel/Documents/CSE3902/sprint0-1/Content/Room2Border.png</File>
+    <File>/Users/krushpatel/Documents/CSE3902/sprint0-1/Content/Sprites/legendofzelda_blocks_sheet.png</File>
+    <File>/Users/krushpatel/Documents/CSE3902/sprint0-1/Content/Sprites/legendofzelda_bosses_sheet.png</File>
+    <File>/Users/krushpatel/Documents/CSE3902/sprint0-1/Content/Sprites/legendofzelda_enemies_sheet_final.png</File>
+    <File>/Users/krushpatel/Documents/CSE3902/sprint0-1/Content/Sprites/legendofzelda_items_sheet.png</File>
+    <File>/Users/krushpatel/Documents/CSE3902/sprint0-1/Content/Sprites/legendofzelda_link_sheet.png</File>
+    <File>/Users/krushpatel/Documents/CSE3902/sprint0-1/Content/Sprites/legendofzelda_misccharacters_sheet.png</File>
+    <File>/Users/krushpatel/Documents/CSE3902/sprint0-1/Content/Sprites/room_2_border.png</File>
   </SourceFiles>
   <DestFiles>
     <File>Font/font.spritefont</File>

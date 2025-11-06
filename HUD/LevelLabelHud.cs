@@ -22,10 +22,10 @@ namespace sprint0.HUD
         public void Update(GameTime gameTime) { }
         public void Draw(SpriteBatch spriteBatch)
         {
-            float scale = 1.2f;
+            float scale = 1.2f; // Smaller text as requested
             var t = getText();
             spriteBatch.DrawString(font, t, pos + new Vector2(1,1), Color.Black * 0.6f, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-            spriteBatch.DrawString(font, t, pos, Color.OrangeRed, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            spriteBatch.DrawString(font, t, pos, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f); // Changed to white
         }
     }
 }

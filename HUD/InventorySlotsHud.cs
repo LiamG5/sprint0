@@ -15,13 +15,15 @@ namespace sprint0.HUD
         private readonly Vector2 bPos;
 
         private readonly Texture2D slotBg;
+        private readonly SpriteFont font;
 
-        public InventorySlotsHud(Func<Texture2D> getIconB, Func<Texture2D> getIconA, Vector2 aPos, Vector2 bPos)
+        public InventorySlotsHud(Func<Texture2D> getIconB, Func<Texture2D> getIconA, Vector2 aPos, Vector2 bPos, SpriteFont font = null)
         {
             this.getIconB = getIconB ?? (() => null);
             this.getIconA = getIconA ?? (() => null);
             this.aPos = aPos;
             this.bPos = bPos;
+            this.font = font;
 
             slotBg = Texture2DStorage.GetTexture("hud_slot_bg");
         }
@@ -30,8 +32,21 @@ namespace sprint0.HUD
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (slotBg == null) return; // Can't draw without background texture
+            
             var bRect = new Rectangle((int)bPos.X, (int)bPos.Y, SlotSize.X, SlotSize.Y);
             var aRect = new Rectangle((int)aPos.X, (int)aPos.Y, SlotSize.X, SlotSize.Y);
+
+            // Draw "B" and "A" labels above the slots
+            if (font != null)
+            {
+                float labelScale = 1.1f;
+                Vector2 bLabelPos = new Vector2(bRect.X + (bRect.Width - font.MeasureString("B").X * labelScale) / 2, bRect.Y - 16);
+                Vector2 aLabelPos = new Vector2(aRect.X + (aRect.Width - font.MeasureString("A").X * labelScale) / 2, aRect.Y - 16);
+                
+                spriteBatch.DrawString(font, "B", bLabelPos, Color.White, 0f, Vector2.Zero, labelScale, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "A", aLabelPos, Color.White, 0f, Vector2.Zero, labelScale, SpriteEffects.None, 0f);
+            }
 
             spriteBatch.Draw(slotBg, bRect, Color.Blue * 0.35f);
             spriteBatch.Draw(slotBg, aRect, Color.Blue * 0.35f);
@@ -42,7 +57,7 @@ namespace sprint0.HUD
             var bIcon = getIconB();
             var aIcon = getIconA();
 
-            const int iconSize = 24;
+            const int iconSize = 28; // Increased from 24 to match bigger slots
             if (bIcon != null)
             {
                 var dst = new Rectangle(bRect.X + (bRect.Width - iconSize) / 2, bRect.Y + (bRect.Height - iconSize) / 2, iconSize, iconSize);
@@ -59,6 +74,7 @@ namespace sprint0.HUD
         private static void Stroke(SpriteBatch sb, Rectangle r, Color color)
         {
             var p = Texture2DStorage.GetTexture("hud_slot_bg");
+            if (p == null) return; // Can't draw without texture
             const int t = 2;
             sb.Draw(p, new Rectangle(r.X, r.Y, r.Width, t), color);
             sb.Draw(p, new Rectangle(r.X, r.Bottom - t, r.Width, t), color);

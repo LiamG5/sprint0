@@ -67,6 +67,13 @@ namespace sprint0.Managers
             };
         }
         
+        public RoomConnections GetRoomConnections(int roomId)
+        {
+            if (roomConnections.ContainsKey(roomId))
+                return roomConnections[roomId];
+            return null;
+        }
+        
         public void SetCurrentRoom(int roomId)
         {
             currentRoomId = roomId;
