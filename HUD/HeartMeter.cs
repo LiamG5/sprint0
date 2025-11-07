@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Sprites;
+using static sprint0.HUD.HudConstants;
 
 namespace sprint0.HUD
 {
@@ -20,8 +21,8 @@ namespace sprint0.HUD
             this.getHearts = getHearts;
             this.getMaxHearts = getMaxHearts;
             this.font = font;
-            pos = position;
-            labelPos = new Vector2(position.X, position.Y - 24); // Increased spacing
+            pos = position; // Position for hearts
+            labelPos = LifeLabelPos; // Use the constant label position to avoid overlap
             fullHeart = Texture2DStorage.GetTexture("hud_heart_full");
             emptyHeart = Texture2DStorage.GetTexture("hud_heart_empty");
         }
