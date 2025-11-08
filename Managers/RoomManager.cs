@@ -8,6 +8,8 @@ namespace sprint0.Managers
     public class RoomManager
     {
         private Dictionary<int, RoomConnections> roomConnections;
+        private Dictionary<int, RoomType> roomTypes;
+        private HashSet<int> visitedRooms;
         private int currentRoomId;
         private Link link;
         private Game1 game;
@@ -19,14 +21,18 @@ namespace sprint0.Managers
             this.link = link;
             this.game = game;
             this.currentRoomId = 1;
+            this.visitedRooms = new HashSet<int>();
+            this.roomTypes = new Dictionary<int, RoomType>();
             SetupRoomConnections();
+            SetupRoomTypes();
+            MarkRoomVisited(1);
         }
         
         private void SetupRoomConnections()
         {
             roomConnections = new Dictionary<int, RoomConnections>();
             
-            // Row 1: Rooms 1-6
+            // Rooms 1-6
             roomConnections[1] = new RoomConnections { North = -1, South = 7, East = 2, West = -1 };
             roomConnections[2] = new RoomConnections { North = -1, South = 8, East = 3, West = 1 };
             roomConnections[3] = new RoomConnections { North = -1, South = 9, East = 4, West = 2 };
@@ -34,7 +40,7 @@ namespace sprint0.Managers
             roomConnections[5] = new RoomConnections { North = -1, South = 11, East = 6, West = 4 };
             roomConnections[6] = new RoomConnections { North = -1, South = 12, East = -1, West = 5 };
             
-            // Row 2: Rooms 7-12
+            // Rooms 7-12
             roomConnections[7] = new RoomConnections { North = 1, South = 13, East = 8, West = -1 };
             roomConnections[8] = new RoomConnections { North = 2, South = 14, East = 9, West = 7 };
             roomConnections[9] = new RoomConnections { North = 3, South = 15, East = 10, West = 8 };
@@ -42,7 +48,7 @@ namespace sprint0.Managers
             roomConnections[11] = new RoomConnections { North = 5, South = 17, East = 12, West = 10 };
             roomConnections[12] = new RoomConnections { North = 6, South = -1, East = -1, West = 11 };
             
-            // Row 3: Rooms 13-17
+            // Rooms 13-17
             roomConnections[13] = new RoomConnections { North = 7, South = -1, East = 14, West = -1 };
             roomConnections[14] = new RoomConnections { North = 8, South = -1, East = 15, West = 13 };
             roomConnections[15] = new RoomConnections { North = 9, South = -1, East = 16, West = 14 };
@@ -77,6 +83,60 @@ namespace sprint0.Managers
         public void SetCurrentRoom(int roomId)
         {
             currentRoomId = roomId;
+            MarkRoomVisited(roomId);
+        }
+        
+        private void SetupRoomTypes()
+        {
+            for (int i = 1; i <= 17; i++)
+            {
+                roomTypes[i] = RoomType.Regular;
+            }
+        }
+        
+        public void MarkRoomVisited(int roomId)
+        {
+            if (roomId >= 1 && roomId <= 17)
+            {
+                visitedRooms.Add(roomId);
+            }
+        }
+        
+        public bool IsRoomVisited(int roomId)
+        {
+            return visitedRooms.Contains(roomId);
+        }
+        
+        public RoomType GetRoomType(int roomId)
+        {
+            return roomTypes.ContainsKey(roomId) ? roomTypes[roomId] : RoomType.Regular;
+        }
+        
+        public HashSet<int> GetVisitedRegularRooms()
+        {
+            var result = new HashSet<int>();
+            foreach (var roomId in visitedRooms)
+            {
+                if (GetRoomType(roomId) == RoomType.Regular)
+                {
+                    result.Add(roomId);
+                }
+            }
+            return result;
+        }
+        
+        public HashSet<int> GetVisitedRoomsForMinimap()
+        {
+            var result = new HashSet<int>();
+            foreach (var roomId in visitedRooms)
+            {
+                var type = GetRoomType(roomId);
+                if (type == RoomType.Regular || type == RoomType.Secret)
+                {
+                    result.Add(roomId);
+                }
+            }
+            return result;
         }
         
         public void TransitionToRoom(int newRoomId, TransitionDirection direction)
@@ -86,7 +146,6 @@ namespace sprint0.Managers
             
             currentRoomId = newRoomId;
             
-            // Call the existing GoToRoom methods in Game1
             switch (newRoomId)
             {
                 case 1: game.GoToRoom1(); break;
@@ -108,7 +167,6 @@ namespace sprint0.Managers
                 case 17: game.GoToRoom17(); break;
             }
             
-            // Reposition Link after the room loads
             RepositionLink(direction);
         }
         
@@ -116,10 +174,10 @@ namespace sprint0.Managers
         {
             Vector2 newPosition = direction switch
             {
-                TransitionDirection.North => new Vector2(384, 400),  // Coming from north, spawn at bottom
-                TransitionDirection.South => new Vector2(384, 130),  // Coming from south, spawn at top
-                TransitionDirection.East => new Vector2(130, 240),   // Coming from east, spawn at left
-                TransitionDirection.West => new Vector2(600, 240),   // Coming from west, spawn at right
+                TransitionDirection.North => new Vector2(384, 400),
+                TransitionDirection.South => new Vector2(384, 130),
+                TransitionDirection.East => new Vector2(130, 240),
+                TransitionDirection.West => new Vector2(600, 240),
                 _ => link.position
             };
             
@@ -146,5 +204,12 @@ namespace sprint0.Managers
         East,
         West,
         None
+    }
+    
+    public enum RoomType
+    {
+        Regular,
+        Secret,
+        SuperSecret
     }
 }
