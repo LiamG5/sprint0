@@ -48,19 +48,21 @@ public class Game1 : Game
     private KeyboardState previousKeyboardState;
     private CollisionUpdater collisionUpdater;
     private RoomManager roomManager;
+    private bool isPaused = false;
 
-    // Minimap click area
     private Rectangle mapRect = new Rectangle(32, 32, 6 * 24, 3 * 24);
     private const int MapRows = 3;
     private const int MapCols = 6;
 
-    // Map click → room jump
     private Dictionary<int, ICommand> mapCellCommands;
     private MouseController mouse;
 
     private Texture2D _minimapOverlay;
     private static readonly Color _minimapColor = new Color(255, 0, 0, 96);
     private static readonly Color _minimapTextColor = Color.Yellow;
+
+    public enum GameState { Gameplay, Pause };
+    public GameState currentState { get; set; } = GameState.Gameplay;
 
     public Game1()
     {
@@ -122,7 +124,6 @@ public class Game1 : Game
 
         try
         {
-            // We'll reuse this font for the minimap labels.
             font = Content.Load<SpriteFont>("Font/font");
         }
         catch (Exception ex)
@@ -174,24 +175,33 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        link.Update(gameTime);
-        collisionUpdater.Update();
-        dungeon.Update(gameTime);
-
         foreach (var controller in controllers)
         {
             controller.Update();
         }
-
-        foreach (var e in dungeon.GetEnemies())
-        {
-            e.Update(gameTime);
-        }
-
-        enemy.Update(gameTime);
-        item.Update(gameTime);
-
         base.Update(gameTime);
+
+        if (currentState == GameState.Gameplay)
+        {
+            link.Update(gameTime);
+            collisionUpdater.Update();
+            dungeon.Update(gameTime);
+
+            foreach (var controller in controllers)
+            {
+                controller.Update();
+            }
+
+            foreach (var e in dungeon.GetEnemies())
+            {
+                e.Update(gameTime);
+            }
+
+            enemy.Update(gameTime);
+            item.Update(gameTime);
+
+            base.Update(gameTime);
+        }
     }
 
     protected override void Draw(GameTime gameTime)

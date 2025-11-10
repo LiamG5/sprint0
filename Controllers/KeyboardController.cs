@@ -47,6 +47,7 @@ namespace sprint0.Classes
             pressOnceCommands[Keys.I] = new NextCommand(game.itemCarousel);
             pressOnceCommands[Keys.Q] = new QuitCommand(game);
             pressOnceCommands[Keys.R] = new ResetCommand(game);
+            pressOnceCommands[Keys.B] = new PauseCommand(game);
             
             holdCommands[Keys.Left] = new MoveLeftCommand(game.link);
             holdCommands[Keys.A] = new MoveLeftCommand(game.link);
