@@ -222,7 +222,12 @@ namespace sprint0.Sprites
         
         public void Draw(SpriteBatch sprite, GraphicsDevice graphics)
         {
-            sprite.Draw(border, new Vector2(0, 0), new Rectangle(0, 0, graphics.Viewport.Width, graphics.Viewport.Height), Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+            if (border != null)
+            {
+                // Calculate game world height (viewport height minus HUD height)
+                int gameWorldHeight = graphics.Viewport.Height - sprint0.HUD.HudConstants.HudHeight;
+                sprite.Draw(border, new Vector2(0, 0), new Rectangle(0, 0, graphics.Viewport.Width, gameWorldHeight), Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+            }
 
             const int gridColumns = 12;
             const int gridRows = 7;

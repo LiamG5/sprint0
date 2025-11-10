@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Interfaces;
 using sprint0.Classes;
@@ -8,24 +8,24 @@ using Microsoft.Xna.Framework.Content;
 
 namespace sprint0.Sprites
 {
-    public class ItemRecoveryHeart : IItem {
+    public class ItemEmptyHeart : IItem {
 
         private Texture2D itemSS;
         private Vector2 position;
         private bool isCollected = false;
-        private static int ItemRow = 1;
+        private static int ItemRow = 3;
         private static int ItemCol = 6;
         private static Rectangle block = new Rectangle(40*ItemCol, 40*ItemRow, 15, 16);
         private const int ITEM_WIDTH = 45;
         private const int ITEM_HEIGHT = 48;
 
-        public ItemRecoveryHeart(Texture2D sheet, Vector2 startPosition)
+        public ItemEmptyHeart(Texture2D sheet, Vector2 startPosition)
         {
             itemSS = sheet;
             position = startPosition;
         }
 
-        public ItemRecoveryHeart(Texture2D sheet) : this(sheet, new Vector2(200, 100))
+        public ItemEmptyHeart(Texture2D sheet) : this(sheet, new Vector2(200, 100))
         {
         }
 
@@ -75,3 +75,4 @@ namespace sprint0.Sprites
         }
     }
 }
+
