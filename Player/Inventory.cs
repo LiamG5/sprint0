@@ -19,6 +19,7 @@ namespace sprint0.Classes
         private static bool boomerang;
         private static bool compass;
         private static bool map;
+        
 
         public Inventory()
         {
