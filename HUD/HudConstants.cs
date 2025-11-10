@@ -25,7 +25,7 @@ namespace sprint0.HUD
         
         // Life
         public static readonly Vector2 LifeLabelPos = TopLeft + new Vector2(400, 4);
-        public static  readonly Vector2 HeartsPos = TopLeft + new Vector2(400, 52);
-        public const int HeartSpacing = 20;
+        public static  readonly Vector2 HeartsPos = TopLeft + new Vector2(400, 48);
+        public const int HeartSpacing = 34;
     }
 }
