@@ -1,8 +1,9 @@
-using System.Collections;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using sprint0.Classes;
 using sprint0.Interfaces;
+using System.Collections;
+using System.Security.Cryptography.X509Certificates;
 
 namespace sprint0.PlayerStates
 {
@@ -10,6 +11,7 @@ namespace sprint0.PlayerStates
     {
         private Link player;
         private LinkAnimation linkAnimation;
+        private SoundEffectInstance sfx = sprint0.Sounds.SoundStorage.LOZ_Get_Item.CreateInstance();
 
         private float currentTime = 0;
         private float duration = 750;
@@ -33,6 +35,11 @@ namespace sprint0.PlayerStates
             if (currentTime > duration)
             {
                 player.Idle();
+            }
+
+            if (sfx.State != SoundState.Playing)
+            {
+                sfx.Play();
             }
         }
 

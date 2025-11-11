@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using sprint0.Classes;
 using sprint0.Interfaces;
 
@@ -9,6 +10,7 @@ namespace sprint0.PlayerStates
 
         private Link player;
         private LinkAnimation linkAnimation;
+        private SoundEffectInstance sfx = sprint0.Sounds.SoundStorage.LOZ_Link_Hurt.CreateInstance();
 
         private float currentTime;
         private float duration = 1500;
@@ -31,6 +33,12 @@ namespace sprint0.PlayerStates
             {
                 player.Idle();
             }
+
+            if (sfx.State != SoundState.Playing)
+            {
+                sfx.Play();
+            }
+
         }
 
         public void UseState()
