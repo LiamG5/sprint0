@@ -196,10 +196,10 @@ namespace sprint0.Managers
         {
             Vector2 newPosition = direction switch
             {
-                TransitionDirection.North => new Vector2(384, 400),  // Enter from bottom
-                TransitionDirection.South => new Vector2(384, 130),  // Enter from top
-                TransitionDirection.East => new Vector2(130, 240),   // Enter from left
-                TransitionDirection.West => new Vector2(600, 240),   // Enter from right
+                TransitionDirection.North => new Vector2(360, 406),  // Enter from bottom
+                TransitionDirection.South => new Vector2(360, 62),  // Enter from top
+                TransitionDirection.East => new Vector2(78, 240),   // Enter from left
+                TransitionDirection.West => new Vector2(638, 240),   // Enter from right
                 _ => link.position
             };
             

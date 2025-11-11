@@ -478,6 +478,7 @@ public class Game1 : Game
         
         if (roomManager != null)
         {
+            Inventory.PingRoomNum(roomIndex);
             roomManager.SetCurrentRoom(roomIndex);
             dungeon.SetRoomManager(roomManager, roomIndex);
             itemLoader.LoadItems(roomIndex);

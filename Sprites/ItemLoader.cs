@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using sprint0.Classes;
 using sprint0.Interfaces;
 using sprint0.Managers;
 using System;
@@ -26,70 +27,72 @@ namespace sprint0.Sprites
 
         public void LoadItems(int roomId)
         {
-
             itemList.Clear();
-            switch (roomId)
+            if (!Inventory.isItemCollected())
             {
-                case 1:
-                    Room1Items();
-                    break;
-                case 2:
-                    Room2Items();
-                    break;
-                case 3:
-                    Room3Items();
-                    break;
-                case 4:
-                    Room4Items();
-                    break;
-                case 5:
-                    Room5Items();
-                    break;
-                case 6:
-                    Room6Items();
-                    break;
-                case 7:
-                    Room7Items();
-                    break;
-                case 8:
-                    Room8Items();
-                    break;
-                case 9:
-                    Room9Items();
-                    break;
-                case 10:
-                    Room10Items();
-                    break;
-                case 11:
-                    Room11Items();
-                    break;
-                case 12:
-                    Room12Items();
-                    break;
-                case 13:
-                    Room13Items();
-                    break;
-                case 14:
-                    Room14Items();
-                    break;
-                case 15:
-                    Room15Items();
-                    break;
-                case 16:
-                    Room16Items();
-                    break;
-                case 17:
-                    Room17Items();
-                    break;
-                default:
-                    break;
+                switch (roomId)
+                {
+                    case 1:
+                        Room1Items();
+                        break;
+                    case 2:
+                        Room2Items();
+                        break;
+                    case 3:
+                        Room3Items();
+                        break;
+                    case 4:
+                        Room4Items();
+                        break;
+                    case 5:
+                        Room5Items();
+                        break;
+                    case 6:
+                        Room6Items();
+                        break;
+                    case 7:
+                        Room7Items();
+                        break;
+                    case 8:
+                        Room8Items();
+                        break;
+                    case 9:
+                        Room9Items();
+                        break;
+                    case 10:
+                        Room10Items();
+                        break;
+                    case 11:
+                        Room11Items();
+                        break;
+                    case 12:
+                        Room12Items();
+                        break;
+                    case 13:
+                        Room13Items();
+                        break;
+                    case 14:
+                        Room14Items();
+                        break;
+                    case 15:
+                        Room15Items();
+                        break;
+                    case 16:
+                        Room16Items();
+                        break;
+                    case 17:
+                        Room17Items();
+                        break;
+                    default:
+                        break;
 
+                }
             }
         }
 
         private void Room1Items()
         {
-        
+            
             itemList.Add(items.BuildSmallKey(new Vector2(478, 384)));
         }
 
@@ -180,6 +183,7 @@ namespace sprint0.Sprites
         }
         private void Room17Items()
         {
+
             itemList.Add(items.BuildSmallKey(new Vector2(388, 144)));
             
         }

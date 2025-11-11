@@ -62,6 +62,7 @@ namespace sprint0.Sprites
             switch (other)
             {
                 case Link link:
+                    Inventory.AcquireMap();
                     Collect();
                     break;
             }
