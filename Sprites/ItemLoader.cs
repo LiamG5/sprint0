@@ -96,30 +96,29 @@ namespace sprint0.Sprites
         private void Room2Items()
         {
             
-            itemList.Clear();
         }
 
         private void Room3Items()
         {
             
-            itemList.Clear();
+            
         }
 
         private void Room4Items()
         {
-            itemList.Clear();
+          
         }
 
         private void Room5Items()
         {
             
-            itemList.Clear();
+          
         }
 
         private void Room6Items()
         {
 
-            itemList.Add(items.BuildSmallKey(new Vector2(388, 96)));
+            itemList.Add(items.BuildSmallKey(new Vector2(388, 144)));
         }
         
          private void Room7Items()
@@ -147,14 +146,13 @@ namespace sprint0.Sprites
 
         private void Room11Items()
         {
-            
-          
+
+            itemList.Add(items.BuildBoomerang(new Vector2(388, 144)));
         }
 
         private void Room12Items()
         {
-            
-            
+            itemList.Add(items.BuildSmallKey(new Vector2(478, 384)));   
         }
 
         private void Room13Items()
@@ -182,7 +180,7 @@ namespace sprint0.Sprites
         }
         private void Room17Items()
         {
-            itemList.Add(items.BuildSmallKey(new Vector2(388, 96)));
+            itemList.Add(items.BuildSmallKey(new Vector2(388, 144)));
             
         }
 

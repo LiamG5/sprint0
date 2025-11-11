@@ -409,7 +409,7 @@ public class Game1 : Game
             dungeon.SetRoomManager(roomManager, roomIndex);
             itemLoader.LoadItems(roomIndex);
         }
-        var csvPath = (roomIndex == 1)
+         csvPath = (roomIndex == 1)
         ? System.IO.Path.Combine("Content", "dungeon.csv")
         : System.IO.Path.Combine("Content", "Dungeon", $"Room{roomIndex}.csv");
 
@@ -419,8 +419,8 @@ public class Game1 : Game
         return;
     }
 
-    var csv = System.IO.File.ReadAllText(csvPath);
-    dungeon = new DungeonLoader(BlockFactory.Instance, csv);
+    csv = System.IO.File.ReadAllText(csvPath);
+    dungeon = new DungeonLoader(BlockFactory.Instance, itemLoader, csv);
     dungeon.LoadRectangles();
 
     if (roomManager != null)
