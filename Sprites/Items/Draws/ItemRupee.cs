@@ -13,12 +13,10 @@ namespace sprint0.Sprites
         private Texture2D itemSS;
         private Vector2 position;
         private bool isCollected = false;
-        private static int ItemRow = 3;
-        private static int ItemCol = 5;
-        private static Rectangle block = new Rectangle(40*ItemCol, 40*ItemRow, 15, 16);
+        private static Rectangle block = new Rectangle(200, 120, 15, 16);
         private const int ITEM_WIDTH = 45;
         private const int ITEM_HEIGHT = 48;
-        private static int frameNum = 0;
+        private int frameNum = 0;
 
         public ItemRupee(Texture2D sheet, Vector2 startPosition)
         {
@@ -34,6 +32,7 @@ namespace sprint0.Sprites
         public void Update(GameTime gameTime)
         {
             
+            
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 drawPosition)
@@ -42,12 +41,13 @@ namespace sprint0.Sprites
             {
                 spriteBatch.Draw(itemSS, drawPosition, block, Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
                 frameNum++;
-                if (frameNum == 4)
+                if (frameNum == 6)
                 {
-                    block = new Rectangle(40 * 3, 40 * 4, 15, 16);
-                }else if (frameNum == 8)
+                    block = new Rectangle(160, 120, 15, 16);
+                }
+                else if (frameNum == 12)
                 {
-                    block = new Rectangle(40 * 3, 40 * 5, 15, 16);
+                    block = new Rectangle(200, 120, 15, 16);
                     frameNum = 0;
                 }
             }

@@ -28,10 +28,11 @@ namespace sprint0.Sprites
         private List<TransitionZone> transitionZones;
         private int roomId;
         private RoomManager roomManager;
+        private ItemLoader itemLoader;
 
         public Texture2D border;
         
-        public DungeonLoader(BlockFactory blocks, string csvContent)
+        public DungeonLoader(BlockFactory blocks, ItemLoader itemLoader, string csvContent)
         {
             this.blocks = blocks;
             this.path = csvContent;
@@ -47,6 +48,7 @@ namespace sprint0.Sprites
             this.boarders = new List<ICollidable>();
             this.transitionZones = new List<TransitionZone>();
             this.roomId = 1;
+            this.itemLoader = itemLoader;
         }
 
         public void SetRoomManager(RoomManager manager, int currentRoomId)
@@ -244,19 +246,23 @@ namespace sprint0.Sprites
             {
                 if (block is ISprite blockSprite)
                 {
-                    if (!(block is BlockTile)) {
+                    if (!(block is BlockTile))
+                    {
                         blockSprite.Draw(sprite, block.GetPosition());
                     }
-                    if (block is BlockChiseledTile) {
+                    if (block is BlockChiseledTile)
+                    {
                         chiseledTiles.Add(block as BlockChiseledTile);
                     }
                 }
             }
+            
+
             foreach (var chiseledTile in chiseledTiles) {
                 chiseledTile.Draw(sprite, chiseledTile.GetPosition());
             }
         }
-        
+
         public List<Rectangle> GetBlockList()
         {
             return rectangles;
@@ -316,7 +322,7 @@ namespace sprint0.Sprites
         
         public List<IItem> GetItems()
         {
-            return items;
+            return itemLoader.GetItems();
         }
         
         public void AddItem(IItem item)

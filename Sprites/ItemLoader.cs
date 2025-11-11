@@ -13,15 +13,21 @@ namespace sprint0.Sprites
         private int roomId;
         private RoomManager roomManager;
         public Texture2D border;
+        private List<IItem> itemList;
+        
 
-        public ItemLoader(ItemFactory items, int roomNum)
+
+
+        public ItemLoader(ItemFactory items)
         {
             this.items = items;
-            this.roomId = roomNum;
+            this.itemList = new List<IItem>();
         }
 
         public void LoadItems(int roomId)
         {
+
+            itemList.Clear();
             switch (roomId)
             {
                 case 1:
@@ -41,6 +47,9 @@ namespace sprint0.Sprites
                     break;
                 case 6:
                     Room6Items();
+                    break;
+                case 7:
+                    Room7Items();
                     break;
                 case 8:
                     Room8Items();
@@ -66,100 +75,127 @@ namespace sprint0.Sprites
                 case 15:
                     Room15Items();
                     break;
+                case 16:
+                    Room16Items();
+                    break;
+                case 17:
+                    Room17Items();
+                    break;
                 default:
                     break;
+
             }
         }
 
         private void Room1Items()
         {
         
-            items.BuildDungeonMap(new Vector2(100, 100));
+            itemList.Add(items.BuildSmallKey(new Vector2(478, 384)));
         }
 
         private void Room2Items()
         {
             
-            items.BuildCompass(new Vector2(150, 100));
+            itemList.Clear();
         }
 
         private void Room3Items()
         {
             
-            items.BuildRupee(new Vector2(120, 100));
-            items.BuildRupee(new Vector2(140, 100));
-            items.BuildRupee(new Vector2(160, 100));
-            items.BuildRupee(new Vector2(180, 100));
-            items.BuildRupee(new Vector2(200, 100));
+            itemList.Clear();
         }
 
         private void Room4Items()
         {
-            // Boomerang
-            items.BuildBoomerang(new Vector2(100, 100));
+            itemList.Clear();
         }
 
         private void Room5Items()
         {
             
-            items.BuildHeartContainer(new Vector2(150, 100));
+            itemList.Clear();
         }
 
         private void Room6Items()
         {
-            
-            items.BuildSmallKey(new Vector2(130, 100));
+
+            itemList.Add(items.BuildSmallKey(new Vector2(388, 96)));
+        }
+        
+         private void Room7Items()
+        {
+            itemList.Add(items.BuildCompass(new Vector2(580, 240)));
         }
 
 
         private void Room8Items()
         {
             
-            items.BuildSmallKey(new Vector2(120, 100));
+            
         }
 
         private void Room9Items()
         {
             
-            items.BuildRupee(new Vector2(110, 100));
-            items.BuildRupee(new Vector2(130, 100));
-            items.BuildRupee(new Vector2(150, 100));
         }
 
         private void Room10Items()
         {
             
-            items.BuildBow(new Vector2(100, 100));
+            itemList.Add(items.BuildDungeonMap(new Vector2(580, 240)));
         }
 
         private void Room11Items()
         {
             
-            items.BuildFairy(new Vector2(150, 100));
+          
         }
 
         private void Room12Items()
         {
             
-            items.BuildHeartContainer(new Vector2(140, 100));
+            
         }
 
         private void Room13Items()
         {
             
-            items.BuildBomb(new Vector2(120, 100));
+            
         }
 
         private void Room14Items()
         {
+            itemList.Add(items.BuildHeartContainer(new Vector2(580,240)));
             
-            items.BuildClock(new Vector2(130, 100));
         }
 
         private void Room15Items()
         {
+        itemList.Add(items.BuildTriforceFragment(new Vector2(360,250)));
 
-            items.BuildHeartContainer(new Vector2(100, 100));
+        }
+
+        private void Room16Items()
+        {
+
+
+        }
+        private void Room17Items()
+        {
+            itemList.Add(items.BuildSmallKey(new Vector2(388, 96)));
+            
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            foreach (IItem item in itemList)
+            {
+                item.Draw(spriteBatch, item.GetPosition());
+            }
+        }
+        public List<IItem> GetItems()
+        {
+            return itemList;
         }
         
 

@@ -38,7 +38,7 @@ namespace sprint0.Sprites
         {
             if (!isCollected)
             {
-                spriteBatch.Draw(itemSS, drawPosition, block, Color.Blue, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(itemSS, drawPosition, block, Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
             }
         }
 

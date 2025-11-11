@@ -51,6 +51,7 @@ namespace sprint0.Sprites
             ItemFactory.ItemType.Clock,
             ItemFactory.ItemType.RupeeRed,
             ItemFactory.ItemType.RupeeBlue,
+            ItemFactory.ItemType.Rupee,
             ItemFactory.ItemType.Fairy
         };
 
@@ -178,6 +179,9 @@ namespace sprint0.Sprites
                     break;
                 case ItemFactory.ItemType.RupeeBlue:
                     currentItem = itemFactory.BuildRupeeBlue();
+                    break;
+                case ItemFactory.ItemType.Rupee:
+                    currentItem = itemFactory.BuildRupee();
                     break;
                 case ItemFactory.ItemType.Fairy:
                     currentItem = itemFactory.BuildFairy();

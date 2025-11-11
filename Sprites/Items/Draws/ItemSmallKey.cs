@@ -19,6 +19,7 @@ namespace sprint0.Sprites
         private const int ITEM_WIDTH = 45;
         private const int ITEM_HEIGHT = 48;
 
+        
         public ItemSmallKey(Texture2D sheet, Vector2 startPosition)
         {
             itemSS = sheet;

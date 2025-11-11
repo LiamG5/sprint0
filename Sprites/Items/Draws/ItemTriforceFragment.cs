@@ -16,7 +16,7 @@ namespace sprint0.Sprites
         private static Rectangle block = new Rectangle(320, 120, 16, 16);
         private const int ITEM_WIDTH = 48;  // 16 * 3.0f
         private const int ITEM_HEIGHT = 48;
-        private static int frameNum = 0;
+        private int frameNum = 0;
 
         public ItemTriforceFragment(Texture2D sheet, Vector2 startPosition)
         {
@@ -41,11 +41,11 @@ namespace sprint0.Sprites
 
                 spriteBatch.Draw(itemSS, drawPosition, block, Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
                 frameNum++;
-                if (frameNum == 4)
+                if (frameNum == 6)
                 {
                 block = new Rectangle(340, 120, 16, 16);
                 }
-                else if(frameNum == 8)
+                else if(frameNum == 12)
                 {
                     block = new Rectangle(320, 120, 16, 16);
                     frameNum = 0;

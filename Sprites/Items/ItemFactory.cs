@@ -53,412 +53,412 @@ namespace sprint0.Sprites
         }
 
         // Equipment Items
-        public ISprite BuildSword()
+        public IItem BuildSword()
         {
             currItem = ItemType.Sword;
             return new ItemSword(itemSpritesheet);
         }
 
-        public ISprite BuildSword(Vector2 position)
+        public IItem BuildSword(Vector2 position)
         {
             currItem = ItemType.Sword;
             return new ItemSword(itemSpritesheet, position);
         }
 
-        public ISprite BuildWhiteSword()
+        public IItem BuildWhiteSword()
         {
             currItem = ItemType.WhiteSword;
             return new ItemWhiteSword(itemSpritesheet);
         }
 
-        public ISprite BuildWhiteSword(Vector2 position)
+        public IItem BuildWhiteSword(Vector2 position)
         {
             currItem = ItemType.WhiteSword;
             return new ItemWhiteSword(itemSpritesheet, position);
         }
 
-        public ISprite BuildBoomerang()
+        public IItem BuildBoomerang()
         {
             currItem = ItemType.Boomerang;
             return new ItemBoomerang(itemSpritesheet);
         }
 
-        public ISprite BuildBoomerang(Vector2 position)
+        public IItem BuildBoomerang(Vector2 position)
         {
             currItem = ItemType.Boomerang;
             return new ItemBoomerang(itemSpritesheet, position);
         }
 
-        public ISprite BuildMagicalBoomerang()
+        public IItem BuildMagicalBoomerang()
         {
             currItem = ItemType.MagicalBoomerang;
             return new ItemMagicalBoomerang(itemSpritesheet);
         }
 
-        public ISprite BuildMagicalBoomerang(Vector2 position)
+        public IItem BuildMagicalBoomerang(Vector2 position)
         {
             currItem = ItemType.MagicalBoomerang;
             return new ItemMagicalBoomerang(itemSpritesheet, position);
         }
 
-        public ISprite BuildBomb()
+        public IItem BuildBomb()
         {
             currItem = ItemType.Bomb;
             return new ItemBomb(itemSpritesheet);
         }
 
-        public ISprite BuildBomb(Vector2 position)
+        public IItem BuildBomb(Vector2 position)
         {
             currItem = ItemType.Bomb;
             return new ItemBomb(itemSpritesheet, position);
         }
 
-        public ISprite BuildBow()
+        public IItem BuildBow()
         {
             currItem = ItemType.Bow;
             return new ItemBow(itemSpritesheet);
         }
 
-        public ISprite BuildBow(Vector2 position)
+        public IItem BuildBow(Vector2 position)
         {
             currItem = ItemType.Bow;
             return new ItemBow(itemSpritesheet, position);
         }
 
-        public ISprite BuildArrow()
+        public IItem BuildArrow()
         {
             currItem = ItemType.Arrow;
             return new ItemArrow(itemSpritesheet);
         }
 
-        public ISprite BuildArrow(Vector2 position)
+        public IItem BuildArrow(Vector2 position)
         {
             currItem = ItemType.Arrow;
             return new ItemArrow(itemSpritesheet, position);
         }
 
-        public ISprite BuildSilverArrow()
+        public IItem BuildSilverArrow()
         {
             currItem = ItemType.SilverArrow;
             return new ItemSilverArrow(itemSpritesheet);
         }
 
-        public ISprite BuildSilverArrow(Vector2 position)
+        public IItem BuildSilverArrow(Vector2 position)
         {
             currItem = ItemType.SilverArrow;
             return new ItemSilverArrow(itemSpritesheet, position);
         }
 
-        public ISprite BuildCandleRed()
+        public IItem BuildCandleRed()
         {
             currItem = ItemType.CandleRed;
             return new ItemCandleRed(itemSpritesheet);
         }
 
-        public ISprite BuildCandleRed(Vector2 position)
+        public IItem BuildCandleRed(Vector2 position)
         {
             currItem = ItemType.CandleRed;
             return new ItemCandleRed(itemSpritesheet, position);
         }
 
-        public ISprite BuildCandleBlue()
+        public IItem BuildCandleBlue()
         {
             currItem = ItemType.CandleBlue;
             return new ItemCandleBlue(itemSpritesheet);
         }
 
-        public ISprite BuildCandleBlue(Vector2 position)
+        public IItem BuildCandleBlue(Vector2 position)
         {
             currItem = ItemType.CandleBlue;
             return new ItemCandleBlue(itemSpritesheet, position);
         }
 
-        public ISprite BuildRecorder()
+        public IItem BuildRecorder()
         {
             currItem = ItemType.Recorder;
             return new ItemRecorder(itemSpritesheet);
         }
 
-        public ISprite BuildRecorder(Vector2 position)
+        public IItem BuildRecorder(Vector2 position)
         {
             currItem = ItemType.Recorder;
             return new ItemRecorder(itemSpritesheet, position);
         }
 
-        public ISprite BuildFood()
+        public IItem BuildFood()
         {
             currItem = ItemType.Food;
             return new ItemFood(itemSpritesheet);
         }
 
-        public ISprite BuildFood(Vector2 position)
+        public IItem BuildFood(Vector2 position)
         {
             currItem = ItemType.Food;
             return new ItemFood(itemSpritesheet, position);
         }
 
-        public ISprite BuildLetter()
+        public IItem BuildLetter()
         {
             currItem = ItemType.Letter;
             return new ItemLetter(itemSpritesheet);
         }
 
-        public ISprite BuildLetter(Vector2 position)
+        public IItem BuildLetter(Vector2 position)
         {
             currItem = ItemType.Letter;
             return new ItemLetter(itemSpritesheet, position);
         }
 
-        public ISprite BuildPotionRed()
+        public IItem BuildPotionRed()
         {
             currItem = ItemType.PotionRed;
             return new ItemPotionRed(itemSpritesheet);
         }
 
-        public ISprite BuildPotionRed(Vector2 position)
+        public IItem BuildPotionRed(Vector2 position)
         {
             currItem = ItemType.PotionRed;
             return new ItemPotionRed(itemSpritesheet, position);
         }
 
-        public ISprite BuildPotionBlue()
+        public IItem BuildPotionBlue()
         {
             currItem = ItemType.PotionBlue;
             return new ItemPotionBlue(itemSpritesheet);
         }
 
-        public ISprite BuildPotionBlue(Vector2 position)
+        public IItem BuildPotionBlue(Vector2 position)
         {
             currItem = ItemType.PotionBlue;
             return new ItemPotionBlue(itemSpritesheet, position);
         }
 
-        public ISprite BuildMagicalRod()
+        public IItem BuildMagicalRod()
         {
             currItem = ItemType.MagicalRod;
             return new ItemMagicalRod(itemSpritesheet);
         }
 
-        public ISprite BuildMagicalRod(Vector2 position)
+        public IItem BuildMagicalRod(Vector2 position)
         {
             currItem = ItemType.MagicalRod;
             return new ItemMagicalRod(itemSpritesheet, position);
         }
 
         // Inventory Items
-        public ISprite BuildRaft()
+        public IItem BuildRaft()
         {
             currItem = ItemType.Raft;
             return new ItemRaft(itemSpritesheet);
         }
 
-        public ISprite BuildRaft(Vector2 position)
+        public IItem BuildRaft(Vector2 position)
         {
             currItem = ItemType.Raft;
             return new ItemRaft(itemSpritesheet, position);
         }
 
-        public ISprite BuildBookOfMagic()
+        public IItem BuildBookOfMagic()
         {
             currItem = ItemType.BookOfMagic;
             return new ItemBookOfMagic(itemSpritesheet);
         }
 
-        public ISprite BuildBookOfMagic(Vector2 position)
+        public IItem BuildBookOfMagic(Vector2 position)
         {
             currItem = ItemType.BookOfMagic;
             return new ItemBookOfMagic(itemSpritesheet, position);
         }
 
-        public ISprite BuildBlueRing()
+        public IItem BuildBlueRing()
         {
             currItem = ItemType.BlueRing;
             return new ItemBlueRing(itemSpritesheet);
         }
 
-        public ISprite BuildBlueRing(Vector2 position)
+        public IItem BuildBlueRing(Vector2 position)
         {
             currItem = ItemType.BlueRing;
             return new ItemBlueRing(itemSpritesheet, position);
         }
 
-        public ISprite BuildRedRing()
+        public IItem BuildRedRing()
         {
             currItem = ItemType.RedRing;
             return new ItemRedRing(itemSpritesheet);
         }
 
-        public ISprite BuildRedRing(Vector2 position)
+        public IItem BuildRedRing(Vector2 position)
         {
             currItem = ItemType.RedRing;
             return new ItemRedRing(itemSpritesheet, position);
         }
 
-        public ISprite BuildStepladder()
+        public IItem BuildStepladder()
         {
             currItem = ItemType.Stepladder;
             return new ItemStepladder(itemSpritesheet);
         }
 
-        public ISprite BuildStepladder(Vector2 position)
+        public IItem BuildStepladder(Vector2 position)
         {
             currItem = ItemType.Stepladder;
             return new ItemStepladder(itemSpritesheet, position);
         }
 
-        public ISprite BuildMagicalKey()
+        public IItem BuildMagicalKey()
         {
             currItem = ItemType.MagicalKey;
             return new ItemMagicalKey(itemSpritesheet);
         }
 
-        public ISprite BuildMagicalKey(Vector2 position)
+        public IItem BuildMagicalKey(Vector2 position)
         {
             currItem = ItemType.MagicalKey;
             return new ItemMagicalKey(itemSpritesheet, position);
         }
 
-        public ISprite BuildPowerBracelet()
+        public IItem BuildPowerBracelet()
         {
             currItem = ItemType.PowerBracelet;
             return new ItemPowerBracelet(itemSpritesheet);
         }
 
-        public ISprite BuildPowerBracelet(Vector2 position)
+        public IItem BuildPowerBracelet(Vector2 position)
         {
             currItem = ItemType.PowerBracelet;
             return new ItemPowerBracelet(itemSpritesheet, position);
         }
 
         // Dungeon Items
-        public ISprite BuildCompass()
+        public IItem BuildCompass()
         {
             currItem = ItemType.Compass;
             return new ItemCompass(itemSpritesheet);
         }
 
-        public ISprite BuildCompass(Vector2 position)
+        public IItem BuildCompass(Vector2 position)
         {
             currItem = ItemType.Compass;
             return new ItemCompass(itemSpritesheet, position);
         }
 
-        public ISprite BuildDungeonMap()
+        public IItem BuildDungeonMap()
         {
             currItem = ItemType.DungeonMap;
             return new ItemDungeonMap(itemSpritesheet);
         }
 
-        public ISprite BuildDungeonMap(Vector2 position)
+        public IItem BuildDungeonMap(Vector2 position)
         {
             currItem = ItemType.DungeonMap;
             return new ItemDungeonMap(itemSpritesheet, position);
         }
 
-        public ISprite BuildSmallKey()
+        public IItem BuildSmallKey()
         {
             currItem = ItemType.SmallKey;
             return new ItemSmallKey(itemSpritesheet);
         }
 
-        public ISprite BuildSmallKey(Vector2 position)
+        public IItem BuildSmallKey(Vector2 position)
         {
             currItem = ItemType.SmallKey;
             return new ItemSmallKey(itemSpritesheet, position);
         }
 
-        public ISprite BuildTriforceFragment()
+        public IItem BuildTriforceFragment()
         {
             currItem = ItemType.TriforceFragment;
             return new ItemTriforceFragment(itemSpritesheet);
         }
 
-        public ISprite BuildTriforceFragment(Vector2 position)
+        public IItem BuildTriforceFragment(Vector2 position)
         {
             currItem = ItemType.TriforceFragment;
             return new ItemTriforceFragment(itemSpritesheet, position);
         }
 
         // Miscellaneous Items
-        public ISprite BuildRecoveryHeart()
+        public IItem BuildRecoveryHeart()
         {
             currItem = ItemType.RecoveryHeart;
             return new ItemRecoveryHeart(itemSpritesheet);
         }
 
-        public ISprite BuildRecoveryHeart(Vector2 position)
+        public IItem BuildRecoveryHeart(Vector2 position)
         {
             currItem = ItemType.RecoveryHeart;
             return new ItemRecoveryHeart(itemSpritesheet, position);
         }
 
-        public ISprite BuildHeartContainer()
+        public IItem BuildHeartContainer()
         {
             currItem = ItemType.HeartContainer;
             return new ItemHeartContainer(itemSpritesheet);
         }
 
-        public ISprite BuildHeartContainer(Vector2 position)
+        public IItem BuildHeartContainer(Vector2 position)
         {
             currItem = ItemType.HeartContainer;
             return new ItemHeartContainer(itemSpritesheet, position);
         }
 
-        public ISprite BuildClock()
+        public IItem BuildClock()
         {
             currItem = ItemType.Clock;
             return new ItemClock(itemSpritesheet);
         }
 
-        public ISprite BuildClock(Vector2 position)
+        public IItem BuildClock(Vector2 position)
         {
             currItem = ItemType.Clock;
             return new ItemClock(itemSpritesheet, position);
         }
 
-        public ISprite BuildRupeeRed()
+        public IItem BuildRupeeRed()
         {
             currItem = ItemType.RupeeRed;
             return new ItemRupeeRed(itemSpritesheet);
         }
 
-        public ISprite BuildRupeeRed(Vector2 position)
+        public IItem BuildRupeeRed(Vector2 position)
         {
             currItem = ItemType.RupeeRed;
             return new ItemRupeeRed(itemSpritesheet, position);
         }
 
-        public ISprite BuildRupeeBlue()
+        public IItem BuildRupeeBlue()
         {
             currItem = ItemType.RupeeBlue;
             return new ItemRupeeBlue(itemSpritesheet);
         }
 
-        public ISprite BuildRupeeBlue(Vector2 position)
+        public IItem BuildRupeeBlue(Vector2 position)
         {
             currItem = ItemType.RupeeBlue;
             return new ItemRupeeBlue(itemSpritesheet, position);
         }
-        public ISprite BuildRupee()
+        public IItem BuildRupee()
         {
             currItem = ItemType.Rupee;
             return new ItemRupee(itemSpritesheet);
         }
 
-        public ISprite BuildRupee(Vector2 position)
+        public IItem BuildRupee(Vector2 position)
         {
             currItem = ItemType.Rupee;
             return new ItemRupee(itemSpritesheet, position);
         }
 
 
-        public ISprite BuildFairy()
+        public IItem BuildFairy()
         {
             currItem = ItemType.Fairy;
             return new ItemFairy(itemSpritesheet);
         }
 
-        public ISprite BuildFairy(Vector2 position)
+        public IItem BuildFairy(Vector2 position)
         {
             currItem = ItemType.Fairy;
             return new ItemFairy(itemSpritesheet, position);

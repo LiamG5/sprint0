@@ -48,6 +48,7 @@ public class Game1 : Game
     private KeyboardState previousKeyboardState;
     private CollisionUpdater collisionUpdater;
     private RoomManager roomManager;
+    private ItemLoader itemLoader;
 
     // Minimap click area
     private Rectangle mapRect = new Rectangle(32, 32, 6 * 24, 3 * 24);
@@ -101,10 +102,11 @@ public class Game1 : Game
         itemCarousel = new ItemCarousel(items, _spriteBatch);
 
         string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
-
-        dungeon = new DungeonLoader(blocks, File.ReadAllText(dungeonPath));
+        itemLoader = new ItemLoader(items);
+        dungeon = new DungeonLoader(blocks, itemLoader, File.ReadAllText(dungeonPath));
+        
         dungeon.LoadRectangles();
-
+        
         tile = blockCarousel.GetCurrentBlock();
         enemy = enemyCarousel.GetCurrentEnemy();
         item = itemCarousel.GetCurrentItem();
@@ -201,6 +203,7 @@ public class Game1 : Game
         _spriteBatch.Begin();
 
         dungeon.Draw(_spriteBatch, GraphicsDevice);
+        
 
         foreach (var e in dungeon.GetEnemies())
         {
@@ -218,7 +221,7 @@ public class Game1 : Game
             _spriteBatch.Draw(_minimapOverlay, mapRect, _minimapColor);
 
         DrawMinimapNumbers(_spriteBatch);
-
+        itemLoader.Draw(_spriteBatch);
         _spriteBatch.End();
         base.Draw(gameTime);
     }
@@ -250,13 +253,14 @@ public class Game1 : Game
             return;
         }
         var csv = System.IO.File.ReadAllText(csvPath);
-        dungeon = new DungeonLoader(BlockFactory.Instance, csv);
+        dungeon = new DungeonLoader(BlockFactory.Instance, itemLoader, csv);
         dungeon.LoadRectangles();
         
         if (roomManager != null)
         {
             roomManager.SetCurrentRoom(roomIndex);
             dungeon.SetRoomManager(roomManager, roomIndex);
+            itemLoader.LoadItems(roomIndex);
         }
         
         collisionUpdater = new CollisionUpdater(dungeon, link);
