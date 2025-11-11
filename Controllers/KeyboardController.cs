@@ -52,6 +52,7 @@ namespace sprint0.Classes
             pressOnceCommands[Keys.I] = new NextCommand(game.itemCarousel);
             pressOnceCommands[Keys.Q] = new QuitCommand(game);
             pressOnceCommands[Keys.R] = new ResetCommand(game);
+            pressOnceCommands[Keys.Escape] = new PauseCommand(game);
             
             holdCommands[Keys.Left] = new MoveLeftCommand(game.link);
             holdCommands[Keys.A] = new MoveLeftCommand(game.link);
@@ -94,7 +95,7 @@ namespace sprint0.Classes
                 
                 if (currentState.IsKeyDown(Keys.B) && previousState.IsKeyUp(Keys.B))
                 {
-                    game.ToggleInventoryMenu();
+                    game.currentState = Game1.GameState.Gameplay;
                 }
             }
             else

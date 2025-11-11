@@ -12,6 +12,7 @@ namespace sprint0.Classes
 	{
 
 		private SpriteBatch spriteBatch;
+		private Game1 game;
 
 		private IPlayerState state;
 
@@ -28,9 +29,10 @@ namespace sprint0.Classes
         private const int PLAYER_WIDTH = 48;
         private const int PLAYER_HEIGHT = 48; 
 
-		public Link(SpriteBatch spriteBatch)
+		public Link(SpriteBatch spriteBatch, Game1 game)
 		{
 			this.spriteBatch = spriteBatch;
+			this.game = game;
 			this.linkAnimation = new LinkAnimation();
 			this.state = new IdleState(this, linkAnimation);
 		}
@@ -136,7 +138,16 @@ namespace sprint0.Classes
         }
 		public void TakeDamage()
 		{
-			ChangeState(new DamagedState(this, linkAnimation));
+			Inventory.TakeDamage(1);
+			
+			if (Inventory.IsDead())
+			{
+				game.currentState = Game1.GameState.GameOver;
+			}
+			else
+			{
+				ChangeState(new DamagedState(this, linkAnimation));
+			}
 		}
 		public void UseMagic()
 		{ 			
@@ -168,6 +179,10 @@ namespace sprint0.Classes
 		switch (other)
 		{
 			case IEnemy enemy:
+				if (!(state is DamagedState))
+				{
+					TakeDamage();
+				}
 				break;
 				
 			case IBlock block when block.IsSolid():
@@ -178,7 +193,6 @@ namespace sprint0.Classes
 				break;
 			
 			case IItem item:
-					// Item collision is handled by the item itself
 					break;
 				
 		}
