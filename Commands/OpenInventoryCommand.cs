@@ -13,7 +13,7 @@ namespace sprint0.Commands
         
         public void Execute()
         {
-            game.ToggleInventoryMenu();
+            game.currentState = Game1.GameState.Inventory;
         }
     }
 }

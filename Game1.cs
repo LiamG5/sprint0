@@ -67,7 +67,6 @@ public class Game1 : Game
     private string levelName = "Level 1";
     
     // Inventory system
-    private bool isInventoryOpen = false;
     private HUD.InventoryMenu inventoryMenu;
     private List<ItemFactory.ItemType> inventoryItems;
     private int selectedInventoryIndex = 0;
@@ -85,6 +84,10 @@ public class Game1 : Game
     private Texture2D _minimapOverlay;
     private static readonly Color _minimapColor = new Color(255, 0, 0, 96);
     private static readonly Color _minimapTextColor = Color.Yellow;
+
+    public enum GameState { Gameplay, Pause, Inventory, GameOver, Win };
+    public GameState currentState { get; set; } = GameState.Gameplay;
+
 
     public Game1()
     {
@@ -123,7 +126,7 @@ public class Game1 : Game
 
         hudFont = Content.Load<SpriteFont>("Font/font");
 
-        link = new Link(_spriteBatch);
+        link = new Link(_spriteBatch, this);
         roomManager = new RoomManager(link, this);
 
         hud = new HUD.HudManager();
@@ -234,7 +237,7 @@ public class Game1 : Game
         }
 
         controllers = new List<IController>();
-        keyboard = new KeyboardController(this, null, () => isInventoryOpen);
+        keyboard = new KeyboardController(this, null, () => currentState == GameState.Inventory);
         controllers.Add(keyboard);
 
         mapCellCommands = new Dictionary<int, ICommand>
@@ -274,9 +277,9 @@ public class Game1 : Game
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
         {
-            if (isInventoryOpen)
+            if (currentState == GameState.Inventory)
             {
-                isInventoryOpen = false;
+                currentState = GameState.Gameplay;
             }
             else
             {
@@ -284,38 +287,77 @@ public class Game1 : Game
             }
         }
 
-        // Pause game updates when inventory is open
-        if (!isInventoryOpen)
+        // Update based on game state
+        if (currentState == GameState.Gameplay)
         {
             link.Update(gameTime);
             collisionUpdater.Update();
             dungeon.Update(gameTime);
-        }
-        else
-        {
-            // Update inventory menu when open
-            inventoryMenu?.Update(gameTime);
-        }
+            
+            // Check for game over
+            if (Classes.Inventory.IsDead())
+            {
+                new Commands.GameOverCommand(this).Execute();
+            }
+            
+            // Check for win condition (triforce fragment collected)
+            if (dungeon != null)
+            {
+                foreach (var item in dungeon.GetItems())
+                {
+                    if (item is Sprites.ItemTriforceFragment triforce && triforce.IsCollected())
+                    {
+                        new Commands.WinCommand(this).Execute();
+                        break;
+                    }
+                }
+            }
+            
+            foreach (var controller in controllers)
+            {
+                controller.Update();
+            }
+            
+            HandleMinimapClicks();
 
-        foreach (var controller in controllers)
-        {
-            controller.Update();
-        }
-        
-        // Handle minimap room clicks
-        HandleMinimapClicks();
+            foreach (var e in dungeon.GetEnemies())
+            {
+                e.Update(gameTime);
+            }
 
-        foreach (var e in dungeon.GetEnemies())
-        {
-            e.Update(gameTime);
-        }
-
-        if (!isInventoryOpen)
-        {
             enemy.Update(gameTime);
             item.Update(gameTime);
+            hud?.Update(gameTime);
         }
-        hud?.Update(gameTime);
+        else if (currentState == GameState.Pause)
+        {
+            foreach (var controller in controllers)
+            {
+                controller.Update();
+            }
+        }
+        else if (currentState == GameState.Inventory)
+        {
+            foreach (var controller in controllers)
+            {
+                controller.Update();
+            }
+            inventoryMenu.Update(gameTime);
+        }
+        else if (currentState == GameState.GameOver)
+        {
+            foreach (var controller in controllers)
+            {
+                controller.Update();
+            }
+        }
+        else if (currentState == GameState.Win)
+        {
+            foreach (var controller in controllers)
+            {
+                controller.Update();
+            }
+        }
 
         base.Update(gameTime);
     }
@@ -324,7 +366,7 @@ public class Game1 : Game
 {
     GraphicsDevice.Clear(Color.CornflowerBlue);
 
-    if (isInventoryOpen)
+    if (currentState == GameState.Inventory)
     {
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         inventoryMenu?.Draw(_spriteBatch);
@@ -366,6 +408,34 @@ public class Game1 : Game
         DrawMinimapNumbers(_spriteBatch);
         itemLoader.Draw(_spriteBatch);
         _spriteBatch.End();
+        
+        if (currentState == GameState.GameOver || currentState == GameState.Win)
+        {
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            
+            string message = "";
+            
+            if (currentState == GameState.GameOver)
+            {
+                message = "Game Over";
+            }
+            else if (currentState == GameState.Win)
+            {
+                message = "Win";
+            }
+            
+            if (font != null)
+            {
+                Vector2 textSize = font.MeasureString(message);
+                Vector2 screenCenter = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
+                Vector2 textPosition = screenCenter - textSize / 2;
+                
+                _spriteBatch.DrawString(font, message, textPosition + new Vector2(2, 2), Color.Black);
+                _spriteBatch.DrawString(font, message, textPosition, Color.White);
+            }
+            
+            _spriteBatch.End();
+        }
     }
 
     base.Draw(gameTime);
@@ -435,7 +505,7 @@ public class Game1 : Game
 
     public void ResetGame()
     {
-        link = new Link(_spriteBatch);
+        link = new Link(_spriteBatch, this);
 
         blockCarousel = new BlockCarousel(blocks, _spriteBatch);
         enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
@@ -446,7 +516,7 @@ public class Game1 : Game
         item = itemCarousel.GetCurrentItem();
 
         controllers = new List<IController>();
-        keyboard = new KeyboardController(this, null, () => isInventoryOpen);
+        keyboard = new KeyboardController(this, null, () => currentState == GameState.Gameplay);
         controllers.Add(keyboard);
 
         roomManager = new RoomManager(link, this);
@@ -538,18 +608,10 @@ public class Game1 : Game
         };
     }
     
-    public void ToggleInventoryMenu()
-    {
-        isInventoryOpen = !isInventoryOpen;
-        if (isInventoryOpen)
-        {
-            selectedInventoryIndex = 0;
-        }
-    }
-    
+
     public void NavigateInventory(InventoryNavigateCommand.Direction direction)
     {
-        if (!isInventoryOpen || inventoryItems == null || inventoryItems.Count == 0)
+        if (currentState != GameState.Inventory || inventoryItems == null || inventoryItems.Count == 0)
             return;
         
         const int cols = 4;
@@ -584,11 +646,11 @@ public class Game1 : Game
     
     public void SelectInventoryItem()
     {
-        if (!isInventoryOpen || inventoryItems == null || selectedInventoryIndex < 0 || selectedInventoryIndex >= inventoryItems.Count)
+        if (currentState != GameState.Inventory || inventoryItems == null || selectedInventoryIndex < 0 || selectedInventoryIndex >= inventoryItems.Count)
             return;
         
         itemInSlotB = inventoryItems[selectedInventoryIndex];
         
-        isInventoryOpen = false;
+        currentState = GameState.Gameplay;
     }
 }
