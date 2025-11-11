@@ -72,6 +72,7 @@ public class Game1 : Game
     private List<ItemFactory.ItemType> inventoryItems;
     private int selectedInventoryIndex = 0;
     private ItemFactory.ItemType itemInSlotB = ItemFactory.ItemType.Boomerang;
+    private ItemLoader itemLoader;
 
     // Minimap click area
     private Rectangle mapRect = new Rectangle(32, 32, 6 * 24, 3 * 24);
@@ -203,10 +204,11 @@ public class Game1 : Game
         itemCarousel = new ItemCarousel(items, _spriteBatch);
 
         string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
-
-        dungeon = new DungeonLoader(blocks, File.ReadAllText(dungeonPath));
+        itemLoader = new ItemLoader(items);
+        dungeon = new DungeonLoader(blocks, itemLoader, File.ReadAllText(dungeonPath));
+        
         dungeon.LoadRectangles();
-
+        
         tile = blockCarousel.GetCurrentBlock();
         enemy = enemyCarousel.GetCurrentEnemy();
         item = itemCarousel.GetCurrentItem();
@@ -358,6 +360,11 @@ public class Game1 : Game
         if (link != null)
             link.Draw(_spriteBatch);
 
+        if (_minimapOverlay != null)
+            _spriteBatch.Draw(_minimapOverlay, mapRect, _minimapColor);
+
+        DrawMinimapNumbers(_spriteBatch);
+        itemLoader.Draw(_spriteBatch);
         _spriteBatch.End();
     }
 
@@ -386,7 +393,23 @@ public class Game1 : Game
 
     private void LoadRoom(int roomIndex)
     {
-        var csvPath = (roomIndex == 1)
+        var csvPath = System.IO.Path.Combine("Content", "Dungeon", $"Room{roomIndex}.csv");
+        if (!System.IO.File.Exists(csvPath))
+        {
+            System.Console.WriteLine($"[LoadRoom] Missing CSV: {csvPath}");
+            return;
+        }
+        var csv = System.IO.File.ReadAllText(csvPath);
+        dungeon = new DungeonLoader(BlockFactory.Instance, itemLoader, csv);
+        dungeon.LoadRectangles();
+        
+        if (roomManager != null)
+        {
+            roomManager.SetCurrentRoom(roomIndex);
+            dungeon.SetRoomManager(roomManager, roomIndex);
+            itemLoader.LoadItems(roomIndex);
+        }
+         csvPath = (roomIndex == 1)
         ? System.IO.Path.Combine("Content", "dungeon.csv")
         : System.IO.Path.Combine("Content", "Dungeon", $"Room{roomIndex}.csv");
 
@@ -396,8 +419,8 @@ public class Game1 : Game
         return;
     }
 
-    var csv = System.IO.File.ReadAllText(csvPath);
-    dungeon = new DungeonLoader(BlockFactory.Instance, csv);
+    csv = System.IO.File.ReadAllText(csvPath);
+    dungeon = new DungeonLoader(BlockFactory.Instance, itemLoader, csv);
     dungeon.LoadRectangles();
 
     if (roomManager != null)

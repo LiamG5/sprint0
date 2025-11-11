@@ -8,30 +8,30 @@ using Microsoft.Xna.Framework.Content;
 
 namespace sprint0.Sprites
 {
-    public class ItemBlueRing : IItem {
+    public class ItemRupee : IItem {
 
         private Texture2D itemSS;
         private Vector2 position;
         private bool isCollected = false;
-        private static int ItemRow = 0;
-        private static int ItemCol = 4;
-        private static Rectangle block = new Rectangle(40*ItemCol, 40*ItemRow, 15, 16);
+        private static Rectangle block = new Rectangle(200, 120, 15, 16);
         private const int ITEM_WIDTH = 45;
         private const int ITEM_HEIGHT = 48;
-       
+        private int frameNum = 0;
 
-        public ItemBlueRing(Texture2D sheet, Vector2 startPosition)
+        public ItemRupee(Texture2D sheet, Vector2 startPosition)
         {
             itemSS = sheet;
             position = startPosition;
         }
 
-        public ItemBlueRing(Texture2D sheet) : this(sheet, new Vector2(200, 100))
+        public ItemRupee(Texture2D sheet) : this(sheet, new Vector2(200, 100))
         {
+            
         }
 
         public void Update(GameTime gameTime)
         {
+            
             
         }
 
@@ -40,7 +40,19 @@ namespace sprint0.Sprites
             if (!isCollected)
             {
                 spriteBatch.Draw(itemSS, drawPosition, block, Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+                frameNum++;
+                if (frameNum == 6)
+                {
+                    block = new Rectangle(160, 120, 15, 16);
+                }
+                else if (frameNum == 12)
+                {
+                    block = new Rectangle(200, 120, 15, 16);
+                    frameNum = 0;
+                }
             }
+            
+
         }
 
         public Rectangle GetBounds()
