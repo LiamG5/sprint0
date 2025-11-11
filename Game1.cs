@@ -14,6 +14,8 @@ using static sprint0.Sprites.BlockFactory;
 using static sprint0.Sprites.DungeonCarousel;
 using static sprint0.Sprites.EnemySpriteFactory;
 using sprint0.Collisions;
+using sprint0.HUD;
+using static sprint0.Sprites.ItemFactory;
 
 namespace sprint0;
 
@@ -48,6 +50,28 @@ public class Game1 : Game
     private KeyboardState previousKeyboardState;
     private CollisionUpdater collisionUpdater;
     private RoomManager roomManager;
+    
+    // HUD
+    private HUD.HudManager hud;
+    private HUD.MinimapHud minimapHud;
+    private SpriteFont hudFont;
+
+    // temp HUD data
+    private int hearts = 3;
+    private int maxHearts = 3;
+    private int bombs = 0;
+    private int arrows = 0;
+    private int rupees = 0;
+    private int keys = 0;
+    private bool hasMap = true; // TODO: Connect to actual map item
+    private string levelName = "Level 1";
+    
+    // Inventory system
+    private bool isInventoryOpen = false;
+    private HUD.InventoryMenu inventoryMenu;
+    private List<ItemFactory.ItemType> inventoryItems;
+    private int selectedInventoryIndex = 0;
+    private ItemFactory.ItemType itemInSlotB = ItemFactory.ItemType.Boomerang;
     private ItemLoader itemLoader;
 
     // Minimap click area
@@ -55,7 +79,6 @@ public class Game1 : Game
     private const int MapRows = 3;
     private const int MapCols = 6;
 
-    // Map click → room jump
     private Dictionary<int, ICommand> mapCellCommands;
     private MouseController mouse;
 
@@ -68,6 +91,11 @@ public class Game1 : Game
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+        
+        _graphics.PreferredBackBufferWidth = 768;
+        _graphics.PreferredBackBufferHeight = 620;
+        _graphics.IsFullScreen = false;
+        _graphics.ApplyChanges();
     }
 
     protected override void Initialize()
@@ -78,6 +106,11 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+        
+        // Debug:
+        System.Console.WriteLine($"[Window Size] Requested: 768x620, Actual: {GraphicsDevice.Viewport.Width}x{GraphicsDevice.Viewport.Height}");
+        
+        sprint0.Sprites.Texture2DStorage.Init(GraphicsDevice);
 
         try
         {
@@ -88,10 +121,79 @@ public class Game1 : Game
             System.Console.WriteLine("[LoadAllTextures] " + ex);
         }
 
-        _minimapOverlay = new Texture2D(GraphicsDevice, 1, 1);
-        _minimapOverlay.SetData(new[] { Color.White });
+        hudFont = Content.Load<SpriteFont>("Font/font");
 
         link = new Link(_spriteBatch);
+        roomManager = new RoomManager(link, this);
+
+        hud = new HUD.HudManager();
+
+        hud.Add(new HUD.HudBackground(GraphicsDevice.Viewport.Width, HUD.HudConstants.HudHeight, GraphicsDevice));
+
+        hud.Add(new HUD.LevelLabelHud(() => levelName, hudFont, HUD.HudConstants.LevelLabelPos));
+        
+        minimapHud = new HUD.MinimapHud(
+            () => roomManager.CurrentRoomId,
+            () => hasMap,
+            (roomId) => roomManager.GetRoomConnections(roomId),
+            HUD.HudConstants.MinimapPos,
+            GraphicsDevice,
+            rows: 3,
+            cols: 6,
+            cellSize: 14);
+        hud.Add(minimapHud);
+
+        hud.Add(new HUD.InventorySlotsHud(
+            () => GetItemIcon(itemInSlotB),
+            () => sprint0.Sprites.Texture2DStorage.GetTexture("icon_sword"),
+            HUD.HudConstants.SlotAPos, HUD.HudConstants.SlotBPos,
+            hudFont));
+
+        hud.Add(new HUD.CounterIcon(
+            sprint0.Sprites.Texture2DStorage.GetTexture("icon_rupee"),
+            () => rupees, hudFont, HUD.HudConstants.CountersPos));
+
+        hud.Add(new HUD.CounterIcon(
+            sprint0.Sprites.Texture2DStorage.GetTexture("icon_key"),
+            () => keys, hudFont, HUD.HudConstants.CountersPos + new Vector2(0, 1 * HUD.HudConstants.CounterLineHeight)));
+
+        hud.Add(new HUD.CounterIcon(
+            sprint0.Sprites.Texture2DStorage.GetTexture("icon_bomb"),
+            () => bombs, hudFont, HUD.HudConstants.CountersPos + new Vector2(0, 2 * HUD.HudConstants.CounterLineHeight)));
+
+        hud.Add(new HUD.HeartMeter(() => hearts, () => maxHearts, HUD.HudConstants.HeartsPos, hudFont));
+
+        // Initialize inventory
+        inventoryItems = new List<ItemFactory.ItemType>
+        {
+            ItemFactory.ItemType.Boomerang,
+            ItemFactory.ItemType.Bomb,
+            ItemFactory.ItemType.Bow,
+            ItemFactory.ItemType.Arrow,
+            ItemFactory.ItemType.CandleRed,
+            ItemFactory.ItemType.Recorder,
+            ItemFactory.ItemType.Food,
+            ItemFactory.ItemType.PotionRed
+        };
+        
+        inventoryMenu = new HUD.InventoryMenu(
+            () => inventoryItems,
+            () => itemInSlotB,
+            (item) => itemInSlotB = item,
+            () => selectedInventoryIndex,
+            (index) => selectedInventoryIndex = index,
+            () => roomManager,
+            () => hearts,
+            () => maxHearts,
+            () => rupees,
+            () => keys,
+            () => bombs,
+            hudFont,
+            GraphicsDevice
+        );
+
+        _minimapOverlay = new Texture2D(GraphicsDevice, 1, 1);
+        _minimapOverlay.SetData(new[] { Color.White });
 
         blocks = BlockFactory.Instance;
         enemies = EnemySpriteFactory.Instance;
@@ -124,7 +226,6 @@ public class Game1 : Game
 
         try
         {
-            // We'll reuse this font for the minimap labels.
             font = Content.Load<SpriteFont>("Font/font");
         }
         catch (Exception ex)
@@ -133,10 +234,8 @@ public class Game1 : Game
         }
 
         controllers = new List<IController>();
-        keyboard = new KeyboardController(this, null);
+        keyboard = new KeyboardController(this, null, () => isInventoryOpen);
         controllers.Add(keyboard);
-
-        roomManager = new RoomManager(link, this);
 
         mapCellCommands = new Dictionary<int, ICommand>
         {
@@ -159,7 +258,6 @@ public class Game1 : Game
             { 16, new GoToRoom17Command(this) },
         };
 
-        // Mouse controller for minimap clicks
         mouse = new MouseController(mapRect, MapRows, MapCols, mapCellCommands);
         controllers.Add(mouse);
 
@@ -167,6 +265,7 @@ public class Game1 : Game
         collisionUpdater.getList();
 
         previousKeyboardState = Keyboard.GetState();
+        previousMouseState = Mouse.GetState();
 
         System.Console.WriteLine("[LoadContent] completed");
     }
@@ -174,48 +273,92 @@ public class Game1 : Game
     protected override void Update(GameTime gameTime)
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
+        {
+            if (isInventoryOpen)
+            {
+                isInventoryOpen = false;
+            }
+            else
+            {
+                Exit();
+            }
+        }
 
-        link.Update(gameTime);
-        collisionUpdater.Update();
-        dungeon.Update(gameTime);
+        // Pause game updates when inventory is open
+        if (!isInventoryOpen)
+        {
+            link.Update(gameTime);
+            collisionUpdater.Update();
+            dungeon.Update(gameTime);
+        }
+        else
+        {
+            // Update inventory menu when open
+            inventoryMenu?.Update(gameTime);
+        }
 
         foreach (var controller in controllers)
         {
             controller.Update();
         }
+        
+        // Handle minimap room clicks
+        HandleMinimapClicks();
 
         foreach (var e in dungeon.GetEnemies())
         {
             e.Update(gameTime);
         }
 
-        enemy.Update(gameTime);
-        item.Update(gameTime);
+        if (!isInventoryOpen)
+        {
+            enemy.Update(gameTime);
+            item.Update(gameTime);
+        }
+        hud?.Update(gameTime);
 
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
+{
+    GraphicsDevice.Clear(Color.CornflowerBlue);
+
+    if (isInventoryOpen)
     {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        inventoryMenu?.Draw(_spriteBatch);
+        _spriteBatch.End();
+    }
+    else
+    {
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        hud?.Draw(_spriteBatch);
+        _spriteBatch.End();
 
-        _spriteBatch.Begin();
-
-        dungeon.Draw(_spriteBatch, GraphicsDevice);
+        Matrix transform = Matrix.CreateTranslation(0, HUD.HudConstants.HudHeight, 0);
         
+        _spriteBatch.Begin(
+            samplerState: SamplerState.PointClamp,
+            transformMatrix: transform);
 
-        foreach (var e in dungeon.GetEnemies())
+        if (dungeon != null)
         {
-            if (!e.IsDead())
+            dungeon.Draw(_spriteBatch, GraphicsDevice);
+
+            foreach (var e in dungeon.GetEnemies())
             {
-                e.Draw(_spriteBatch, e.GetPosition());
+                if (!e.IsDead())
+                    e.Draw(_spriteBatch, e.GetPosition());
             }
         }
 
-        enemy.Draw(_spriteBatch, new Vector2(400, 100));
-        item.Draw(_spriteBatch, new Vector2(200, 100));
-        link.Draw(_spriteBatch);
+        if (enemy != null)
+            enemy.Draw(_spriteBatch, new Vector2(400, 100));
+        if (item != null)
+            item.Draw(_spriteBatch, new Vector2(200, 100));
+        if (link != null)
+            link.Draw(_spriteBatch);
 
         if (_minimapOverlay != null)
             _spriteBatch.Draw(_minimapOverlay, mapRect, _minimapColor);
@@ -223,8 +366,12 @@ public class Game1 : Game
         DrawMinimapNumbers(_spriteBatch);
         itemLoader.Draw(_spriteBatch);
         _spriteBatch.End();
-        base.Draw(gameTime);
     }
+
+    base.Draw(gameTime);
+}
+
+
 
     public void GoToRoom1()  => LoadRoom(1);
     public void GoToRoom2()  => LoadRoom(2);
@@ -262,6 +409,25 @@ public class Game1 : Game
             dungeon.SetRoomManager(roomManager, roomIndex);
             itemLoader.LoadItems(roomIndex);
         }
+        var csvPath = (roomIndex == 1)
+        ? System.IO.Path.Combine("Content", "dungeon.csv")
+        : System.IO.Path.Combine("Content", "Dungeon", $"Room{roomIndex}.csv");
+
+    if (!System.IO.File.Exists(csvPath))
+    {
+        System.Console.WriteLine($"[LoadRoom] Missing CSV: {csvPath}");
+        return;
+    }
+
+    var csv = System.IO.File.ReadAllText(csvPath);
+    dungeon = new DungeonLoader(BlockFactory.Instance, csv);
+    dungeon.LoadRectangles();
+
+    if (roomManager != null)
+    {
+        roomManager.SetCurrentRoom(roomIndex);
+        dungeon.SetRoomManager(roomManager, roomIndex);
+    }
         
         collisionUpdater = new CollisionUpdater(dungeon, link);
         System.Console.WriteLine($"[LoadRoom] Loaded Room {roomIndex}");
@@ -280,7 +446,7 @@ public class Game1 : Game
         item = itemCarousel.GetCurrentItem();
 
         controllers = new List<IController>();
-        keyboard = new KeyboardController(this, null);
+        keyboard = new KeyboardController(this, null, () => isInventoryOpen);
         controllers.Add(keyboard);
 
         roomManager = new RoomManager(link, this);
@@ -295,6 +461,28 @@ public class Game1 : Game
 
         collisionUpdater = new CollisionUpdater(dungeon, link);
         collisionUpdater.getList();
+    }
+
+    private MouseState previousMouseState;
+    
+    private void HandleMinimapClicks()
+    {
+        if (minimapHud == null || !hasMap) return;
+        
+        var currentMouse = Mouse.GetState();
+        var pos = new Point(currentMouse.X, currentMouse.Y);
+        
+        if (currentMouse.LeftButton == ButtonState.Pressed && 
+            previousMouseState.LeftButton == ButtonState.Released)
+        {
+            var roomNum = minimapHud.GetRoomAtPoint(pos);
+            if (roomNum.HasValue && roomNum.Value >= 1 && roomNum.Value <= 17)
+            {
+                LoadRoom(roomNum.Value);
+            }
+        }
+        
+        previousMouseState = currentMouse;
     }
 
     private void DrawMinimapNumbers(SpriteBatch sb)
@@ -321,14 +509,86 @@ public class Game1 : Game
                     mapRect.Y + row * cellH + (cellH - size.Y) * 0.5f
                 );
 
-                // soft shadow
                 sb.DrawString(font, text, pos + new Vector2(1, 1),
                               Color.Black * 0.7f, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
 
-                // main label
                 sb.DrawString(font, text, pos, _minimapTextColor,
                               0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
             }
         }
+    }
+    
+    private Texture2D GetItemIcon(ItemFactory.ItemType itemType)
+    {
+        return itemType switch
+        {
+            ItemFactory.ItemType.Boomerang => sprint0.Sprites.Texture2DStorage.GetTexture("icon_boomerang"),
+            ItemFactory.ItemType.Bomb => sprint0.Sprites.Texture2DStorage.GetTexture("icon_bomb"),
+            ItemFactory.ItemType.Bow => sprint0.Sprites.Texture2DStorage.GetTexture("icon_bow"),
+            ItemFactory.ItemType.Arrow => sprint0.Sprites.Texture2DStorage.GetTexture("icon_arrow"),
+            ItemFactory.ItemType.CandleRed => sprint0.Sprites.Texture2DStorage.GetTexture("icon_candle"),
+            ItemFactory.ItemType.CandleBlue => sprint0.Sprites.Texture2DStorage.GetTexture("icon_candle"),
+            ItemFactory.ItemType.Recorder => sprint0.Sprites.Texture2DStorage.GetTexture("icon_recorder"),
+            ItemFactory.ItemType.Food => sprint0.Sprites.Texture2DStorage.GetTexture("icon_food"),
+            ItemFactory.ItemType.PotionRed => sprint0.Sprites.Texture2DStorage.GetTexture("icon_potion"),
+            ItemFactory.ItemType.PotionBlue => sprint0.Sprites.Texture2DStorage.GetTexture("icon_potion"),
+            ItemFactory.ItemType.MagicalRod => sprint0.Sprites.Texture2DStorage.GetTexture("icon_rod"),
+            ItemFactory.ItemType.Sword => sprint0.Sprites.Texture2DStorage.GetTexture("icon_sword"),
+            _ => null
+        };
+    }
+    
+    public void ToggleInventoryMenu()
+    {
+        isInventoryOpen = !isInventoryOpen;
+        if (isInventoryOpen)
+        {
+            selectedInventoryIndex = 0;
+        }
+    }
+    
+    public void NavigateInventory(InventoryNavigateCommand.Direction direction)
+    {
+        if (!isInventoryOpen || inventoryItems == null || inventoryItems.Count == 0)
+            return;
+        
+        const int cols = 4;
+        const int rows = 2;
+        int maxItems = Math.Min(inventoryItems.Count, 8);
+        
+        int currentRow = selectedInventoryIndex / cols;
+        int currentCol = selectedInventoryIndex % cols;
+        
+        switch (direction)
+        {
+            case InventoryNavigateCommand.Direction.Up:
+                currentRow = (currentRow - 1 + rows) % rows;
+                break;
+            case InventoryNavigateCommand.Direction.Down:
+                currentRow = (currentRow + 1) % rows;
+                break;
+            case InventoryNavigateCommand.Direction.Left:
+                currentCol = (currentCol - 1 + cols) % cols;
+                break;
+            case InventoryNavigateCommand.Direction.Right:
+                currentCol = (currentCol + 1) % cols;
+                break;
+        }
+        
+        int newIndex = currentRow * cols + currentCol;
+        if (newIndex < maxItems)
+        {
+            selectedInventoryIndex = newIndex;
+        }
+    }
+    
+    public void SelectInventoryItem()
+    {
+        if (!isInventoryOpen || inventoryItems == null || selectedInventoryIndex < 0 || selectedInventoryIndex >= inventoryItems.Count)
+            return;
+        
+        itemInSlotB = inventoryItems[selectedInventoryIndex];
+        
+        isInventoryOpen = false;
     }
 }
