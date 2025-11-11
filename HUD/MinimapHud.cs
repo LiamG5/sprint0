@@ -22,17 +22,23 @@ namespace sprint0.HUD
         private const int RoomWidth = 16;  // Wider rectangles
         private const int RoomHeight = 10; // Shorter height
         private const int RoomSpacing = 4; // Gap between rooms (increased for more separation)
-        
+
         // Room layout: 3 rows x 6 cols
         // Row 1: Rooms 1-6
         // Row 2: Rooms 7-12
         // Row 3: Rooms 13-17 (only 5 rooms)
         private static readonly int[] RoomLayout = new int[]
         {
-            1, 2, 3, 4, 5, 6,    // Row 1
-            7, 8, 9, 10, 11, 12, // Row 2
-            13, 14, 15, 16, 17, -1 // Row 3 (last cell empty)
-        };
+           -1, 16, 17, -1, -1, -1,   // Row 1 (top)
+           -1, -1, 13, -1, 14, 15,   // Row 2
+            8,  9, 10, 11, 12, -1,   // Row 3
+           -1,  5,  6,  7, -1, -1,   // Row 4
+           -1, -1,  4, -1, -1, -1,   // Row 5
+           -1,  1,  2,  3, -1, -1    // Row 6 (bottom)
+         };
+
+
+
         
         // Helper to get room position from room number
         private static (int row, int col) GetRoomPosition(int roomNum)
@@ -49,7 +55,13 @@ namespace sprint0.HUD
             return (-1, -1);
         }
 
-        public MinimapHud(Func<int> getCurrentRoom, Func<bool> hasMap, Func<int, RoomConnections> getRoomConnections, Vector2 position, GraphicsDevice graphicsDevice, int rows = 3, int cols = 6, int cellSize = 8)
+        public MinimapHud(
+            Func<int> getCurrentRoom,
+            Func<bool> hasMap,
+            Func<int, RoomConnections> getRoomConnections,
+            Vector2 position,
+            GraphicsDevice graphicsDevice,
+            int rows = 6, int cols = 6, int cellSize = 8)
         {
             this.getCurrentRoom = getCurrentRoom;
             this.hasMap = hasMap;
@@ -59,15 +71,15 @@ namespace sprint0.HUD
             this.cols = cols;
             this.cellWidth = cellSize;
             this.cellHeight = cellSize;
-            
-            // Create a simple pixel texture for drawing
+
             pixelTexture = new Texture2D(graphicsDevice, 1, 1);
             pixelTexture.SetData(new[] { Color.White });
+
         }
+
 
         public void Update(GameTime gameTime) { }
         
-        // Get the clickable rectangle for a specific room
         public Rectangle? GetRoomBounds(int roomNum)
         {
             if (!hasMap()) return null;
@@ -95,7 +107,6 @@ namespace sprint0.HUD
             return null;
         }
         
-        // Check if a point is on a room and return the room number
         public int? GetRoomAtPoint(Point point)
         {
             if (!hasMap()) return null;
@@ -143,7 +154,6 @@ namespace sprint0.HUD
                         pos.Y + row * cellHeight
                     );
                     
-                    // Draw room as a small blue rectangle (wider than tall) with spacing
                     var roomRect = new Rectangle(
                         (int)cellPos.X + (cellWidth - RoomWidth) / 2 + RoomSpacing / 2, // Add spacing
                         (int)cellPos.Y + (cellHeight - RoomHeight) / 2 + RoomSpacing / 2,
@@ -151,13 +161,11 @@ namespace sprint0.HUD
                         RoomHeight - RoomSpacing
                     );
                     
-                    // Draw blue rectangle for room
                     Color roomColor = (roomNum == currentRoom) ? Color.Green : new Color(0, 200, 255);
                     spriteBatch.Draw(pixelTexture, roomRect, roomColor);
                 }
             }
             
-            // Connections removed - rooms are now separate with gaps
         }
         
         private void DrawLine(SpriteBatch spriteBatch, Vector2 start, Vector2 end, Color color)
@@ -168,7 +176,7 @@ namespace sprint0.HUD
             
             direction.Normalize();
             
-            // Draw line by drawing small rectangles along the path
+            
             int steps = (int)distance;
             for (int i = 0; i <= steps; i++)
             {
@@ -179,4 +187,3 @@ namespace sprint0.HUD
         }
     }
 }
-

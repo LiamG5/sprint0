@@ -5,10 +5,6 @@ using sprint0.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
-using static sprint0.Sprites.DungeonCarousel;
 
 namespace sprint0.Sprites
 {
@@ -28,11 +24,10 @@ namespace sprint0.Sprites
         private List<TransitionZone> transitionZones;
         private int roomId;
         private RoomManager roomManager;
-        private ItemLoader itemLoader;
 
         public Texture2D border;
-        
-        public DungeonLoader(BlockFactory blocks, ItemLoader itemLoader, string csvContent)
+
+        public DungeonLoader(BlockFactory blocks, string csvContent)
         {
             this.blocks = blocks;
             this.path = csvContent;
@@ -47,9 +42,29 @@ namespace sprint0.Sprites
             this.border = Texture2DStorage.GetDungeonBorder();
             this.boarders = new List<ICollidable>();
             this.transitionZones = new List<TransitionZone>();
-            this.roomId = 1;
-            this.itemLoader = itemLoader;
+            this.roomId = 8;
         }
+
+        public DungeonLoader(BlockFactory blocks, ItemLoader items, string csvContent)
+        {
+            this.blocks = blocks;
+            this.path = csvContent;
+
+            int totalCells = 84;
+            storage = new ISprite[totalCells];
+            storageIdx = 0;
+            this.rectangles = new List<Rectangle>();
+            this.blockObjects = new List<IBlock>();
+            this.enemies = new List<IEnemy>();
+            this.projectiles = new List<Projectile>();
+            this.items = new List<IItem>();
+            this.border = Texture2DStorage.GetDungeonBorder();
+            this.boarders = new List<ICollidable>();
+            this.transitionZones = new List<TransitionZone>();
+            this.roomId = 8;
+        }
+
+
 
         public void SetRoomManager(RoomManager manager, int currentRoomId)
         {
@@ -61,53 +76,63 @@ namespace sprint0.Sprites
         private void CreateTransitionZones()
         {
             if (roomManager == null) return;
-            
+
             transitionZones.Clear();
-            
+
+            // Helper: make a solid blocking rectangle when no neighbor exists
+            void AddBlockingRect(Rectangle rect)
+            {
+                // Use an invisible TransitionZone that does nothing (solid block)
+                transitionZones.Add(new TransitionZone(rect, TransitionDirection.None, roomManager, isBlocking: true));
+            }
+
             int northRoom = roomManager.GetConnectedRoom(roomId, TransitionDirection.North);
             if (northRoom != -1)
             {
-                transitionZones.Add(new TransitionZone(
-                    new Rectangle(336, 0, 96, 80),
-                    TransitionDirection.North,
-                    northRoom,
-                    roomManager
-                ));
+                transitionZones.Add(new TransitionZone(new Rectangle(336, 0, 96, 80),
+                    TransitionDirection.North, roomManager));
             }
-            
+            else
+            {
+                AddBlockingRect(new Rectangle(336, 0, 96, 80));
+            }
+
             int southRoom = roomManager.GetConnectedRoom(roomId, TransitionDirection.South);
             if (southRoom != -1)
             {
-                transitionZones.Add(new TransitionZone(
-                    new Rectangle(336, 400, 96, 80),
-                    TransitionDirection.South,
-                    southRoom,
-                    roomManager
-                ));
+                transitionZones.Add(new TransitionZone(new Rectangle(336, 400, 96, 80),
+                    TransitionDirection.South, roomManager));
             }
-            
+            else
+            {
+                AddBlockingRect(new Rectangle(336, 400, 96, 80));
+            }
+
             int westRoom = roomManager.GetConnectedRoom(roomId, TransitionDirection.West);
             if (westRoom != -1)
             {
-                transitionZones.Add(new TransitionZone(
-                    new Rectangle(0, 192, 80, 96),
-                    TransitionDirection.West,
-                    westRoom,
-                    roomManager
-                ));
+                transitionZones.Add(new TransitionZone(new Rectangle(0, 192, 80, 96),
+                    TransitionDirection.West, roomManager));
             }
-            
+            else
+            {
+                AddBlockingRect(new Rectangle(0, 192, 80, 96));
+            }
+
             int eastRoom = roomManager.GetConnectedRoom(roomId, TransitionDirection.East);
             if (eastRoom != -1)
             {
-                transitionZones.Add(new TransitionZone(
-                    new Rectangle(656, 192, 80, 96),
-                    TransitionDirection.East,
-                    eastRoom,
-                    roomManager
-                ));
+                transitionZones.Add(new TransitionZone(new Rectangle(656, 192, 80, 96),
+                    TransitionDirection.East, roomManager));
+            }
+            else
+            {
+                AddBlockingRect(new Rectangle(656, 192, 80, 96));
             }
         }
+
+
+
 
         public void LoadRectangles()
         {
@@ -117,6 +142,8 @@ namespace sprint0.Sprites
 
             rectangles.Clear();
             blockObjects.Clear();
+            boarders.Clear(); // Clear borders before rebuilding
+            
             string[] lines = path.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             int cellIndex = 0;
@@ -177,7 +204,7 @@ namespace sprint0.Sprites
                 }
             }
             
-            // Add wall borders
+            // Add wall borders (these are the outer walls that always exist)
             for (int i = 0; i < 2; i++)
             {
                 boarders.Add(new DungeonLongWall(new Vector2(0 + i * 424, 48)));
@@ -186,27 +213,52 @@ namespace sprint0.Sprites
                 boarders.Add(new DungeonTallWall(new Vector2(48 + i * 634, 294)));
             }
             
-            // Add doors or walls based on room connections
+            // Add solid walls in doorway locations where there is NO connection
+            // This makes doors behave like walls when there's no neighboring room
             if (roomManager != null)
             {
+                // North door/wall
                 if (roomManager.GetConnectedRoom(roomId, TransitionDirection.North) == -1)
                 {
                     boarders.Add(new SolidWallBlock(new Vector2(336, 24), 96, 48));
+                    System.Console.WriteLine($"[DungeonLoader] Added North wall for Room {roomId} (no connection)");
+                }
+                else
+                {
+                    System.Console.WriteLine($"[DungeonLoader] North doorway open for Room {roomId}");
                 }
                 
+                // South door/wall
                 if (roomManager.GetConnectedRoom(roomId, TransitionDirection.South) == -1)
                 {
                     boarders.Add(new SolidWallBlock(new Vector2(336, 432), 96, 48));
+                    System.Console.WriteLine($"[DungeonLoader] Added South wall for Room {roomId} (no connection)");
+                }
+                else
+                {
+                    System.Console.WriteLine($"[DungeonLoader] South doorway open for Room {roomId}");
                 }
                 
+                // West door/wall
                 if (roomManager.GetConnectedRoom(roomId, TransitionDirection.West) == -1)
                 {
                     boarders.Add(new SolidWallBlock(new Vector2(24, 192), 48, 96));
+                    System.Console.WriteLine($"[DungeonLoader] Added West wall for Room {roomId} (no connection)");
+                }
+                else
+                {
+                    System.Console.WriteLine($"[DungeonLoader] West doorway open for Room {roomId}");
                 }
                 
+                // East door/wall
                 if (roomManager.GetConnectedRoom(roomId, TransitionDirection.East) == -1)
                 {
                     boarders.Add(new SolidWallBlock(new Vector2(682, 192), 48, 96));
+                    System.Console.WriteLine($"[DungeonLoader] Added East wall for Room {roomId} (no connection)");
+                }
+                else
+                {
+                    System.Console.WriteLine($"[DungeonLoader] East doorway open for Room {roomId}");
                 }
             }
         }
@@ -251,23 +303,19 @@ namespace sprint0.Sprites
             {
                 if (block is ISprite blockSprite)
                 {
-                    if (!(block is BlockTile))
-                    {
+                    if (!(block is BlockTile)) {
                         blockSprite.Draw(sprite, block.GetPosition());
                     }
-                    if (block is BlockChiseledTile)
-                    {
+                    if (block is BlockChiseledTile) {
                         chiseledTiles.Add(block as BlockChiseledTile);
                     }
                 }
             }
-            
-
             foreach (var chiseledTile in chiseledTiles) {
                 chiseledTile.Draw(sprite, chiseledTile.GetPosition());
             }
         }
-
+        
         public List<Rectangle> GetBlockList()
         {
             return rectangles;
@@ -327,7 +375,7 @@ namespace sprint0.Sprites
         
         public List<IItem> GetItems()
         {
-            return itemLoader.GetItems();
+            return items;
         }
         
         public void AddItem(IItem item)

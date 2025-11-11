@@ -7,14 +7,12 @@ using Microsoft.Xna.Framework.Content;
 
 namespace sprint0.Sprites
 {
-    public class DungeonDoor : ICollidable {
-
-
+    public class DungeonDoor : ICollidable 
+    {
         private Vector2 position;
         private Rectangle rectangle;
-
-        Boolean doorThere = false;
-        Boolean doorOpen = false;
+        private bool doorThere = false;
+        private bool doorOpen = false;
 
         public DungeonDoor(Vector2 pos)
         {
@@ -26,7 +24,6 @@ namespace sprint0.Sprites
         {
             return rectangle;
         }
-        
         public bool IsSolid()
         {
             return true;
