@@ -83,7 +83,6 @@ namespace sprint0.Sounds
 
             dungeon = Content.Load<Song>(@"music/dungeon");
         }
-
         public static void PlayLOZArrowBoomerang()
         {
             LOZ_Arrow_Boomerang.Play(sfxVolume, 0f, 0f);
