@@ -8,47 +8,82 @@ namespace sprint0.Sprites
 {
     public class TransitionZone : ICollidable
     {
-        private Rectangle bounds;
-        private TransitionDirection direction;
-        private int targetRoomId;
+        private readonly Rectangle bounds;
+        private readonly TransitionDirection direction;
+        private readonly bool isBlocking;   
         private bool isLocked;
-        private RoomManager roomManager;
-        
-        public TransitionZone(Rectangle bounds, TransitionDirection direction, int targetRoomId, RoomManager manager)
+        private readonly RoomManager roomManager;
+
+        // Normal constructor (for regular door transitions)
+        public TransitionZone(Rectangle bounds, TransitionDirection direction, RoomManager manager)
         {
             this.bounds = bounds;
             this.direction = direction;
-            this.targetRoomId = targetRoomId;
-            this.isLocked = false;
             this.roomManager = manager;
+            this.isLocked = false;
+            this.isBlocking = false; 
         }
-        
+
+        public TransitionZone(Rectangle bounds, TransitionDirection direction, RoomManager manager, bool isBlocking)
+        {
+            this.bounds = bounds;
+            this.direction = direction;
+            this.roomManager = manager;
+            this.isLocked = false;
+            this.isBlocking = isBlocking;
+        }
+
         public Rectangle GetBounds()
         {
             return bounds;
         }
-        
+
         public bool IsSolid()
         {
-            return false;  // Not solid - Link can walk through
+            return isBlocking;
         }
-        
+
         public Vector2 GetPosition()
         {
             return new Vector2(bounds.X, bounds.Y);
         }
-        
+
         public void OnCollision(ICollidable other, CollisionDirection collisionDirection)
         {
-            if (other is Link && !isLocked && targetRoomId != -1)
+            // Skip if not Link or currently locked
+            if (!(other is Link) || isLocked)
+                return;
+
+            // If this is a blocking zone, do not allow passage or transitions
+            if (isBlocking)
             {
+                // Optional debug log
+                System.Console.WriteLine($"[TransitionZone] Blocked passage at {direction} in Room {roomManager.CurrentRoomId}");
+                return;
+            }
+
+            int currentRoom = roomManager.CurrentRoomId;
+            int targetRoomId = roomManager.GetConnectedRoom(currentRoom, direction);
+
+            if (targetRoomId != -1)
+            {
+                System.Console.WriteLine($"[TransitionZone] Transitioning from Room {currentRoom} to Room {targetRoomId} via {direction}");
                 roomManager.TransitionToRoom(targetRoomId, direction);
             }
+            else
+            {
+                System.Console.WriteLine($"[TransitionZone] No connection from Room {currentRoom} in direction {direction}");
+            }
         }
-        
+
         public void SetLocked(bool locked)
         {
             isLocked = locked;
+        }
+
+        public TransitionDirection GetDirection()
+        {
+            return direction;
         }
     }
 }

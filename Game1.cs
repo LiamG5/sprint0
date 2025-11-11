@@ -16,6 +16,7 @@ using static sprint0.Sprites.EnemySpriteFactory;
 using sprint0.Collisions;
 using sprint0.HUD;
 using static sprint0.Sprites.ItemFactory;
+using Microsoft.Xna.Framework.Media;
 
 namespace sprint0;
 
@@ -50,6 +51,7 @@ public class Game1 : Game
     private KeyboardState previousKeyboardState;
     private CollisionUpdater collisionUpdater;
     private RoomManager roomManager;
+    private Song bgm;
     
     // HUD
     private HUD.HudManager hud;
@@ -114,6 +116,7 @@ public class Game1 : Game
         System.Console.WriteLine($"[Window Size] Requested: 768x620, Actual: {GraphicsDevice.Viewport.Width}x{GraphicsDevice.Viewport.Height}");
         
         sprint0.Sprites.Texture2DStorage.Init(GraphicsDevice);
+        sprint0.Sounds.SoundStorage.LoadAllSounds(Content);
 
         try
         {
