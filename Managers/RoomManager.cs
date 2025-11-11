@@ -27,42 +27,50 @@ namespace sprint0.Managers
             SetupRoomTypes();
             MarkRoomVisited(1);
         }
-        
+
         private void SetupRoomConnections()
         {
             roomConnections = new Dictionary<int, RoomConnections>();
-            
-            // Rooms 1-6
-            roomConnections[1] = new RoomConnections { North = -1, South = 7, East = 2, West = -1 };
-            roomConnections[2] = new RoomConnections { North = -1, South = 8, East = 3, West = 1 };
-            roomConnections[3] = new RoomConnections { North = -1, South = 9, East = 4, West = 2 };
-            roomConnections[4] = new RoomConnections { North = -1, South = 10, East = 5, West = 3 };
-            roomConnections[5] = new RoomConnections { North = -1, South = 11, East = 6, West = 4 };
-            roomConnections[6] = new RoomConnections { North = -1, South = 12, East = -1, West = 5 };
-            
-            // Rooms 7-12
-            roomConnections[7] = new RoomConnections { North = 1, South = 13, East = 8, West = -1 };
-            roomConnections[8] = new RoomConnections { North = 2, South = 14, East = 9, West = 7 };
-            roomConnections[9] = new RoomConnections { North = 3, South = 15, East = 10, West = 8 };
-            roomConnections[10] = new RoomConnections { North = 4, South = 16, East = 11, West = 9 };
-            roomConnections[11] = new RoomConnections { North = 5, South = 17, East = 12, West = 10 };
-            roomConnections[12] = new RoomConnections { North = 6, South = -1, East = -1, West = 11 };
-            
-            // Rooms 13-17
-            roomConnections[13] = new RoomConnections { North = 7, South = -1, East = 14, West = -1 };
-            roomConnections[14] = new RoomConnections { North = 8, South = -1, East = 15, West = 13 };
-            roomConnections[15] = new RoomConnections { North = 9, South = -1, East = 16, West = 14 };
-            roomConnections[16] = new RoomConnections { North = 10, South = -1, East = 17, West = 15 };
-            roomConnections[17] = new RoomConnections { North = 11, South = -1, East = -1, West = 16 };
+
+            // Row 1
+            roomConnections[16] = new RoomConnections { North = -1, South = -1, East = 17, West = -1 };
+            roomConnections[17] = new RoomConnections { North = -1, South = 13, East = -1, West = 16 };
+
+            // Row 2
+            roomConnections[13] = new RoomConnections { North = 17, South = 10, East = -1, West = -1 };
+            roomConnections[14] = new RoomConnections { North = -1, South = 12, East = 15, West = -1 };
+            roomConnections[15] = new RoomConnections { North = -1, South = -1, East = -1, West = 14 };
+
+            // Row 3
+            roomConnections[8] = new RoomConnections { North = -1, South = -1, East = 9, West = -1 };
+            roomConnections[9] = new RoomConnections { North = -1, South = 5, East = 10, West = 8 };
+            roomConnections[10] = new RoomConnections { North = 13, South = 4, East = 11, West = 9 };
+            roomConnections[11] = new RoomConnections { North = -1, South = 7, East = 12, West = 10 };
+            roomConnections[12] = new RoomConnections { North = 14, South = -1, East = -1, West = 11 };
+
+            // Row 4
+            roomConnections[5] = new RoomConnections { North = 9, South = -1, East = 6, West = -1 };
+            roomConnections[6] = new RoomConnections { North = 10, South = 4, East = 7, West = 5 };
+            roomConnections[7] = new RoomConnections { North = 11, South = -1, East = -1, West = 6 };
+
+            // Row 5
+            roomConnections[4] = new RoomConnections { North = 6, South = 2, East = -1, West = -1 };
+
+            roomConnections[1] = new RoomConnections { North = -1, South = -1, East = 2, West = -1 };
+            roomConnections[2] = new RoomConnections { North = 4, South = -1, East = 3, West = 1 };
+            roomConnections[3] = new RoomConnections { North = -1, South = -1, East = -1, West = 2 };
         }
-        
+
+
+
+
         public int GetConnectedRoom(int fromRoomId, TransitionDirection direction)
         {
             if (!roomConnections.ContainsKey(fromRoomId))
                 return -1;
-            
+
             RoomConnections connections = roomConnections[fromRoomId];
-            
+
             return direction switch
             {
                 TransitionDirection.North => connections.North,
@@ -71,6 +79,11 @@ namespace sprint0.Managers
                 TransitionDirection.West => connections.West,
                 _ => -1
             };
+        }
+        
+        public bool HasConnection(int fromRoomId, TransitionDirection direction)
+        {
+            return GetConnectedRoom(fromRoomId, direction) != -1;
         }
         
         public RoomConnections GetRoomConnections(int roomId)
@@ -141,8 +154,17 @@ namespace sprint0.Managers
         
         public void TransitionToRoom(int newRoomId, TransitionDirection direction)
         {
+            // Validate the transition is allowed
             if (newRoomId < 1 || newRoomId > 17)
                 return;
+            
+            // Check if this transition is valid from the current room
+            int expectedRoomId = GetConnectedRoom(currentRoomId, direction);
+            if (expectedRoomId != newRoomId)
+            {
+                System.Console.WriteLine($"[RoomManager] Invalid transition: Room {currentRoomId} -> {newRoomId} via {direction}. Expected: {expectedRoomId}");
+                return;
+            }
             
             currentRoomId = newRoomId;
             
@@ -174,10 +196,10 @@ namespace sprint0.Managers
         {
             Vector2 newPosition = direction switch
             {
-                TransitionDirection.North => new Vector2(384, 400),
-                TransitionDirection.South => new Vector2(384, 130),
-                TransitionDirection.East => new Vector2(130, 240),
-                TransitionDirection.West => new Vector2(600, 240),
+                TransitionDirection.North => new Vector2(384, 400),  // Enter from bottom
+                TransitionDirection.South => new Vector2(384, 130),  // Enter from top
+                TransitionDirection.East => new Vector2(130, 240),   // Enter from left
+                TransitionDirection.West => new Vector2(600, 240),   // Enter from right
                 _ => link.position
             };
             
