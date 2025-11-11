@@ -76,6 +76,7 @@ namespace sprint0.Sprites
             {
                 case Link link:
                     Collect();
+                    Inventory.AddRupees(40);
                     break;
             }
         }

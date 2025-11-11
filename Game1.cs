@@ -405,9 +405,11 @@ public class Game1 : Game
         
         if (roomManager != null)
         {
+            Inventory.PingRoomNum(roomIndex);
             roomManager.SetCurrentRoom(roomIndex);
             dungeon.SetRoomManager(roomManager, roomIndex);
             itemLoader.LoadItems(roomIndex);
+            
         }
          csvPath = (roomIndex == 1)
         ? System.IO.Path.Combine("Content", "dungeon.csv")
@@ -431,6 +433,8 @@ public class Game1 : Game
         
         collisionUpdater = new CollisionUpdater(dungeon, link);
         System.Console.WriteLine($"[LoadRoom] Loaded Room {roomIndex}");
+
+
     }
 
     public void ResetGame()

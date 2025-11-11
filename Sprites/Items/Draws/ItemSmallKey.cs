@@ -64,6 +64,7 @@ namespace sprint0.Sprites
             {
                 case Link link:
                     Collect();
+                    Inventory.AddKeys(1);
                     break;
             }
         }

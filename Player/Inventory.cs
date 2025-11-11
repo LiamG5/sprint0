@@ -21,12 +21,13 @@ namespace sprint0.Classes
         private static bool boomerang = false;
         private static bool compass = false;
         private static bool map = false;
-        private static bool[] keyCollected = new bool[6];
+
+        private static int roomNum = 1;
+        private static bool[] itemsCollected = new bool[20];
 
        
         static Inventory()
         {
-           
             Reset();
         }
 
@@ -106,6 +107,7 @@ namespace sprint0.Classes
 
         public static void AddKeys(int count)
         {
+            itemsCollected[roomNum] = true;
             keys += count;
         }
 
@@ -155,10 +157,6 @@ namespace sprint0.Classes
             sword = value;
         }
 
-        public static void AcquireSword()
-        {
-            sword = true;
-        }
 
         
         public static bool HasBow()
@@ -173,6 +171,7 @@ namespace sprint0.Classes
 
         public static void AcquireBow()
         {
+            itemsCollected[roomNum] = true;
             bow = true;
         }
 
@@ -189,6 +188,7 @@ namespace sprint0.Classes
 
         public static void AcquireBoomerang()
         {
+            itemsCollected[roomNum] = true;
             boomerang = true;
         }
 
@@ -205,6 +205,7 @@ namespace sprint0.Classes
 
         public static void AcquireCompass()
         {
+            itemsCollected[roomNum] = true;
             compass = true;
         }
 
@@ -221,6 +222,7 @@ namespace sprint0.Classes
 
         public static void AcquireMap()
         {
+            itemsCollected[roomNum] = true;
             map = true;
         }
 
@@ -244,5 +246,20 @@ namespace sprint0.Classes
         {
             health = maxHealth;
         }
+        public static void PingRoomNum(int i)
+        {
+            roomNum = i;
+        }
+        public static int GetRoomNum()
+        {
+            return roomNum;
+        }
+
+
+        public static bool SpawnItemsCheck()
+        {
+            return itemsCollected[roomNum];
+        }
+
     }
 }

@@ -1,9 +1,11 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Interfaces;
+using sprint0.Classes;
 using sprint0.Managers;
 using System;
 using System.Collections.Generic;
+
 
 namespace sprint0.Sprites
 {
@@ -89,7 +91,8 @@ namespace sprint0.Sprites
 
         private void Room1Items()
         {
-        
+            
+            if(!Inventory.SpawnItemsCheck())
             itemList.Add(items.BuildSmallKey(new Vector2(478, 384)));
         }
 
@@ -117,12 +120,13 @@ namespace sprint0.Sprites
 
         private void Room6Items()
         {
-
+            if(!Inventory.SpawnItemsCheck())
             itemList.Add(items.BuildSmallKey(new Vector2(388, 144)));
         }
         
          private void Room7Items()
         {
+            if(!Inventory.SpawnItemsCheck())
             itemList.Add(items.BuildCompass(new Vector2(580, 240)));
         }
 
@@ -140,18 +144,19 @@ namespace sprint0.Sprites
 
         private void Room10Items()
         {
-            
+            if(!Inventory.SpawnItemsCheck())
             itemList.Add(items.BuildDungeonMap(new Vector2(580, 240)));
         }
 
         private void Room11Items()
         {
-
+            if(!Inventory.SpawnItemsCheck())
             itemList.Add(items.BuildBoomerang(new Vector2(388, 144)));
         }
 
         private void Room12Items()
         {
+            if(!Inventory.SpawnItemsCheck())
             itemList.Add(items.BuildSmallKey(new Vector2(478, 384)));   
         }
 
@@ -163,13 +168,15 @@ namespace sprint0.Sprites
 
         private void Room14Items()
         {
+            if(!Inventory.SpawnItemsCheck())
             itemList.Add(items.BuildHeartContainer(new Vector2(580,240)));
             
         }
 
         private void Room15Items()
         {
-        itemList.Add(items.BuildTriforceFragment(new Vector2(360,250)));
+            if(!Inventory.SpawnItemsCheck())
+            itemList.Add(items.BuildTriforceFragment(new Vector2(360,250)));
 
         }
 
@@ -180,6 +187,7 @@ namespace sprint0.Sprites
         }
         private void Room17Items()
         {
+            if(!Inventory.SpawnItemsCheck())
             itemList.Add(items.BuildSmallKey(new Vector2(388, 144)));
             
         }
