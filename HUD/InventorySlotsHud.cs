@@ -41,18 +41,15 @@ namespace sprint0.HUD
             if (font != null)
             {
                 float labelScale = 1.1f;
-                Vector2 bLabelPos = new Vector2(bRect.X + (bRect.Width - font.MeasureString("B").X * labelScale) / 2, bRect.Y - 16);
-                Vector2 aLabelPos = new Vector2(aRect.X + (aRect.Width - font.MeasureString("A").X * labelScale) / 2, aRect.Y - 16);
+                Vector2 bLabelPos = new Vector2(bRect.X + (bRect.Width - font.MeasureString("B").X * labelScale) / 2, bRect.Y - 25);
+                Vector2 aLabelPos = new Vector2(aRect.X + (aRect.Width - font.MeasureString("A").X * labelScale) / 2, aRect.Y - 25);
                 
                 spriteBatch.DrawString(font, "B", bLabelPos, Color.White, 0f, Vector2.Zero, labelScale, SpriteEffects.None, 0f);
                 spriteBatch.DrawString(font, "A", aLabelPos, Color.White, 0f, Vector2.Zero, labelScale, SpriteEffects.None, 0f);
             }
 
-            spriteBatch.Draw(slotBg, bRect, Color.Blue * 0.35f);
-            spriteBatch.Draw(slotBg, aRect, Color.Blue * 0.35f);
-
-            Stroke(spriteBatch, bRect, Color.White);
-            Stroke(spriteBatch, aRect, Color.White);
+            Stroke(spriteBatch, bRect, new Color(0, 200, 255));
+            Stroke(spriteBatch, aRect, new Color(0, 200, 255));
 
             var bIcon = getIconB();
             var aIcon = getIconA();

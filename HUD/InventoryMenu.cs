@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using sprint0.Sprites;
 using sprint0.Managers;
+using sprint0.Interfaces;
 using static sprint0.Sprites.ItemFactory;
 
 namespace sprint0.HUD
@@ -26,6 +27,9 @@ namespace sprint0.HUD
         private readonly Texture2D pixelTexture;
         private readonly SpriteFont font;
         private readonly GraphicsDevice graphicsDevice;
+        private readonly Texture2D itemSpriteSheet;
+        private readonly IItem fullHeartItem;
+        private readonly IItem emptyHeartItem;
         
         private const int MenuPadding = 20;
         private const int SlotSize = 32;
@@ -68,6 +72,13 @@ namespace sprint0.HUD
             
             pixelTexture = new Texture2D(graphicsDevice, 1, 1);
             pixelTexture.SetData(new[] { Color.White });
+            
+            itemSpriteSheet = Texture2DStorage.GetItemSpriteSheet();
+            if (itemSpriteSheet != null)
+            {
+                fullHeartItem = new ItemRecoveryHeart(itemSpriteSheet);
+                emptyHeartItem = new ItemEmptyHeart(itemSpriteSheet);
+            }
         }
         
         public void Update(GameTime gameTime)
@@ -163,26 +174,24 @@ namespace sprint0.HUD
             DrawSlot(spriteBatch, slotBRect, getItemInSlotB());
             DrawSlot(spriteBatch, slotARect, ItemType.Sword);
             
-            spriteBatch.DrawString(font, "B", slotBPos + new Vector2(0, -16), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
-            spriteBatch.DrawString(font, "A", slotAPos + new Vector2(0, -16), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
+            spriteBatch.DrawString(font, "B", slotBPos + new Vector2(0, -24), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
+            spriteBatch.DrawString(font, "A", slotAPos + new Vector2(0, -24), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
             
             var lifeLabelPos = bottomLeft + new Vector2(screenWidth - MenuPadding - 200, 0);
             spriteBatch.DrawString(font, "-LIFE-", lifeLabelPos, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
             
             var heartsPos = lifeLabelPos + new Vector2(0, 20);
-            var fullHeart = Texture2DStorage.GetTexture("hud_heart_full");
-            var emptyHeart = Texture2DStorage.GetTexture("hud_heart_empty");
             int hearts = getHearts();
             int maxHearts = getMaxHearts();
             
-            if (fullHeart != null && emptyHeart != null)
+            if (fullHeartItem != null && emptyHeartItem != null)
             {
+                var heartCursor = heartsPos;
                 for (int i = 0; i < maxHearts; i++)
                 {
-                    var heartRect = new Rectangle((int)heartsPos.X + i * 20, (int)heartsPos.Y, 18, 18);
-                    var heartTex = (i < hearts) ? fullHeart : emptyHeart;
-                    var heartColor = (i < hearts) ? Color.Red : Color.DarkGray;
-                    spriteBatch.Draw(heartTex, heartRect, heartColor);
+                    var heartItem = (i < hearts) ? fullHeartItem : emptyHeartItem;
+                    heartItem.Draw(spriteBatch, heartCursor);
+                    heartCursor.X += 34;
                 }
             }
             
@@ -191,39 +200,58 @@ namespace sprint0.HUD
         
         private void DrawSlot(SpriteBatch spriteBatch, Rectangle rect, ItemType? item)
         {
-            if (slotBg != null)
-            {
-                spriteBatch.Draw(slotBg, rect, Color.Blue * 0.35f);
-                DrawRectangleOutline(spriteBatch, rect, Color.White, 2);
-            }
+            DrawRectangleOutline(spriteBatch, rect, new Color(0, 200, 255), 2);
             
             if (item.HasValue)
             {
-                var icon = GetItemIcon(item.Value);
-                if (icon != null)
+                var itemInstance = CreateItem(item.Value);
+                if (itemInstance != null)
                 {
-                    var iconSize = 24;
-                    var iconRect = new Rectangle(rect.X + (rect.Width - iconSize) / 2, rect.Y + (rect.Height - iconSize) / 2, iconSize, iconSize);
-                    spriteBatch.Draw(icon, iconRect, Color.White);
+                    var itemPos = new Vector2(rect.X + (rect.Width - 30) / 2, rect.Y + (rect.Height - 32) / 2);
+                    itemInstance.Draw(spriteBatch, itemPos);
                 }
             }
         }
         
-        private Texture2D GetItemIcon(ItemType itemType)
+        private IItem CreateItem(ItemType itemType)
         {
+            if (itemSpriteSheet == null) return null;
+            
             return itemType switch
             {
-                ItemType.Boomerang => Texture2DStorage.GetTexture("icon_boomerang"),
-                ItemType.Bomb => Texture2DStorage.GetTexture("icon_bomb"),
-                ItemType.Bow => Texture2DStorage.GetTexture("icon_bow"),
-                ItemType.Arrow => Texture2DStorage.GetTexture("icon_arrow"),
-                ItemType.CandleRed => Texture2DStorage.GetTexture("icon_candle"),
-                ItemType.CandleBlue => Texture2DStorage.GetTexture("icon_candle"),
-                ItemType.Recorder => Texture2DStorage.GetTexture("icon_recorder"),
-                ItemType.Food => Texture2DStorage.GetTexture("icon_food"),
-                ItemType.PotionRed => Texture2DStorage.GetTexture("icon_potion"),
-                ItemType.PotionBlue => Texture2DStorage.GetTexture("icon_potion"),
-                ItemType.MagicalRod => Texture2DStorage.GetTexture("icon_rod"),
+                ItemType.Boomerang => new ItemBoomerang(itemSpriteSheet),
+                ItemType.Bomb => new ItemBomb(itemSpriteSheet),
+                ItemType.Bow => new ItemBow(itemSpriteSheet),
+                ItemType.Arrow => new ItemArrow(itemSpriteSheet),
+                ItemType.CandleRed => new ItemCandleRed(itemSpriteSheet),
+                ItemType.CandleBlue => new ItemCandleBlue(itemSpriteSheet),
+                ItemType.Recorder => new ItemRecorder(itemSpriteSheet),
+                ItemType.Food => new ItemFood(itemSpriteSheet),
+                ItemType.PotionRed => new ItemPotionRed(itemSpriteSheet),
+                ItemType.PotionBlue => new ItemPotionBlue(itemSpriteSheet),
+                ItemType.MagicalRod => new ItemMagicalRod(itemSpriteSheet),
+                ItemType.Sword => new ItemSword(itemSpriteSheet),
+                ItemType.WhiteSword => new ItemWhiteSword(itemSpriteSheet),
+                ItemType.MagicalBoomerang => new ItemMagicalBoomerang(itemSpriteSheet),
+                ItemType.SilverArrow => new ItemSilverArrow(itemSpriteSheet),
+                ItemType.Letter => new ItemLetter(itemSpriteSheet),
+                ItemType.Raft => new ItemRaft(itemSpriteSheet),
+                ItemType.BookOfMagic => new ItemBookOfMagic(itemSpriteSheet),
+                ItemType.BlueRing => new ItemBlueRing(itemSpriteSheet),
+                ItemType.RedRing => new ItemRedRing(itemSpriteSheet),
+                ItemType.Stepladder => new ItemStepladder(itemSpriteSheet),
+                ItemType.MagicalKey => new ItemMagicalKey(itemSpriteSheet),
+                ItemType.PowerBracelet => new ItemPowerBracelet(itemSpriteSheet),
+                ItemType.Compass => new ItemCompass(itemSpriteSheet),
+                ItemType.DungeonMap => new ItemDungeonMap(itemSpriteSheet),
+                ItemType.SmallKey => new ItemSmallKey(itemSpriteSheet),
+                ItemType.TriforceFragment => new ItemTriforceFragment(itemSpriteSheet),
+                ItemType.RecoveryHeart => new ItemRecoveryHeart(itemSpriteSheet),
+                ItemType.HeartContainer => new ItemHeartContainer(itemSpriteSheet),
+                ItemType.Clock => new ItemClock(itemSpriteSheet),
+                ItemType.RupeeRed => new ItemRupeeRed(itemSpriteSheet),
+                ItemType.RupeeBlue => new ItemRupeeBlue(itemSpriteSheet),
+                ItemType.Fairy => new ItemFairy(itemSpriteSheet),
                 _ => null
             };
         }
