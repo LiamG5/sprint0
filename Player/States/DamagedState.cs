@@ -10,10 +10,9 @@ namespace sprint0.PlayerStates
 
         private Link player;
         private LinkAnimation linkAnimation;
-        private SoundEffectInstance sfx = sprint0.Sounds.SoundStorage.LOZ_Link_Hurt.CreateInstance();
 
         private float currentTime;
-        private float duration = 1500;
+        private float duration = 1250;
 
         public DamagedState(Link player, LinkAnimation linkAnimation)
         {
@@ -21,8 +20,8 @@ namespace sprint0.PlayerStates
             this.linkAnimation = linkAnimation;
         }
 
-        public void Enter() { 
-            player.velocity = new Vector2(0, 0);
+        public void Enter() 
+        { 
         }
 
         public void Update(GameTime gameTime)
@@ -33,12 +32,6 @@ namespace sprint0.PlayerStates
             {
                 player.Idle();
             }
-
-            if (sfx.State != SoundState.Playing)
-            {
-                sfx.Play();
-            }
-
         }
 
         public void UseState()
