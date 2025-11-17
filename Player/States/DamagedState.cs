@@ -12,7 +12,7 @@ namespace sprint0.PlayerStates
         private LinkAnimation linkAnimation;
 
         private float currentTime;
-        private float duration = 1250;
+        private float duration = 750;
 
         public DamagedState(Link player, LinkAnimation linkAnimation)
         {

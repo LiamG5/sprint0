@@ -220,16 +220,16 @@ namespace sprint0.Classes
 			switch (direction)
 			{
 				case Collisions.CollisionDirection.Left:
-					velocity = new Vector2(5, 0);
+					velocity = new Vector2(3, 0);
 					break;
 				case Collisions.CollisionDirection.Right:
-					velocity = new Vector2(-5, 0);
+					velocity = new Vector2(-3, 0);
 					break;
 				case Collisions.CollisionDirection.Up:
-					velocity = new Vector2(0, 5);
+					velocity = new Vector2(0, 3);
 					break;
 				case Collisions.CollisionDirection.Down:
-					velocity = new Vector2(0, -5);
+					velocity = new Vector2(0, -3);
 					break;
 			}
 		}
