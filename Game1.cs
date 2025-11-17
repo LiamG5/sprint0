@@ -150,7 +150,13 @@ public class Game1 : Game
         hud.Add(minimapHud);
 
         hud.Add(new HUD.InventorySlotsHud(
-            () => GetItemIcon(itemInSlotB),
+            () => {
+                if (inventoryItems != null && selectedInventoryIndex >= 0 && selectedInventoryIndex < inventoryItems.Count)
+                {
+                    return GetItemIcon(inventoryItems[selectedInventoryIndex]);
+                }
+                return GetItemIcon(itemInSlotB);
+            },
             () => sprint0.Sprites.Texture2DStorage.GetTexture("icon_sword"),
             HUD.HudConstants.SlotAPos, HUD.HudConstants.SlotBPos,
             hudFont));

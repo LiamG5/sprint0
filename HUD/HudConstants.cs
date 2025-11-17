@@ -19,9 +19,9 @@ namespace sprint0.HUD
         public const int CounterLineHeight = 24;
         
         // Inventory slots
-        public static readonly Vector2 SlotBPos = TopLeft + new Vector2(280, 20);
-        public static readonly Vector2 SlotAPos = TopLeft + new Vector2(328, 20);
-        public static readonly Point  SlotSize = new(36, 36);
+        public static readonly Vector2 SlotBPos = TopLeft + new Vector2(280, 30);
+        public static readonly Vector2 SlotAPos = TopLeft + new Vector2(328, 30);
+        public static readonly Point  SlotSize = new(36, 42);
         
         // Life
         public static readonly Vector2 LifeLabelPos = TopLeft + new Vector2(400, 4);
