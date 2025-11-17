@@ -15,18 +15,14 @@ namespace sprint0.Sprites
         private static Vector2 blockPos = new Vector2(100, 100);
         private static Rectangle block = new Rectangle(16 * blockType, 0, 16, 16);
         private Vector2 position;
-        private Vector2 velocity;
 
         public BlockChiseledTile (Texture2D sheet, Vector2 pos)
         {
             blockSS = sheet;
             position = pos;
-            velocity = new Vector2(0, 0);
         }
         public void Update(GameTime gameTime)
         {
-            position += velocity;
-            velocity = Vector2.Zero;
         }
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
@@ -50,44 +46,6 @@ namespace sprint0.Sprites
         
         public void OnCollision(sprint0.Interfaces.ICollidable other, sprint0.Collisions.CollisionDirection direction)
         {
-            switch (other)
-            {
-                case Link link:
-                    switch (direction)
-                    {
-                        case Collisions.CollisionDirection.Up:
-                            velocity = new Vector2(0, 5);
-                            break;
-                        case Collisions.CollisionDirection.Down:
-                            velocity = new Vector2(0, -5);
-                            break;
-                        case Collisions.CollisionDirection.Left:
-                            velocity = new Vector2(5, 0);
-                            break;
-                        case Collisions.CollisionDirection.Right:
-                            velocity = new Vector2(-5, 0);
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case ICollidable block:
-                    if (block.IsSolid()) 
-                    {
-                        Vector2 newVelocity = velocity;
-                        Vector2 resolvedPosition = new Collisions.CollisionResponse().ResolveCollisionDirection(this.GetBounds(), block.GetBounds(), direction);
-                        if (direction == Collisions.CollisionDirection.Left || direction == Collisions.CollisionDirection.Right) 
-                        {
-                            newVelocity.X = 0;
-                        } 
-                        else if (direction == Collisions.CollisionDirection.Up || direction == Collisions.CollisionDirection.Down) 
-                        {
-                            newVelocity.Y = 0;
-                        }
-                        velocity = newVelocity;
-                    }
-                    break;
-            }
         }
     }
 }

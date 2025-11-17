@@ -64,7 +64,6 @@ namespace sprint0.Sprites
             switch (other)
             {
                 case Link link:
-                    link.TakeDamage();
                     break;
 
                 case DungeonLongWall wall when wall.IsSolid():

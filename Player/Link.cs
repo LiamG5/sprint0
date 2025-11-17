@@ -151,7 +151,7 @@ namespace sprint0.Classes
 			}
 			else
 			{
-				ChangeState(new DamagedState(this, linkAnimation));
+				ChangeState(new KnockbackState(this, linkAnimation));
 			}
 		}
 		public void UseMagic()
@@ -173,13 +173,12 @@ namespace sprint0.Classes
 		{
 			return position;
 		}
-
+		
 		public void HandleCollisionResponse(Vector2 newPosition)
 		{
 			position = newPosition;
 		}
-		
-
+	
 		public void OnCollision(ICollidable other, Collisions.CollisionDirection direction)
 		{
 			switch (other)
@@ -187,30 +186,30 @@ namespace sprint0.Classes
 				case IEnemy enemy:
 					if (!(state is DamagedState))
 					{
-						TakeDamage();
+						HandleEnemyCollision(enemy, direction);
 					}
 					break;
-
+					
 				case IBlock block when block.IsSolid():
 					HandleBlockCollision(block, direction);
-					break;
-				case ICollidable doorwall when doorwall.IsSolid():
+						break;
+					case ICollidable doorwall when doorwall.IsSolid() :
 					HandleBlockCollision(doorwall, direction);
 					break;
-
+				
 				case IItem item:
-					break;
-
+						break;
+					
 			}
 		}
-
+		
 		private void HandleBlockCollision(ICollidable block, Collisions.CollisionDirection direction)
 		{
 			var collisionResponse = new Collisions.CollisionResponse();
 			Vector2 resolvedPosition = collisionResponse.ResolveCollisionDirection(
 				this.GetBounds(), block.GetBounds(), direction);
 			position = resolvedPosition;
-
+			
 			Vector2 newVelocity = velocity;
 			if (direction == Collisions.CollisionDirection.Left || direction == Collisions.CollisionDirection.Right)
 				newVelocity.X = 0;
@@ -218,7 +217,26 @@ namespace sprint0.Classes
 				newVelocity.Y = 0;
 			velocity = newVelocity;
 		}
-	}
-	
+		
+		private void HandleEnemyCollision(ICollidable enemy, Collisions.CollisionDirection direction)
+		{
+			TakeDamage();
 
+			switch (direction)
+			{
+				case Collisions.CollisionDirection.Left:
+					velocity = new Vector2(3, 0);
+					break;
+				case Collisions.CollisionDirection.Right:
+					velocity = new Vector2(-3, 0);
+					break;
+				case Collisions.CollisionDirection.Up:
+					velocity = new Vector2(0, 3);
+					break;
+				case Collisions.CollisionDirection.Down:
+					velocity = new Vector2(0, -3);
+					break;
+			}
+		}
+	}
 }
