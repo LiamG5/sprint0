@@ -508,6 +508,31 @@ public class Game1 : Game
 
     public void ResetGame()
     {
+        Classes.Inventory.Reset();
+        
+        hearts = Classes.Inventory.GetHealth();
+        maxHearts = Classes.Inventory.GetMaxHealth();
+        bombs = Classes.Inventory.GetBombs();
+        arrows = 0;
+        rupees = Classes.Inventory.GetRupees();
+        keys = Classes.Inventory.GetKeys();
+        hasMap = Classes.Inventory.HasMap();
+        levelName = "Level 1";
+        
+        inventoryItems = new List<ItemFactory.ItemType>
+        {
+            ItemFactory.ItemType.Boomerang,
+            ItemFactory.ItemType.Bomb,
+            ItemFactory.ItemType.Bow,
+            ItemFactory.ItemType.Arrow,
+            ItemFactory.ItemType.CandleRed,
+            ItemFactory.ItemType.Recorder,
+            ItemFactory.ItemType.Food,
+            ItemFactory.ItemType.PotionRed
+        };
+        selectedInventoryIndex = 0;
+        itemInSlotB = ItemFactory.ItemType.Boomerang;
+        
         link = new Link(_spriteBatch, this);
 
         blockCarousel = new BlockCarousel(blocks, _spriteBatch);
@@ -519,23 +544,64 @@ public class Game1 : Game
         item = itemCarousel.GetCurrentItem();
 
         controllers = new List<IController>();
-        keyboard = new KeyboardController(this, null, () => currentState == GameState.Gameplay);
+        keyboard = new KeyboardController(this, null, () => currentState == GameState.Inventory);
         controllers.Add(keyboard);
+        
+        mapCellCommands = new Dictionary<int, ICommand>
+        {
+            {  0, new GoToRoom1Command(this)  },
+            {  1, new GoToRoom2Command(this)  },
+            {  2, new GoToRoom3Command(this)  },
+            {  3, new GoToRoom4Command(this)  },
+            {  4, new GoToRoom5Command(this)  },
+            {  5, new GoToRoom6Command(this)  },
+            {  6, new GoToRoom7Command(this)  },
+            {  7, new GoToRoom8Command(this)  },
+            {  8, new GoToRoom9Command(this)  },
+            {  9, new GoToRoom10Command(this) },
+            { 10, new GoToRoom11Command(this) },
+            { 11, new GoToRoom12Command(this) },
+            { 12, new GoToRoom13Command(this) },
+            { 13, new GoToRoom14Command(this) },
+            { 14, new GoToRoom15Command(this) },
+            { 15, new GoToRoom16Command(this) },
+            { 16, new GoToRoom17Command(this) },
+        };
+        
+        mouse = new MouseController(mapRect, MapRows, MapCols, mapCellCommands);
+        controllers.Add(mouse);
 
         roomManager = new RoomManager(link, this);
 
-        previousKeyboardState = Keyboard.GetState();
-
+        string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
+        itemLoader = new ItemLoader(items);
+        dungeon = new DungeonLoader(blocks, itemLoader, File.ReadAllText(dungeonPath));
         dungeon.LoadRectangles();
-
-        Texture2D enemySheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet();
-        var testEnemy = new EnemyGel(enemySheet, new Vector2(400, 100));
-        dungeon.AddEnemy(testEnemy);
+        
+        try
+        {
+            Texture2D enemySheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet();
+            var testEnemy = new EnemyGel(enemySheet, new Vector2(400, 100));
+            dungeon.AddEnemy(testEnemy);
+        }
+        catch (Exception ex)
+        {
+            System.Console.WriteLine("[ResetGame EnemySheet] " + ex);
+        }
+        
+        roomManager.SetCurrentRoom(1);
+        dungeon.SetRoomManager(roomManager, 1);
+        itemLoader.LoadItems(1);
 
         collisionUpdater = new CollisionUpdater(dungeon, link);
         collisionUpdater.getList();
 
+        previousKeyboardState = Keyboard.GetState();
+        previousMouseState = Mouse.GetState();
+
         currentState = GameState.Gameplay;
+        
+        System.Console.WriteLine("[ResetGame] Game reset complete");
     }
 
     private MouseState previousMouseState;

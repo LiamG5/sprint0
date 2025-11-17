@@ -189,6 +189,9 @@ namespace sprint0.Sprites
                         case "Grate":
                             block = blocks.BuildGrateBlock(null, position) as IBlock;
                             break;
+                        case "MovableTile":
+                            block = blocks.BuildMovableTileBlock(null, position) as IBlock;
+                            break;
                     }
                     
                     if (block != null)
