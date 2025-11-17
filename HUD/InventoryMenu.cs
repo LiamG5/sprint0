@@ -38,6 +38,8 @@ namespace sprint0.HUD
         private const int InventoryCols = 4;
         private const int MapWidth = 200;
         private const int MapHeight = 150;
+        private const int InventoryPadding = 12;
+        private const int InventoryBorderThickness = 4;
         
         public InventoryMenu(
             Func<List<ItemType>> getInventoryItems,
@@ -107,20 +109,36 @@ namespace sprint0.HUD
             spriteBatch.DrawString(font, "USE B BUTTON", bSlotTextPos, Color.White, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 0f);
             spriteBatch.DrawString(font, "FOR THIS", bSlotTextPos + new Vector2(0, 16), Color.White, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 0f);
             
-            var inventoryStartPos = topLeft + new Vector2(screenWidth - MenuPadding - (InventoryCols * (SlotSize + SlotSpacing)), 40);
             var inventoryItems = getInventoryItems();
             int selectedIndex = getCurrentSelection();
             
+            int inventoryContentWidth = InventoryCols * SlotSize + (InventoryCols - 1) * SlotSpacing;
+            int inventoryContentHeight = InventoryRows * SlotSize + (InventoryRows - 1) * SlotSpacing;
+            int inventoryWidth = inventoryContentWidth + InventoryPadding * 2;
+            int inventoryHeight = inventoryContentHeight + InventoryPadding * 2;
+            var inventoryStartPos = topLeft + new Vector2(screenWidth - MenuPadding - inventoryWidth, 40);
+            var inventoryRect = new Rectangle((int)inventoryStartPos.X, (int)inventoryStartPos.Y, inventoryWidth, inventoryHeight);
+            DrawRectangleOutline(spriteBatch, inventoryRect, new Color(0, 200, 255), InventoryBorderThickness);
+            
+            var itemStartPos = inventoryStartPos + new Vector2(InventoryPadding, InventoryPadding);
             for (int row = 0; row < InventoryRows; row++)
             {
                 for (int col = 0; col < InventoryCols; col++)
                 {
                     int index = row * InventoryCols + col;
-                    var slotPos = inventoryStartPos + new Vector2(col * (SlotSize + SlotSpacing), row * (SlotSize + SlotSpacing));
+                    var slotPos = itemStartPos + new Vector2(col * (SlotSize + SlotSpacing), row * (SlotSize + SlotSpacing));
                     var slotRect = new Rectangle((int)slotPos.X, (int)slotPos.Y, SlotSize, SlotSize);
                     
                     ItemType? item = index < inventoryItems.Count ? inventoryItems[index] : (ItemType?)null;
-                    DrawSlot(spriteBatch, slotRect, item);
+                    if (item.HasValue)
+                    {
+                        var itemInstance = CreateItem(item.Value);
+                        if (itemInstance != null)
+                        {
+                            var itemPos = new Vector2(slotRect.X + (slotRect.Width - 30) / 2, slotRect.Y + (slotRect.Height - 32) / 2);
+                            itemInstance.Draw(spriteBatch, itemPos);
+                        }
+                    }
                     
                     if (index == selectedIndex)
                     {
@@ -171,7 +189,13 @@ namespace sprint0.HUD
             var slotBRect = new Rectangle((int)slotBPos.X, (int)slotBPos.Y, SlotSize, SlotSize);
             var slotARect = new Rectangle((int)slotAPos.X, (int)slotAPos.Y, SlotSize, SlotSize);
             
-            DrawSlot(spriteBatch, slotBRect, getItemInSlotB());
+            ItemType? selectedItem = null;
+            if (selectedIndex >= 0 && selectedIndex < inventoryItems.Count)
+            {
+                selectedItem = inventoryItems[selectedIndex];
+            }
+            
+            DrawSlot(spriteBatch, slotBRect, selectedItem);
             DrawSlot(spriteBatch, slotARect, ItemType.Sword);
             
             spriteBatch.DrawString(font, "B", slotBPos + new Vector2(0, -24), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
