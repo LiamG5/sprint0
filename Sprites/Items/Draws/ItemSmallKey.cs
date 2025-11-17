@@ -63,6 +63,7 @@ namespace sprint0.Sprites
             switch (other)
             {
                 case Link link:
+                    Inventory.AddKeys(1);
                     Collect();
                     break;
             }

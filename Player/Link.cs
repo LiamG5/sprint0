@@ -19,22 +19,25 @@ namespace sprint0.Classes
 		private LinkAnimation linkAnimation = new LinkAnimation();
 
 		private GameTime time;
+	
 
 		public enum Direction { Up, Down, Left, Right };
-        public Direction direction { get; private set; } = Direction.Right;
+		public Direction direction { get; private set; } = Direction.Right;
 
 		public Vector2 position { get; set; } = new Vector2(400, 200);
-        public Vector2 velocity { get; set; } = new Vector2(0, 0);
-        
-        private const int PLAYER_WIDTH = 48;
-        private const int PLAYER_HEIGHT = 48; 
+		public Vector2 velocity { get; set; } = new Vector2(0, 0);
 
+		private const int PLAYER_WIDTH = 48;
+		private const int PLAYER_HEIGHT = 48;
+		public LinkAttackHitbox linkAttackHitbox;
 		public Link(SpriteBatch spriteBatch, Game1 game)
 		{
 			this.spriteBatch = spriteBatch;
 			this.game = game;
 			this.linkAnimation = new LinkAnimation();
 			this.state = new IdleState(this, linkAnimation);
+			this.linkAttackHitbox = new LinkAttackHitbox();
+			
 		}
 
 		public void Update(GameTime gameTime)
@@ -45,41 +48,42 @@ namespace sprint0.Classes
 			linkAnimation.Update(gameTime);
 		}
 
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            linkAnimation.Draw(spriteBatch, position);
-        }
+		public void Draw(SpriteBatch spriteBatch)
+		{
+			linkAnimation.Draw(spriteBatch, position);
+		}
 
-        public IPlayerState GetCurrentState()
-        {
-            return state;
-        }
+		public IPlayerState GetCurrentState()
+		{
+			return state;
+		}
 
-        public void ChangeState(IPlayerState newState)
-        {
-            state.Exit();
-            state = newState;
-            state.Enter();
-        }
+		public void ChangeState(IPlayerState newState)
+		{
+			state.Exit();
+			state = newState;
+			state.Enter();
+		}
 
-        public void Idle()
-        {
+		public void Idle()
+		{
 			velocity = new Vector2(0, 0);
-            ChangeState(new IdleState(this, linkAnimation));
-        }
+			ChangeState(new IdleState(this, linkAnimation));
 
-        public void MoveLeft()
+		}
+
+		public void MoveLeft()
 		{
 			if (state is IdleState || state is MoveState || state is DamagedState)
 			{
 				velocity = new Vector2(-5, 0);
-                direction = Direction.Left;
-                if (state is IdleState)
-                {
-                    ChangeState(new MoveState(this, linkAnimation));
-                }
-            }
-        }
+				direction = Direction.Left;
+				if (state is IdleState)
+				{
+					ChangeState(new MoveState(this, linkAnimation));
+				}
+			}
+		}
 
 		public void MoveRight()
 		{
@@ -87,12 +91,12 @@ namespace sprint0.Classes
 			{
 				velocity = new Vector2(5, 0);
 				direction = Direction.Right;
-                if (state is IdleState)
-                {
-                    ChangeState(new MoveState(this, linkAnimation));
-                }
-            }
-        }
+				if (state is IdleState)
+				{
+					ChangeState(new MoveState(this, linkAnimation));
+				}
+			}
+		}
 
 		public void MoveUp()
 		{
@@ -100,12 +104,12 @@ namespace sprint0.Classes
 			{
 				velocity = new Vector2(0, -5);
 				direction = Direction.Up;
-                if (state is IdleState)
-                {
-                    ChangeState(new MoveState(this, linkAnimation));
-                }
-            }
-        }
+				if (state is IdleState)
+				{
+					ChangeState(new MoveState(this, linkAnimation));
+				}
+			}
+		}
 
 		public void MoveDown()
 		{
@@ -113,33 +117,34 @@ namespace sprint0.Classes
 			{
 				velocity = new Vector2(0, 5);
 				direction = Direction.Down;
-                if (state is IdleState)
-                {
-                    ChangeState(new MoveState(this, linkAnimation));
-                }
-            }
-        }
+				if (state is IdleState)
+				{
+					ChangeState(new MoveState(this, linkAnimation));
+				}
+			}
+		}
 
 		public void Attack()
 		{
-			ChangeState(new AttackState(this, linkAnimation));
-        }
-        public void UseItem1()
+			ChangeState(new AttackState(this, linkAnimation, linkAttackHitbox));
+
+		}
+		public void UseItem1()
 		{
-            ChangeState(new ItemState(this, linkAnimation,1));
-        }
-        public void UseItem2()
+			ChangeState(new ItemState(this, linkAnimation, 1));
+		}
+		public void UseItem2()
 		{
-			ChangeState(new ItemState(this, linkAnimation,2));
-        }
+			ChangeState(new ItemState(this, linkAnimation, 2));
+		}
 		public void UseItem3()
 		{
-			ChangeState(new ItemState(this, linkAnimation,3));
-        }
+			ChangeState(new ItemState(this, linkAnimation, 3));
+		}
 		public void TakeDamage()
 		{
 			Inventory.TakeDamage(1);
-			
+
 			if (Inventory.IsDead())
 			{
 				game.currentState = Game1.GameState.GameOver;
@@ -150,20 +155,20 @@ namespace sprint0.Classes
 			}
 		}
 		public void UseMagic()
-		{ 			
+		{
 			ChangeState(new MagicState(this, linkAnimation));
 		}
-		
+
 		public Rectangle GetBounds()
 		{
 			return new Rectangle((int)position.X, (int)position.Y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		}
-		
+
 		public bool IsSolid()
 		{
 			return true;
 		}
-		
+
 		public Vector2 GetPosition()
 		{
 			return position;

@@ -111,10 +111,10 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-        
+
         // Debug:
         System.Console.WriteLine($"[Window Size] Requested: 768x620, Actual: {GraphicsDevice.Viewport.Width}x{GraphicsDevice.Viewport.Height}");
-        
+
         sprint0.Sprites.Texture2DStorage.Init(GraphicsDevice);
         sprint0.Sounds.SoundStorage.LoadAllSounds(Content);
 
@@ -137,7 +137,7 @@ public class Game1 : Game
         hud.Add(new HUD.HudBackground(GraphicsDevice.Viewport.Width, HUD.HudConstants.HudHeight, GraphicsDevice));
 
         hud.Add(new HUD.LevelLabelHud(() => levelName, hudFont, HUD.HudConstants.LevelLabelPos));
-        
+
         minimapHud = new HUD.MinimapHud(
             () => roomManager.CurrentRoomId,
             () => hasMap,
@@ -181,7 +181,7 @@ public class Game1 : Game
             ItemFactory.ItemType.Food,
             ItemFactory.ItemType.PotionRed
         };
-        
+
         inventoryMenu = new HUD.InventoryMenu(
             () => inventoryItems,
             () => itemInSlotB,
@@ -212,9 +212,9 @@ public class Game1 : Game
         string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
         itemLoader = new ItemLoader(items);
         dungeon = new DungeonLoader(blocks, itemLoader, File.ReadAllText(dungeonPath));
-        
+
         dungeon.LoadRectangles();
-        
+
         tile = blockCarousel.GetCurrentBlock();
         enemy = enemyCarousel.GetCurrentEnemy();
         item = itemCarousel.GetCurrentItem();
@@ -275,6 +275,8 @@ public class Game1 : Game
 
         System.Console.WriteLine("[LoadContent] completed");
     }
+    
+
 
     protected override void Update(GameTime gameTime)
     {
@@ -296,13 +298,13 @@ public class Game1 : Game
             link.Update(gameTime);
             collisionUpdater.Update();
             dungeon.Update(gameTime);
-            
+
             // Check for game over
             if (Classes.Inventory.IsDead())
             {
                 new Commands.GameOverCommand(this).Execute();
             }
-            
+
             // Check for win condition (triforce fragment collected)
             if (dungeon != null)
             {
@@ -315,12 +317,12 @@ public class Game1 : Game
                     }
                 }
             }
-            
+
             foreach (var controller in controllers)
             {
                 controller.Update();
             }
-            
+
             HandleMinimapClicks();
 
             foreach (var e in dungeon.GetEnemies())
@@ -361,6 +363,23 @@ public class Game1 : Game
                 controller.Update();
             }
         }
+        
+    if (Keyboard.GetState().IsKeyDown(Keys.M))
+        {
+            if (MediaPlayer.State == MediaState.Playing)
+            {
+                MediaPlayer.Pause();
+            }
+            else
+            {
+                MediaPlayer.IsMuted = false;
+                MediaPlayer.Play(sprint0.Sounds.SoundStorage.dungeon);
+                MediaPlayer.Volume = 0.5f;
+                MediaPlayer.IsRepeating = true;
+            }
+        }
+
+
 
         base.Update(gameTime);
     }
@@ -478,6 +497,7 @@ public class Game1 : Game
         
         if (roomManager != null)
         {
+            Inventory.PingRoomNum(roomIndex);
             roomManager.SetCurrentRoom(roomIndex);
             dungeon.SetRoomManager(roomManager, roomIndex);
             itemLoader.LoadItems(roomIndex);

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using System.Security;
+using System.Runtime.CompilerServices;
 
 namespace sprint0.Classes
 {
@@ -21,7 +22,10 @@ namespace sprint0.Classes
         private static bool boomerang = false;
         private static bool compass = false;
         private static bool map = false;
-        private static bool[] keyCollected = new bool[6];
+        private static bool[] itemCollected = new bool[30];
+        private static int roomNum = 1;
+
+
 
        
         static Inventory()
@@ -106,6 +110,7 @@ namespace sprint0.Classes
 
         public static void AddKeys(int count)
         {
+            itemCollect();
             keys += count;
         }
 
@@ -144,21 +149,6 @@ namespace sprint0.Classes
             return false;
         }
 
-        
-        public static bool HasSword()
-        {
-            return sword;
-        }
-
-        public static void SetSword(bool value)
-        {
-            sword = value;
-        }
-
-        public static void AcquireSword()
-        {
-            sword = true;
-        }
 
         
         public static bool HasBow()
@@ -173,6 +163,7 @@ namespace sprint0.Classes
 
         public static void AcquireBow()
         {
+            itemCollect();
             bow = true;
         }
 
@@ -189,6 +180,7 @@ namespace sprint0.Classes
 
         public static void AcquireBoomerang()
         {
+            itemCollect();
             boomerang = true;
         }
 
@@ -205,6 +197,7 @@ namespace sprint0.Classes
 
         public static void AcquireCompass()
         {
+            itemCollect();
             compass = true;
         }
 
@@ -221,6 +214,7 @@ namespace sprint0.Classes
 
         public static void AcquireMap()
         {
+            itemCollect();
             map = true;
         }
 
@@ -243,6 +237,20 @@ namespace sprint0.Classes
         public static void RestoreFullHealth()
         {
             health = maxHealth;
+        }
+
+        public static void itemCollect()
+        {
+            itemCollected[roomNum] = true;
+        }
+
+         public static bool isItemCollected()
+        {
+            return itemCollected[roomNum];
+        }
+        public static void PingRoomNum(int i)
+        {
+            roomNum = i;
         }
     }
 }

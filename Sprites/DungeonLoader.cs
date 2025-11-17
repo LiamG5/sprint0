@@ -24,13 +24,15 @@ namespace sprint0.Sprites
         private List<TransitionZone> transitionZones;
         private int roomId;
         private RoomManager roomManager;
+        private ItemLoader itemLoader;
 
         public Texture2D border;
 
-        public DungeonLoader(BlockFactory blocks, string csvContent)
+        public DungeonLoader(BlockFactory blocks, ItemLoader itemLoader, string csvContent)
         {
             this.blocks = blocks;
             this.path = csvContent;
+            this.itemLoader = itemLoader;
             int totalCells = 84;
             storage = new ISprite[totalCells];
             storageIdx = 0;
@@ -43,25 +45,7 @@ namespace sprint0.Sprites
             this.boarders = new List<ICollidable>();
             this.transitionZones = new List<TransitionZone>();
             this.roomId = 8;
-        }
-
-        public DungeonLoader(BlockFactory blocks, ItemLoader items, string csvContent)
-        {
-            this.blocks = blocks;
-            this.path = csvContent;
-
-            int totalCells = 84;
-            storage = new ISprite[totalCells];
-            storageIdx = 0;
-            this.rectangles = new List<Rectangle>();
-            this.blockObjects = new List<IBlock>();
-            this.enemies = new List<IEnemy>();
-            this.projectiles = new List<Projectile>();
-            this.items = new List<IItem>();
-            this.border = Texture2DStorage.GetDungeonBorder();
-            this.boarders = new List<ICollidable>();
-            this.transitionZones = new List<TransitionZone>();
-            this.roomId = 8;
+            
         }
 
 
@@ -70,6 +54,7 @@ namespace sprint0.Sprites
         {
             this.roomManager = manager;
             this.roomId = currentRoomId;
+
             CreateTransitionZones();
         }
 
@@ -89,45 +74,45 @@ namespace sprint0.Sprites
             int northRoom = roomManager.GetConnectedRoom(roomId, TransitionDirection.North);
             if (northRoom != -1)
             {
-                transitionZones.Add(new TransitionZone(new Rectangle(336, 0, 96, 80),
+                transitionZones.Add(new TransitionZone(new Rectangle(336, 0, 50, 50),
                     TransitionDirection.North, roomManager));
             }
             else
             {
-                AddBlockingRect(new Rectangle(336, 0, 96, 80));
+                AddBlockingRect(new Rectangle(346, 24, 50, 50));
             }
 
             int southRoom = roomManager.GetConnectedRoom(roomId, TransitionDirection.South);
             if (southRoom != -1)
             {
-                transitionZones.Add(new TransitionZone(new Rectangle(336, 400, 96, 80),
+                transitionZones.Add(new TransitionZone(new Rectangle(346, 454, 50, 50),
                     TransitionDirection.South, roomManager));
             }
             else
             {
-                AddBlockingRect(new Rectangle(336, 400, 96, 80));
+                AddBlockingRect(new Rectangle(380, 432, 50, 50));
             }
 
             int westRoom = roomManager.GetConnectedRoom(roomId, TransitionDirection.West);
             if (westRoom != -1)
             {
-                transitionZones.Add(new TransitionZone(new Rectangle(0, 192, 80, 96),
+                transitionZones.Add(new TransitionZone(new Rectangle(6, 248, 50, 50),
                     TransitionDirection.West, roomManager));
             }
             else
             {
-                AddBlockingRect(new Rectangle(0, 192, 80, 96));
+                AddBlockingRect(new Rectangle(24, 248, 50, 50));
             }
 
             int eastRoom = roomManager.GetConnectedRoom(roomId, TransitionDirection.East);
             if (eastRoom != -1)
             {
-                transitionZones.Add(new TransitionZone(new Rectangle(656, 192, 80, 96),
+                transitionZones.Add(new TransitionZone(new Rectangle(700, 248, 50, 50),
                     TransitionDirection.East, roomManager));
             }
             else
             {
-                AddBlockingRect(new Rectangle(656, 192, 80, 96));
+                AddBlockingRect(new Rectangle(682, 248, 50, 50));
             }
         }
 
@@ -155,7 +140,7 @@ namespace sprint0.Sprites
                     int col = cellIndex % gridColumns;
                     int row = cellIndex / gridColumns;
                     Vector2 position = new Vector2((col + offset) * tileSize, (row + offset) * tileSize);
-                    
+
                     IBlock block = null;
                     switch (blockType)
                     {
@@ -193,7 +178,7 @@ namespace sprint0.Sprites
                             block = blocks.BuildMovableTileBlock(null, position) as IBlock;
                             break;
                     }
-                    
+
                     if (block != null)
                     {
                         blockObjects.Add(block);
@@ -205,6 +190,7 @@ namespace sprint0.Sprites
 
                     cellIndex++;
                 }
+                items = itemLoader.GetItems();
             }
             
             // Add wall borders (these are the outer walls that always exist)
