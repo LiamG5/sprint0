@@ -534,6 +534,8 @@ public class Game1 : Game
 
         collisionUpdater = new CollisionUpdater(dungeon, link);
         collisionUpdater.getList();
+
+        currentState = GameState.Gameplay;
     }
 
     private MouseState previousMouseState;
