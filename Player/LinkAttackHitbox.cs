@@ -48,7 +48,7 @@ namespace sprint0.Classes
         }
         public bool IsSolid()
         {
-            return active = true;;
+            return active;
         }
         public Vector2 GetPosition()
         {
