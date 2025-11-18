@@ -126,9 +126,49 @@ namespace sprint0.Classes
 
 		public void Attack()
 		{
-			ChangeState(new AttackState(this, linkAnimation, linkAttackHitbox));
-
+			if (state is IdleState || state is MoveState || state is DamagedState)
+			{
+				ChangeState(new AttackState(this, linkAnimation, linkAttackHitbox));
+			}
 		}
+		public void FireSwordBeam()
+		{			
+			Rectangle sourceRect = new Rectangle(0, 0, 0, 0);
+			Vector2 velocity = new Vector2(0, 0);
+			Vector2 startPosition = position;
+			
+			switch (direction)
+			{
+				case Direction.Up:
+					sourceRect = new Rectangle(60, 220, 22, 22); 
+					velocity = new Vector2(0, -8);
+					break;
+				case Direction.Down:
+					sourceRect = new Rectangle(0, 220, 22, 22); 
+					velocity = new Vector2(0, 8);
+					break;
+				case Direction.Left:
+					sourceRect = new Rectangle(26, 225, 22, 22);
+					velocity = new Vector2(-8, 0);
+					break;
+				case Direction.Right:
+					sourceRect = new Rectangle(85, 225, 22, 22);
+					velocity = new Vector2(8, 0);
+					break;
+			}
+						
+			var swordBeam = new sprint0.Sprites.Projectile(
+				sprint0.Sprites.Texture2DStorage.GetLinkSpriteSheet(), 
+				sourceRect, 
+				position, 
+				velocity, 
+				damage: 2, 
+				isEnemyProjectile: false
+			);			
+
+			game.AddProjectile(swordBeam);
+		}
+
 		public void UseItem1()
 		{
 			ChangeState(new ItemState(this, linkAnimation, 1));
@@ -164,7 +204,12 @@ namespace sprint0.Classes
 			return new Rectangle((int)position.X, (int)position.Y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		}
 
-		public bool IsSolid()
+		public bool BlocksMovement()
+		{
+			return true;
+		}
+		
+		public bool BlocksProjectiles()
 		{
 			return true;
 		}
@@ -190,10 +235,10 @@ namespace sprint0.Classes
 					}
 					break;
 					
-				case IBlock block when block.IsSolid():
+				case IBlock block when block.BlocksMovement():
 					HandleBlockCollision(block, direction);
 						break;
-					case ICollidable doorwall when doorwall.IsSolid() :
+					case ICollidable doorwall when doorwall.BlocksMovement() :
 					HandleBlockCollision(doorwall, direction);
 					break;
 				

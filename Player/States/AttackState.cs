@@ -13,7 +13,7 @@ namespace sprint0.PlayerStates
         private SoundEffectInstance sfx = sprint0.Sounds.SoundStorage.LOZ_Sword_Slash.CreateInstance();
 
         private float currentTime = 0;
-        private float duration = 1000;
+        private float duration = 500;
         LinkAttackHitbox linkAttackHitbox;
         public AttackState(Link player, LinkAnimation linkAnimation, LinkAttackHitbox linkAttackHitbox)
         {
@@ -69,6 +69,10 @@ namespace sprint0.PlayerStates
         public void Exit()
         {
             linkAttackHitbox.active = false;
+            if (Inventory.GetHealth() == Inventory.GetMaxHealth())
+            {
+                player.FireSwordBeam();
+            }
         }
     }
 }

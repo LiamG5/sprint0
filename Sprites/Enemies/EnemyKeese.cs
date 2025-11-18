@@ -55,7 +55,12 @@ namespace sprint0.Sprites
             return new Rectangle((int)movement.GetPosition().X, (int)movement.GetPosition().Y, ENEMY_WIDTH, ENEMY_HEIGHT);
         }
 
-        public bool IsSolid()
+        public bool BlocksMovement()
+        {
+            return true;
+        }
+        
+        public bool BlocksProjectiles()
         {
             return true;
         }
@@ -72,18 +77,18 @@ namespace sprint0.Sprites
                 case Link link:
                     break;
 
-                case DungeonLongWall wall when wall.IsSolid():
+                case DungeonLongWall wall when wall.BlocksMovement():
                     movement.ChangeDirection();
                     break;
 
-                case DungeonTallWall wall when wall.IsSolid():
+                case DungeonTallWall wall when wall.BlocksMovement():
                     movement.ChangeDirection();
                     break;
 
-                case IBlock block when block.IsSolid():
+                case IBlock block when block.BlocksMovement():
                     movement.ChangeDirection();
                     break;
-                case IAttack attack when attack.IsSolid():
+                case IAttack attack when attack.BlocksMovement():
                     TakeDamage();
                     System.Diagnostics.Debug.WriteLine("Keese took damage");
                     break;

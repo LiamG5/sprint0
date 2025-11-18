@@ -18,23 +18,18 @@ namespace sprint0.Sprites
         private bool shouldDestroy;
         private const int PROJECTILE_WIDTH = 16;
         private const int PROJECTILE_HEIGHT = 16;
-        private float scale = 2.0f;
+        private float scale = 3.0f;
 
         public Projectile(Texture2D texture, Rectangle sourceRect, Vector2 startPosition, 
-                         Vector2 direction, float speed, int damage, bool isEnemyProjectile)
+                         Vector2 velocity, int damage, bool isEnemyProjectile)
         {
             this.texture = texture;
             this.sourceRectangle = sourceRect;
             this.position = startPosition;
+            this.velocity = velocity;
             this.damage = damage;
             this.isEnemyProjectile = isEnemyProjectile;
             this.shouldDestroy = false;
-
-            if (direction != Vector2.Zero)
-            {
-                direction.Normalize();
-            }
-            this.velocity = direction * speed;
         }
 
         public bool IsEnemyProjectile => isEnemyProjectile;
@@ -47,7 +42,7 @@ namespace sprint0.Sprites
 
         public void Draw(SpriteBatch spriteBatch, Vector2 drawPosition)
         {
-            if (!shouldDestroy)
+            if (!shouldDestroy && texture != null && sourceRectangle.Width > 0 && sourceRectangle.Height > 0)
             {
                 spriteBatch.Draw(texture, drawPosition, sourceRectangle, 
                                Color.White, 0f, Vector2.Zero, scale, 
@@ -65,7 +60,12 @@ namespace sprint0.Sprites
             );
         }
 
-        public bool IsSolid()
+        public bool BlocksMovement()
+        {
+            return false;
+        }
+        
+        public bool BlocksProjectiles()
         {
             return false;
         }
@@ -84,12 +84,22 @@ namespace sprint0.Sprites
                     shouldDestroy = true;
                     break;
 
+                case Link link when !isEnemyProjectile:
+                    break;
+
+                case LinkAttackHitbox hitbox when !isEnemyProjectile:
+                    break;
+
                 case IEnemy enemy when !isEnemyProjectile:
                     enemy.TakeDamage();
                     shouldDestroy = true;
                     break;
 
-                case IBlock block when block.IsSolid():
+                case IBlock block when block.BlocksProjectiles():
+                    shouldDestroy = true;
+                    break;
+
+                case ICollidable wall when wall.BlocksProjectiles():
                     shouldDestroy = true;
                     break;
             }
