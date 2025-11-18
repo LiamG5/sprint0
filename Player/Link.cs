@@ -229,12 +229,12 @@ namespace sprint0.Classes
 		{
 			switch (other)
 			{
-				case IEnemy enemy:
-					if (!(state is DamagedState))
-					{
-						HandleEnemyCollision(enemy, direction);
-					}
-					break;
+			case IEnemy enemy:
+				if (!(state is DamagedState) && !(state is KnockbackState))
+				{
+					HandleEnemyCollision(enemy, direction);
+				}
+				break;
 					
 				case IBlock block when block.BlocksMovement():
 					HandleBlockCollision(block, direction);
