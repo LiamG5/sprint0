@@ -1,7 +1,7 @@
 Tile,Tile,Tile,Tile,Tile,Tile,Tile,Tile,Tile,Tile,Tile,Tile
 Tile,Tile,Tile,Tile,Tile,Tile,ChiseledTile,Tile,Tile,Tile,Tile,Tile
 Tile,Tile,Tile,Tile,Tile,ChiseledTile,Tile,ChiseledTile,Tile,Tile,Tile,Tile
-Tile,Tile,Tile,Tile,ChiseledTile,Tile,Stair,Tile,ChiseledTile,Tile,Tile,Tile
+Tile,Tile,Tile,Tile,MovableTile,Tile,Stair,Tile,ChiseledTile,Tile,Tile,Tile
 Tile,Tile,Tile,Tile,Tile,ChiseledTile,Tile,ChiseledTile,Tile,Tile,Tile,Tile
 Tile,Tile,Tile,Tile,Tile,Tile,ChiseledTile,Tile,Tile,Tile,Tile,Tile
 Tile,Tile,Tile,Tile,Tile,Tile,Tile,Tile,Tile,Tile,Tile,Tile
