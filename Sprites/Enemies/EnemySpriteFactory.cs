@@ -38,36 +38,66 @@ namespace sprint0.Sprites
                 return instance; 
             } 
         }
-        public ISprite SpawnBladeTrap(SpriteBatch sprite)
+        public IEnemy SpawnBladeTrap()
         {
             currEnemy = EnemyType.BladeTrap;
             return new EnemyBladeTrap(enemySpritesheet);
         }
+        public IEnemy SpawnBladeTrap(Vector2 position)
+        {
+            currEnemy = EnemyType.BladeTrap;
+            return new EnemyBladeTrap(enemySpritesheet, position);
+        }
 
-        public ISprite SpawnGel(SpriteBatch sprite)
+        public IEnemy SpawnGel()
         {
             currEnemy = EnemyType.Gel;
             return new EnemyGel(enemySpritesheet);
         }
-        public ISprite SpawnRedGoriya(SpriteBatch sprite)
+        public IEnemy SpawnGel(Vector2 position)
+        {
+            currEnemy = EnemyType.Gel;
+            return new EnemyGel(enemySpritesheet, position);
+        }
+        public IEnemy SpawnRedGoriya()
         {
             currEnemy = EnemyType.RedGoriya;
             return new EnemyRedGoriya(enemySpritesheet);
         }
-        public ISprite SpawnKeese(SpriteBatch sprite)
+        public IEnemy SpawnRedGoriya(Vector2 position)
+        {
+            currEnemy = EnemyType.RedGoriya;
+            return new EnemyRedGoriya(enemySpritesheet, position);
+        }
+        public IEnemy SpawnKeese()
         {
             currEnemy = EnemyType.Keese;
             return new EnemyKeese(enemySpritesheet);
         }
-        public ISprite SpawnStalfos(SpriteBatch sprite)
+        public IEnemy SpawnKeese(Vector2 position)
+        {
+            currEnemy = EnemyType.Keese;
+            return new EnemyKeese(enemySpritesheet, position);
+        }
+        public IEnemy SpawnStalfos()
         {
             currEnemy = EnemyType.Stalfos;
             return new EnemyStalfos(enemySpritesheet);
         }
-        public ISprite SpawnWallmaster(SpriteBatch sprite)
+        public IEnemy SpawnStalfos(Vector2 position)
+        {
+            currEnemy = EnemyType.Stalfos;
+            return new EnemyStalfos(enemySpritesheet, position);
+        }
+        public IEnemy SpawnWallmaster()
         {
             currEnemy = EnemyType.Wallmaster;
             return new EnemyWallmaster(enemySpritesheet);
+        }
+        public IEnemy SpawnWallmaster(Vector2 position)
+        {
+            currEnemy = EnemyType.Wallmaster;
+            return new EnemyWallmaster(enemySpritesheet,position);
         }
 
 

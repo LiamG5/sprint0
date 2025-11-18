@@ -8,7 +8,7 @@ using System;
 
 namespace sprint0.Sprites
 {
-    public class EnemyBladeTrap : ISprite {
+    public class EnemyBladeTrap : ISprite , IEnemy{
 
         private Texture2D enemySS;
         private Vector2 position;
@@ -49,7 +49,12 @@ namespace sprint0.Sprites
             return new Rectangle((int)position.X, (int)position.Y, ENEMY_WIDTH, ENEMY_HEIGHT);
         }
 
-        public bool IsSolid()
+        public bool BlocksMovement()
+        {
+            return true;
+        }
+        
+        public bool BlocksProjectiles()
         {
             return true;
         }
@@ -64,18 +69,17 @@ namespace sprint0.Sprites
             switch (other)
             {
                 case Link link:
-                    link.TakeDamage();
                     break;
 
-                case DungeonLongWall wall when wall.IsSolid():
+                case DungeonLongWall wall when wall.BlocksMovement():
                     
                     break;
 
-                case DungeonTallWall wall when wall.IsSolid():
+                case DungeonTallWall wall when wall.BlocksMovement():
                     
                     break;
 
-                case IBlock block when block.IsSolid():
+                case IBlock block when block.BlocksMovement():
                     
                     break;
             }

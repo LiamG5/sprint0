@@ -25,7 +25,12 @@ namespace sprint0.Sprites
             return rectangle;
         }
         
-        public bool IsSolid()
+        public bool BlocksMovement()
+        {
+            return true;
+        }
+        
+        public bool BlocksProjectiles()
         {
             return true;
         }   

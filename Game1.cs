@@ -74,6 +74,7 @@ public class Game1 : Game
     private int selectedInventoryIndex = 0;
     private ItemFactory.ItemType itemInSlotB = ItemFactory.ItemType.Boomerang;
     private ItemLoader itemLoader;
+    private EnemyLoader enemyLoader;
 
     // Minimap click area
     private Rectangle mapRect = new Rectangle(32, 32, 6 * 24, 3 * 24);
@@ -111,10 +112,10 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-        
+
         // Debug:
         System.Console.WriteLine($"[Window Size] Requested: 768x620, Actual: {GraphicsDevice.Viewport.Width}x{GraphicsDevice.Viewport.Height}");
-        
+
         sprint0.Sprites.Texture2DStorage.Init(GraphicsDevice);
         sprint0.Sounds.SoundStorage.LoadAllSounds(Content);
 
@@ -137,7 +138,7 @@ public class Game1 : Game
         hud.Add(new HUD.HudBackground(GraphicsDevice.Viewport.Width, HUD.HudConstants.HudHeight, GraphicsDevice));
 
         hud.Add(new HUD.LevelLabelHud(() => levelName, hudFont, HUD.HudConstants.LevelLabelPos));
-        
+
         minimapHud = new HUD.MinimapHud(
             () => roomManager.CurrentRoomId,
             () => hasMap,
@@ -187,7 +188,7 @@ public class Game1 : Game
             ItemFactory.ItemType.Food,
             ItemFactory.ItemType.PotionRed
         };
-        
+
         inventoryMenu = new HUD.InventoryMenu(
             () => inventoryItems,
             () => itemInSlotB,
@@ -217,10 +218,11 @@ public class Game1 : Game
 
         string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
         itemLoader = new ItemLoader(items);
-        dungeon = new DungeonLoader(blocks, itemLoader, File.ReadAllText(dungeonPath));
-        
+        enemyLoader = new EnemyLoader(enemies);
+        dungeon = new DungeonLoader(blocks, itemLoader, enemyLoader, File.ReadAllText(dungeonPath));
+
         dungeon.LoadRectangles();
-        
+
         tile = blockCarousel.GetCurrentBlock();
         enemy = enemyCarousel.GetCurrentEnemy();
         item = itemCarousel.GetCurrentItem();
@@ -281,6 +283,8 @@ public class Game1 : Game
 
         System.Console.WriteLine("[LoadContent] completed");
     }
+    
+
 
     protected override void Update(GameTime gameTime)
     {
@@ -302,14 +306,12 @@ public class Game1 : Game
             link.Update(gameTime);
             collisionUpdater.Update();
             dungeon.Update(gameTime);
-            
-            // Check for game over
+
             if (Classes.Inventory.IsDead())
             {
                 new Commands.GameOverCommand(this).Execute();
             }
-            
-            // Check for win condition (triforce fragment collected)
+
             if (dungeon != null)
             {
                 foreach (var item in dungeon.GetItems())
@@ -321,17 +323,26 @@ public class Game1 : Game
                     }
                 }
             }
-            
+
             foreach (var controller in controllers)
             {
                 controller.Update();
             }
-            
+
             HandleMinimapClicks();
 
             foreach (var e in dungeon.GetEnemies())
             {
                 e.Update(gameTime);
+            }
+
+            if (dungeon != null)
+            {
+                foreach (var projectile in dungeon.GetProjectiles())
+                {
+                    projectile.Update(gameTime);
+                }
+                dungeon.CleanupDeadEntities();
             }
 
             enemy.Update(gameTime);
@@ -367,6 +378,23 @@ public class Game1 : Game
                 controller.Update();
             }
         }
+        
+    if (Keyboard.GetState().IsKeyDown(Keys.M))
+        {
+            if (MediaPlayer.State == MediaState.Playing)
+            {
+                MediaPlayer.Pause();
+            }
+            else
+            {
+                MediaPlayer.IsMuted = false;
+                MediaPlayer.Play(sprint0.Sounds.SoundStorage.dungeon);
+                MediaPlayer.Volume = 0.5f;
+                MediaPlayer.IsRepeating = true;
+            }
+        }
+
+
 
         base.Update(gameTime);
     }
@@ -402,16 +430,35 @@ public class Game1 : Game
                 if (!e.IsDead())
                     e.Draw(_spriteBatch, e.GetPosition());
             }
+
         }
 
         if (enemy != null)
+        {
             enemy.Draw(_spriteBatch, new Vector2(400, 100));
+        }
         if (item != null)
+        {
             item.Draw(_spriteBatch, new Vector2(200, 100));
+        }
         if (link != null)
+        {
             link.Draw(_spriteBatch);
+        }
+        
+        if (dungeon != null)
+        {
+            foreach (var projectile in dungeon.GetProjectiles())
+            {
+                if (!projectile.ShouldDestroy)
+                {
+                    projectile.Draw(_spriteBatch, projectile.GetPosition());
+                }
+            }
+        }
 
         itemLoader.Draw(_spriteBatch);
+        enemyLoader.Draw(_spriteBatch);
         _spriteBatch.End();
         
         if (currentState == GameState.GameOver || currentState == GameState.Win)
@@ -466,6 +513,14 @@ public class Game1 : Game
     public void GoToRoom16() => LoadRoom(16);
     public void GoToRoom17() => LoadRoom(17);
 
+    public void AddProjectile(Sprites.Projectile projectile)
+    {
+        if (dungeon != null)
+        {
+            dungeon.AddProjectile(projectile);
+        }
+    }
+
     private void LoadRoom(int roomIndex)
     {
         var csvPath = System.IO.Path.Combine("Content", "Dungeon", $"Room{roomIndex}.csv");
@@ -475,14 +530,16 @@ public class Game1 : Game
             return;
         }
         var csv = System.IO.File.ReadAllText(csvPath);
-        dungeon = new DungeonLoader(BlockFactory.Instance, itemLoader, csv);
+        dungeon = new DungeonLoader(BlockFactory.Instance, itemLoader, enemyLoader, csv);
         dungeon.LoadRectangles();
         
         if (roomManager != null)
         {
+            Inventory.PingRoomNum(roomIndex);
             roomManager.SetCurrentRoom(roomIndex);
             dungeon.SetRoomManager(roomManager, roomIndex);
             itemLoader.LoadItems(roomIndex);
+            enemyLoader.LoadEnemies(roomIndex);
         }
          csvPath = (roomIndex == 1)
         ? System.IO.Path.Combine("Content", "dungeon.csv")
@@ -495,7 +552,7 @@ public class Game1 : Game
     }
 
     csv = System.IO.File.ReadAllText(csvPath);
-    dungeon = new DungeonLoader(BlockFactory.Instance, itemLoader, csv);
+    dungeon = new DungeonLoader(BlockFactory.Instance, itemLoader, enemyLoader, csv);
     dungeon.LoadRectangles();
 
     if (roomManager != null)
@@ -510,6 +567,31 @@ public class Game1 : Game
 
     public void ResetGame()
     {
+        Classes.Inventory.Reset();
+        
+        hearts = Classes.Inventory.GetHealth();
+        maxHearts = Classes.Inventory.GetMaxHealth();
+        bombs = Classes.Inventory.GetBombs();
+        arrows = 0;
+        rupees = Classes.Inventory.GetRupees();
+        keys = Classes.Inventory.GetKeys();
+        hasMap = Classes.Inventory.HasMap();
+        levelName = "Level 1";
+        
+        inventoryItems = new List<ItemFactory.ItemType>
+        {
+            ItemFactory.ItemType.Boomerang,
+            ItemFactory.ItemType.Bomb,
+            ItemFactory.ItemType.Bow,
+            ItemFactory.ItemType.Arrow,
+            ItemFactory.ItemType.CandleRed,
+            ItemFactory.ItemType.Recorder,
+            ItemFactory.ItemType.Food,
+            ItemFactory.ItemType.PotionRed
+        };
+        selectedInventoryIndex = 0;
+        itemInSlotB = ItemFactory.ItemType.Boomerang;
+        
         link = new Link(_spriteBatch, this);
 
         blockCarousel = new BlockCarousel(blocks, _spriteBatch);
@@ -521,23 +603,64 @@ public class Game1 : Game
         item = itemCarousel.GetCurrentItem();
 
         controllers = new List<IController>();
-        keyboard = new KeyboardController(this, null, () => currentState == GameState.Gameplay);
+        keyboard = new KeyboardController(this, null, () => currentState == GameState.Inventory);
         controllers.Add(keyboard);
+        
+        mapCellCommands = new Dictionary<int, ICommand>
+        {
+            {  0, new GoToRoom1Command(this)  },
+            {  1, new GoToRoom2Command(this)  },
+            {  2, new GoToRoom3Command(this)  },
+            {  3, new GoToRoom4Command(this)  },
+            {  4, new GoToRoom5Command(this)  },
+            {  5, new GoToRoom6Command(this)  },
+            {  6, new GoToRoom7Command(this)  },
+            {  7, new GoToRoom8Command(this)  },
+            {  8, new GoToRoom9Command(this)  },
+            {  9, new GoToRoom10Command(this) },
+            { 10, new GoToRoom11Command(this) },
+            { 11, new GoToRoom12Command(this) },
+            { 12, new GoToRoom13Command(this) },
+            { 13, new GoToRoom14Command(this) },
+            { 14, new GoToRoom15Command(this) },
+            { 15, new GoToRoom16Command(this) },
+            { 16, new GoToRoom17Command(this) },
+        };
+        
+        mouse = new MouseController(mapRect, MapRows, MapCols, mapCellCommands);
+        controllers.Add(mouse);
 
         roomManager = new RoomManager(link, this);
 
-        previousKeyboardState = Keyboard.GetState();
-
+        string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
+        itemLoader = new ItemLoader(items);
+        dungeon = new DungeonLoader(blocks, itemLoader, enemyLoader, File.ReadAllText(dungeonPath));
         dungeon.LoadRectangles();
-
-        Texture2D enemySheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet();
-        var testEnemy = new EnemyGel(enemySheet, new Vector2(400, 100));
-        dungeon.AddEnemy(testEnemy);
+        
+        try
+        {
+            Texture2D enemySheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet();
+            var testEnemy = new EnemyGel(enemySheet, new Vector2(400, 100));
+            dungeon.AddEnemy(testEnemy);
+        }
+        catch (Exception ex)
+        {
+            System.Console.WriteLine("[ResetGame EnemySheet] " + ex);
+        }
+        
+        roomManager.SetCurrentRoom(1);
+        dungeon.SetRoomManager(roomManager, 1);
+        itemLoader.LoadItems(1);
 
         collisionUpdater = new CollisionUpdater(dungeon, link);
         collisionUpdater.getList();
 
+        previousKeyboardState = Keyboard.GetState();
+        previousMouseState = Mouse.GetState();
+
         currentState = GameState.Gameplay;
+        
+        System.Console.WriteLine("[ResetGame] Game reset complete");
     }
 
     private MouseState previousMouseState;
