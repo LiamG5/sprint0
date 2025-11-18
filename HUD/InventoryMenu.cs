@@ -130,13 +130,14 @@ namespace sprint0.HUD
                     var slotRect = new Rectangle((int)slotPos.X, (int)slotPos.Y, SlotSize, SlotSize);
                     
                     ItemType? item = index < inventoryItems.Count ? inventoryItems[index] : (ItemType?)null;
-                    if (item.HasValue)
+                    if (item.HasValue && itemSpriteSheet != null)
                     {
-                        var itemInstance = CreateItem(item.Value);
-                        if (itemInstance != null)
+                        var sourceRect = GetItemSourceRect(item.Value);
+                        if (sourceRect.HasValue)
                         {
-                            var itemPos = new Vector2(slotRect.X + (slotRect.Width - 30) / 2, slotRect.Y + (slotRect.Height - 32) / 2);
-                            itemInstance.Draw(spriteBatch, itemPos);
+                            float scale = 2.0f;
+                            var itemPos = new Vector2(slotRect.X + (slotRect.Width - sourceRect.Value.Width * scale) / 2, slotRect.Y + (slotRect.Height - sourceRect.Value.Height * scale) / 2);
+                            spriteBatch.Draw(itemSpriteSheet, itemPos, sourceRect.Value, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
                         }
                     }
                     
@@ -161,27 +162,21 @@ namespace sprint0.HUD
             
             spriteBatch.DrawString(font, "LEVEL-1", bottomLeft, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
             
-            var itemCountsPos = bottomLeft + new Vector2(120, 0);
-            var rupeeIcon = Texture2DStorage.GetTexture("icon_rupee");
-            var keyIcon = Texture2DStorage.GetTexture("icon_key");
-            var bombIcon = Texture2DStorage.GetTexture("icon_bomb");
+            var itemCountsPos = bottomLeft + new Vector2(120, -8);
             
-            if (rupeeIcon != null)
+            if (itemSpriteSheet != null)
             {
-                spriteBatch.Draw(rupeeIcon, new Rectangle((int)itemCountsPos.X, (int)itemCountsPos.Y, 16, 16), Color.White);
-                spriteBatch.DrawString(font, "X" + getRupees(), itemCountsPos + new Vector2(20, 0), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
-            }
-            
-            if (keyIcon != null)
-            {
-                spriteBatch.Draw(keyIcon, new Rectangle((int)itemCountsPos.X, (int)(itemCountsPos.Y + 20), 16, 16), Color.White);
-                spriteBatch.DrawString(font, "X" + getKeys(), itemCountsPos + new Vector2(20, 20), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
-            }
-            
-            if (bombIcon != null)
-            {
-                spriteBatch.Draw(bombIcon, new Rectangle((int)itemCountsPos.X, (int)(itemCountsPos.Y + 40), 16, 16), Color.White);
-                spriteBatch.DrawString(font, "X" + getBombs(), itemCountsPos + new Vector2(20, 40), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
+                var rupeeRect = new Rectangle(40 * 4, 40 * 3, 15, 16);
+                spriteBatch.Draw(itemSpriteSheet, itemCountsPos, rupeeRect, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "X" + getRupees(), itemCountsPos + new Vector2(20, -2), Color.White, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0f);
+                
+                var keyRect = new Rectangle(40 * 7, 40 * 1, 15, 16);
+                spriteBatch.Draw(itemSpriteSheet, itemCountsPos + new Vector2(0, 28), keyRect, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "X" + getKeys(), itemCountsPos + new Vector2(20, 26), Color.White, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0f);
+                
+                var bombRect = new Rectangle(40 * 5, 40 * 0, 15, 16);
+                spriteBatch.Draw(itemSpriteSheet, itemCountsPos + new Vector2(0, 56), bombRect, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "X" + getBombs(), itemCountsPos + new Vector2(20, 54), Color.White, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0f);
             }
             
             var slotBPos = bottomLeft + new Vector2(280, 0);
@@ -226,15 +221,57 @@ namespace sprint0.HUD
         {
             DrawRectangleOutline(spriteBatch, rect, new Color(0, 200, 255), 2);
             
-            if (item.HasValue)
+            if (item.HasValue && itemSpriteSheet != null)
             {
-                var itemInstance = CreateItem(item.Value);
-                if (itemInstance != null)
+                var sourceRect = GetItemSourceRect(item.Value);
+                if (sourceRect.HasValue)
                 {
-                    var itemPos = new Vector2(rect.X + (rect.Width - 30) / 2, rect.Y + (rect.Height - 32) / 2);
-                    itemInstance.Draw(spriteBatch, itemPos);
+                    float scale = 2.0f;
+                    var itemPos = new Vector2(rect.X + (rect.Width - sourceRect.Value.Width * scale) / 2, rect.Y + (rect.Height - sourceRect.Value.Height * scale) / 2);
+                    spriteBatch.Draw(itemSpriteSheet, itemPos, sourceRect.Value, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
                 }
             }
+        }
+        
+        private Rectangle? GetItemSourceRect(ItemType itemType)
+        {
+            return itemType switch
+            {
+                ItemType.RupeeRed => new Rectangle(40 * 4, 40 * 3, 15, 16),
+                ItemType.RupeeBlue => new Rectangle(40 * 5, 40 * 3, 15, 16),
+                ItemType.SmallKey => new Rectangle(40 * 7, 40 * 1, 15, 16),
+                ItemType.Bomb => new Rectangle(40 * 5, 40 * 0, 15, 16),
+                ItemType.Boomerang => new Rectangle(40 * 7, 40 * 0, 15, 16),
+                ItemType.Bow => new Rectangle(40 * 0, 40 * 1, 15, 16),
+                ItemType.Arrow => new Rectangle(40 * 1, 40 * 1, 15, 16),
+                ItemType.CandleRed => new Rectangle(40 * 2, 40 * 1, 15, 16),
+                ItemType.CandleBlue => new Rectangle(40 * 3, 40 * 1, 15, 16),
+                ItemType.Recorder => new Rectangle(360, 40 * 2, 13, 16),
+                ItemType.Food => new Rectangle(40 * 5, 40 * 1, 15, 16),
+                ItemType.PotionRed => new Rectangle(40 * 6, 40 * 1, 15, 16),
+                ItemType.PotionBlue => new Rectangle(40 * 7, 40 * 2, 15, 16),
+                ItemType.MagicalRod => new Rectangle(40 * 0, 40 * 2, 15, 16),
+                ItemType.Sword => new Rectangle(40 * 7, 40 * 3, 15, 16),
+                ItemType.WhiteSword => new Rectangle(40 * 0, 40 * 3, 15, 16),
+                ItemType.MagicalBoomerang => new Rectangle(40 * 1, 40 * 3, 15, 16),
+                ItemType.SilverArrow => new Rectangle(40 * 2, 40 * 3, 15, 16),
+                ItemType.Letter => new Rectangle(40 * 6, 40 * 2, 15, 16),
+                ItemType.Raft => new Rectangle(40 * 3, 40 * 2, 15, 16),
+                ItemType.BookOfMagic => new Rectangle(40 * 4, 40 * 2, 15, 16),
+                ItemType.BlueRing => new Rectangle(40 * 5, 40 * 2, 15, 16),
+                ItemType.RedRing => new Rectangle(40 * 6, 40 * 2, 15, 16),
+                ItemType.Stepladder => new Rectangle(40 * 1, 40 * 2, 15, 16),
+                ItemType.MagicalKey => new Rectangle(40 * 2, 40 * 2, 15, 16),
+                ItemType.PowerBracelet => new Rectangle(40 * 4, 40 * 1, 15, 16),
+                ItemType.Compass => new Rectangle(40 * 0, 40 * 0, 15, 16),
+                ItemType.DungeonMap => new Rectangle(40 * 1, 40 * 0, 15, 16),
+                ItemType.TriforceFragment => new Rectangle(40 * 2, 40 * 0, 15, 16),
+                ItemType.RecoveryHeart => new Rectangle(40 * 6, 40 * 1, 15, 16),
+                ItemType.HeartContainer => new Rectangle(40 * 7, 40 * 1, 15, 16),
+                ItemType.Clock => new Rectangle(40 * 3, 40 * 0, 15, 16),
+                ItemType.Fairy => new Rectangle(40 * 3, 40 * 1, 15, 16),
+                _ => null
+            };
         }
         
         private IItem CreateItem(ItemType itemType)
@@ -286,13 +323,7 @@ namespace sprint0.HUD
             if (roomManager == null) return;
             
             var mapRect = new Rectangle((int)pos.X, (int)pos.Y, width, height);
-            DrawRectangle(spriteBatch, mapRect, new Color(255, 165, 0)); // Orange
-            
-            for (int i = 0; i < width; i += 4)
-            {
-                DrawRectangle(spriteBatch, new Rectangle((int)pos.X + i, (int)pos.Y, 2, 2), new Color(200, 120, 0));
-                DrawRectangle(spriteBatch, new Rectangle((int)pos.X + i + 2, (int)pos.Y + height - 2, 2, 2), new Color(200, 120, 0));
-            }
+            DrawRectangle(spriteBatch, mapRect, new Color(255, 165, 0));
             
             var visitedRooms = roomManager.GetVisitedRegularRooms();
             var connections = new Dictionary<int, RoomConnections>();
@@ -307,16 +338,22 @@ namespace sprint0.HUD
             }
             
             int[] roomLayout = {
-                1, 2, 3, 4, 5, 6,
-                7, 8, 9, 10, 11, 12,
-                13, 14, 15, 16, 17, -1
+               -1, 16, 17, -1, -1, -1,
+               -1, -1, 13, -1, 14, 15,
+                8,  9, 10, 11, 12, -1,
+               -1,  5,  6,  7, -1, -1,
+               -1, -1,  4, -1, -1, -1,
+               -1,  1,  2,  3, -1, -1
             };
             
-            const int mapRows = 3;
+            const int mapRows = 6;
             const int mapCols = 6;
             int cellWidth = width / mapCols;
             int cellHeight = height / mapRows;
             const int roomSize = 8;
+            const int roomSpacing = 2;
+            
+            Dictionary<int, Vector2> roomPositions = new Dictionary<int, Vector2>();
             
             for (int row = 0; row < mapRows; row++)
             {
@@ -328,58 +365,50 @@ namespace sprint0.HUD
                     int roomId = roomLayout[idx];
                     if (roomId == -1) continue;
                     
-                    int roomX = (int)pos.X + col * cellWidth + (cellWidth - roomSize) / 2;
-                    int roomY = (int)pos.Y + row * cellHeight + (cellHeight - roomSize) / 2;
+                    if (!visitedRooms.Contains(roomId)) continue;
                     
-                    if (visitedRooms.Contains(roomId))
+                    int roomX = (int)pos.X + col * cellWidth + (cellWidth - roomSize) / 2 + roomSpacing / 2;
+                    int roomY = (int)pos.Y + row * cellHeight + (cellHeight - roomSize) / 2 + roomSpacing / 2;
+                    int roomCenterX = roomX + (roomSize - roomSpacing) / 2;
+                    int roomCenterY = roomY + (roomSize - roomSpacing) / 2;
+                    
+                    roomPositions[roomId] = new Vector2(roomCenterX, roomCenterY);
+                    
+                    var roomRect = new Rectangle(roomX, roomY, roomSize - roomSpacing, roomSize - roomSpacing);
+                    DrawRectangle(spriteBatch, roomRect, Color.Black);
+                    
+                    if (roomId == roomManager.CurrentRoomId)
                     {
-                        var roomRect = new Rectangle(roomX, roomY, roomSize, roomSize);
-                        DrawRectangle(spriteBatch, roomRect, Color.Black);
-                        
-                        if (roomId == roomManager.CurrentRoomId)
-                        {
-                            int dotSize = 4;
-                            var dotRect = new Rectangle(roomX + (roomSize - dotSize) / 2, roomY + (roomSize - dotSize) / 2, dotSize, dotSize);
-                            DrawRectangle(spriteBatch, dotRect, Color.Green);
-                        }
-                        
-                        if (connections.ContainsKey(roomId))
-                        {
-                            var conn = connections[roomId];
-                            
-                            if (conn.North != -1 && visitedRooms.Contains(conn.North))
-                            {
-                                var (nRow, nCol) = GetRoomPosition(conn.North, roomLayout, mapCols);
-                                int nX = (int)pos.X + nCol * cellWidth + (cellWidth - roomSize) / 2 + roomSize / 2;
-                                int nY = (int)pos.Y + nRow * cellHeight + (cellHeight - roomSize) / 2 + roomSize;
-                                DrawLine(spriteBatch, new Vector2(roomX + roomSize / 2, roomY), new Vector2(nX, nY), Color.Black, 1);
-                            }
-                            
-                            if (conn.South != -1 && visitedRooms.Contains(conn.South))
-                            {
-                                var (sRow, sCol) = GetRoomPosition(conn.South, roomLayout, mapCols);
-                                int sX = (int)pos.X + sCol * cellWidth + (cellWidth - roomSize) / 2 + roomSize / 2;
-                                int sY = (int)pos.Y + sRow * cellHeight + (cellHeight - roomSize) / 2;
-                                DrawLine(spriteBatch, new Vector2(roomX + roomSize / 2, roomY + roomSize), new Vector2(sX, sY), Color.Black, 1);
-                            }
-                            
-                            if (conn.East != -1 && visitedRooms.Contains(conn.East))
-                            {
-                                var (eRow, eCol) = GetRoomPosition(conn.East, roomLayout, mapCols);
-                                int eX = (int)pos.X + eCol * cellWidth + (cellWidth - roomSize) / 2;
-                                int eY = (int)pos.Y + eRow * cellHeight + (cellHeight - roomSize) / 2 + roomSize / 2;
-                                DrawLine(spriteBatch, new Vector2(roomX + roomSize, roomY + roomSize / 2), new Vector2(eX, eY), Color.Black, 1);
-                            }
-                            
-                            if (conn.West != -1 && visitedRooms.Contains(conn.West))
-                            {
-                                var (wRow, wCol) = GetRoomPosition(conn.West, roomLayout, mapCols);
-                                int wX = (int)pos.X + wCol * cellWidth + (cellWidth - roomSize) / 2 + roomSize;
-                                int wY = (int)pos.Y + wRow * cellHeight + (cellHeight - roomSize) / 2 + roomSize / 2;
-                                DrawLine(spriteBatch, new Vector2(roomX, roomY + roomSize / 2), new Vector2(wX, wY), Color.Black, 1);
-                            }
-                        }
+                        int dotSize = 6;
+                        var dotRect = new Rectangle(roomX + (roomSize - roomSpacing - dotSize) / 2, roomY + (roomSize - roomSpacing - dotSize) / 2, dotSize, dotSize);
+                        DrawRectangle(spriteBatch, dotRect, Color.Green);
                     }
+                }
+            }
+            
+            foreach (var kvp in roomPositions)
+            {
+                int roomId = kvp.Key;
+                Vector2 roomCenter = kvp.Value;
+                
+                if (!connections.ContainsKey(roomId)) continue;
+                var conn = connections[roomId];
+                
+                if (conn.North != -1 && visitedRooms.Contains(conn.North) && roomPositions.ContainsKey(conn.North))
+                {
+                    DrawLine(spriteBatch, roomCenter, roomPositions[conn.North], Color.Black, 1);
+                }
+                if (conn.South != -1 && visitedRooms.Contains(conn.South) && roomPositions.ContainsKey(conn.South))
+                {
+                    DrawLine(spriteBatch, roomCenter, roomPositions[conn.South], Color.Black, 1);
+                }
+                if (conn.East != -1 && visitedRooms.Contains(conn.East) && roomPositions.ContainsKey(conn.East))
+                {
+                    DrawLine(spriteBatch, roomCenter, roomPositions[conn.East], Color.Black, 1);
+                }
+                if (conn.West != -1 && visitedRooms.Contains(conn.West) && roomPositions.ContainsKey(conn.West))
+                {
+                    DrawLine(spriteBatch, roomCenter, roomPositions[conn.West], Color.Black, 1);
                 }
             }
         }

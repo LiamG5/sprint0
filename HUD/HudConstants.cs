@@ -15,8 +15,8 @@ namespace sprint0.HUD
         public static readonly Vector2 MinimapPos = TopLeft + new Vector2(0, 24);
         
         // Counters and Slots
-        public static readonly Vector2 CountersPos = TopLeft + new Vector2(180, 20);
-        public const int CounterLineHeight = 24;
+        public static readonly Vector2 CountersPos = TopLeft + new Vector2(180, -12);
+        public const int CounterLineHeight = 32;
         
         // Inventory slots
         public static readonly Vector2 SlotBPos = TopLeft + new Vector2(280, 30);

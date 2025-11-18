@@ -153,24 +153,24 @@ public class Game1 : Game
             () => {
                 if (inventoryItems != null && selectedInventoryIndex >= 0 && selectedInventoryIndex < inventoryItems.Count)
                 {
-                    return GetItemIcon(inventoryItems[selectedInventoryIndex]);
+                    return inventoryItems[selectedInventoryIndex];
                 }
-                return GetItemIcon(itemInSlotB);
+                return itemInSlotB;
             },
-            () => sprint0.Sprites.Texture2DStorage.GetTexture("icon_sword"),
+            () => ItemFactory.ItemType.Sword,
             HUD.HudConstants.SlotAPos, HUD.HudConstants.SlotBPos,
             hudFont));
 
         hud.Add(new HUD.CounterIcon(
-            sprint0.Sprites.Texture2DStorage.GetTexture("icon_rupee"),
+            ItemFactory.ItemType.RupeeRed,
             () => rupees, hudFont, HUD.HudConstants.CountersPos));
 
         hud.Add(new HUD.CounterIcon(
-            sprint0.Sprites.Texture2DStorage.GetTexture("icon_key"),
+            ItemFactory.ItemType.SmallKey,
             () => keys, hudFont, HUD.HudConstants.CountersPos + new Vector2(0, 1 * HUD.HudConstants.CounterLineHeight)));
 
         hud.Add(new HUD.CounterIcon(
-            sprint0.Sprites.Texture2DStorage.GetTexture("icon_bomb"),
+            ItemFactory.ItemType.Bomb,
             () => bombs, hudFont, HUD.HudConstants.CountersPos + new Vector2(0, 2 * HUD.HudConstants.CounterLineHeight)));
 
         hud.Add(new HUD.HeartMeter(() => hearts, () => maxHearts, HUD.HudConstants.HeartsPos, hudFont));
@@ -411,10 +411,6 @@ public class Game1 : Game
         if (link != null)
             link.Draw(_spriteBatch);
 
-        if (_minimapOverlay != null)
-            _spriteBatch.Draw(_minimapOverlay, mapRect, _minimapColor);
-
-        DrawMinimapNumbers(_spriteBatch);
         itemLoader.Draw(_spriteBatch);
         _spriteBatch.End();
         
@@ -569,7 +565,6 @@ public class Game1 : Game
     private void DrawMinimapNumbers(SpriteBatch sb)
     {
         if (font == null) return;
-
         int cellW = mapRect.Width / MapCols;
         int cellH = mapRect.Height / MapRows;
         const float scale = 0.55f;
