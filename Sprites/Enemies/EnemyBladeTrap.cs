@@ -49,7 +49,12 @@ namespace sprint0.Sprites
             return new Rectangle((int)position.X, (int)position.Y, ENEMY_WIDTH, ENEMY_HEIGHT);
         }
 
-        public bool IsSolid()
+        public bool BlocksMovement()
+        {
+            return true;
+        }
+        
+        public bool BlocksProjectiles()
         {
             return true;
         }
@@ -66,15 +71,15 @@ namespace sprint0.Sprites
                 case Link link:
                     break;
 
-                case DungeonLongWall wall when wall.IsSolid():
+                case DungeonLongWall wall when wall.BlocksMovement():
                     
                     break;
 
-                case DungeonTallWall wall when wall.IsSolid():
+                case DungeonTallWall wall when wall.BlocksMovement():
                     
                     break;
 
-                case IBlock block when block.IsSolid():
+                case IBlock block when block.BlocksMovement():
                     
                     break;
             }

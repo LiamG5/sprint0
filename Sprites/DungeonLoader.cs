@@ -184,7 +184,7 @@ namespace sprint0.Sprites
                     if (block != null)
                     {
                         blockObjects.Add(block);
-                        if (block.IsSolid())
+                        if (block.BlocksMovement())
                         {
                             rectangles.Add(new Rectangle((int)position.X, (int)position.Y, 48, 48));
                         }

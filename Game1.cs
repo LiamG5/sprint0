@@ -301,13 +301,11 @@ public class Game1 : Game
             collisionUpdater.Update();
             dungeon.Update(gameTime);
 
-            // Check for game over
             if (Classes.Inventory.IsDead())
             {
                 new Commands.GameOverCommand(this).Execute();
             }
 
-            // Check for win condition (triforce fragment collected)
             if (dungeon != null)
             {
                 foreach (var item in dungeon.GetItems())
@@ -330,6 +328,15 @@ public class Game1 : Game
             foreach (var e in dungeon.GetEnemies())
             {
                 e.Update(gameTime);
+            }
+
+            if (dungeon != null)
+            {
+                foreach (var projectile in dungeon.GetProjectiles())
+                {
+                    projectile.Update(gameTime);
+                }
+                dungeon.CleanupDeadEntities();
             }
 
             enemy.Update(gameTime);
@@ -417,14 +424,32 @@ public class Game1 : Game
                 if (!e.IsDead())
                     e.Draw(_spriteBatch, e.GetPosition());
             }
+
         }
 
         if (enemy != null)
+        {
             enemy.Draw(_spriteBatch, new Vector2(400, 100));
+        }
         if (item != null)
+        {
             item.Draw(_spriteBatch, new Vector2(200, 100));
+        }
         if (link != null)
+        {
             link.Draw(_spriteBatch);
+        }
+        
+        if (dungeon != null)
+        {
+            foreach (var projectile in dungeon.GetProjectiles())
+            {
+                if (!projectile.ShouldDestroy)
+                {
+                    projectile.Draw(_spriteBatch, projectile.GetPosition());
+                }
+            }
+        }
 
         if (_minimapOverlay != null)
             _spriteBatch.Draw(_minimapOverlay, mapRect, _minimapColor);
@@ -485,6 +510,14 @@ public class Game1 : Game
     public void GoToRoom15() => LoadRoom(15);
     public void GoToRoom16() => LoadRoom(16);
     public void GoToRoom17() => LoadRoom(17);
+
+    public void AddProjectile(Sprites.Projectile projectile)
+    {
+        if (dungeon != null)
+        {
+            dungeon.AddProjectile(projectile);
+        }
+    }
 
     private void LoadRoom(int roomIndex)
     {

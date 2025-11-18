@@ -34,7 +34,12 @@ namespace sprint0.Sprites
             return new Rectangle((int)position.X, (int)position.Y, 48, 48);
         }
         
-        public bool IsSolid()
+        public bool BlocksMovement()
+        {
+            return true;
+        }
+        
+        public bool BlocksProjectiles()
         {
             return true;
         }
