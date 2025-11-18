@@ -187,6 +187,7 @@ namespace sprint0.Classes
 
 			if (Inventory.IsDead())
 			{
+				sprint0.Sounds.SoundStorage.LOZ_Link_Die.Play();
 				game.currentState = Game1.GameState.GameOver;
 			}
 			else

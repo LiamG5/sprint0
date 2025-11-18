@@ -91,6 +91,7 @@ namespace sprint0.Sprites
                     break;
 
                 case IEnemy enemy when !isEnemyProjectile:
+                    sprint0.Sounds.SoundStorage.LOZ_Enemy_Hit.Play();
                     enemy.TakeDamage();
                     shouldDestroy = true;
                     break;

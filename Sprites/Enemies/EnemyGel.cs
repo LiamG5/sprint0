@@ -47,6 +47,7 @@ namespace sprint0.Sprites
         public void TakeDamage()
         {
             isDead = true;
+            sprint0.Sounds.SoundStorage.LOZ_Enemy_Die.Play(); 
         }
 
         public bool IsDead()
