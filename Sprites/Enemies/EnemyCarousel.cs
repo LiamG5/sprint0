@@ -23,7 +23,7 @@ namespace sprint0.Sprites
         {
             this.enemyFactory = enemyFactory;
             this.spriteBatch = spriteBatch;
-            currentEnemy = enemyFactory.SpawnBladeTrap(spriteBatch);
+            currentEnemy = enemyFactory.SpawnBladeTrap();
         }
 
         public void Next()
@@ -43,22 +43,22 @@ namespace sprint0.Sprites
             switch (enemyTypes[currentIndex])
             {
                 case EnemySpriteFactory.EnemyType.BladeTrap:
-                    currentEnemy = enemyFactory.SpawnBladeTrap(spriteBatch);
+                    currentEnemy = enemyFactory.SpawnBladeTrap();
                     break;
                 case EnemySpriteFactory.EnemyType.Gel:
-                    currentEnemy = enemyFactory.SpawnGel(spriteBatch);
+                    currentEnemy = enemyFactory.SpawnGel();
                     break;
                 case EnemySpriteFactory.EnemyType.Keese:
-                    currentEnemy = enemyFactory.SpawnKeese(spriteBatch);
+                    currentEnemy = enemyFactory.SpawnKeese();
                     break;
                 case EnemySpriteFactory.EnemyType.RedGoriya:
-                    currentEnemy = enemyFactory.SpawnRedGoriya(spriteBatch);
+                    currentEnemy = enemyFactory.SpawnRedGoriya();
                     break;
                 case EnemySpriteFactory.EnemyType.Stalfos:
-                    currentEnemy = enemyFactory.SpawnStalfos(spriteBatch);
+                    currentEnemy = enemyFactory.SpawnStalfos();
                     break;
                 case EnemySpriteFactory.EnemyType.Wallmaster:
-                    currentEnemy = enemyFactory.SpawnWallmaster(spriteBatch);
+                    currentEnemy = enemyFactory.SpawnWallmaster();
                     break;
             }
         }

@@ -2,22 +2,33 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Classes;
+using sprint0.Collisions;
 using sprint0.Interfaces;
 using sprint0.Sprites.Enemies;
 using System;
 
 namespace sprint0.Sprites
 {
-    public class EnemyWallmaster : ISprite {
+    public class EnemyWallmaster : ISprite , IEnemy{
 
         private Texture2D enemySS;
         private static Rectangle frame1 = new Rectangle(16 * 0, 16 * 14, 16, 16);
         private static Rectangle frame2 = new Rectangle(16 * 1, 16 * 14, 16, 16);
         private EnemyAnimationHelper animation = new EnemyAnimationHelper(frame1, frame2);
-        public EnemyWallmaster (Texture2D sheet)
+        private EnemyMovementCycle movement;
+        private bool isDead = false;
+        private const int ENEMY_WIDTH = 48;  // 16 * 3.0f scale
+        private const int ENEMY_HEIGHT = 48;
+
+        public EnemyWallmaster (Texture2D sheet, Vector2 startPosition)
         {
             enemySS = sheet;
+            movement = new EnemyMovementCycle(startPosition);
         }
+        public EnemyWallmaster(Texture2D sheet) : this(sheet, new Vector2(200, 100))
+        {
+        }
+
         public void Update(GameTime gameTime)
         {
             animation.Update(gameTime);
@@ -25,6 +36,56 @@ namespace sprint0.Sprites
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
             spriteBatch.Draw(enemySS, position, animation.GetFrame(), Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+        }
+        public void TakeDamage()
+        {
+            isDead = true;
+        }
+
+        public bool IsDead()
+        {
+            return isDead;
+        }
+
+        public Rectangle GetBounds()
+        {
+            return new Rectangle((int)movement.GetPosition().X, (int)movement.GetPosition().Y, ENEMY_WIDTH, ENEMY_HEIGHT);
+        }
+
+        public bool BlocksMovement()
+        {
+            return true;
+        }
+        
+        public bool BlocksProjectiles()
+        {
+            return true;
+        }
+
+        public Vector2 GetPosition()
+        {
+            return movement.GetPosition();
+        }
+
+        public void OnCollision(ICollidable other, CollisionDirection direction)
+        {
+            switch (other)
+            {
+                case Link link:
+                    break;
+
+                case DungeonLongWall wall when wall.BlocksMovement():
+                    movement.ChangeDirection();
+                    break;
+
+                case DungeonTallWall wall when wall.BlocksMovement():
+                    movement.ChangeDirection();
+                    break;
+
+                case IBlock block when block.BlocksMovement():
+                    movement.ChangeDirection();
+                    break;
+            }
         }
     }
 }

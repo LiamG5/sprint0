@@ -28,6 +28,7 @@ namespace sprint0.Collisions
         {
             allCollidables.Clear();
             allCollidables.Add(link);
+            allCollidables.Add(link.linkAttackHitbox);
             allCollidables.AddRange(dungeonLoader.GetBlocks());
             allCollidables.AddRange(dungeonLoader.GetEnemies());
             allCollidables.AddRange(dungeonLoader.GetProjectiles());
@@ -42,6 +43,7 @@ namespace sprint0.Collisions
             
             allCollidables.Clear();
             allCollidables.Add(link);
+            allCollidables.Add(link.linkAttackHitbox);
             allCollidables.AddRange(dungeonLoader.GetBoarders());
             allCollidables.AddRange(dungeonLoader.GetBlocks());
             allCollidables.AddRange(dungeonLoader.GetEnemies());

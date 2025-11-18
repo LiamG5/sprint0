@@ -38,7 +38,12 @@ namespace sprint0.Sprites
             return bounds;
         }
 
-        public bool IsSolid()
+        public bool BlocksMovement()
+        {
+            return isBlocking;
+        }
+        
+        public bool BlocksProjectiles()
         {
             return isBlocking;
         }

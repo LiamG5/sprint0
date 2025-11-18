@@ -47,7 +47,12 @@ namespace sprint0.Sprites
             return new Rectangle((int)position.X, (int)position.Y, ITEM_WIDTH, ITEM_HEIGHT);
         }
 
-        public bool IsSolid()
+        public bool BlocksMovement()
+        {
+            return false;
+        }
+        
+        public bool BlocksProjectiles()
         {
             return false;
         }
@@ -62,6 +67,7 @@ namespace sprint0.Sprites
             switch (other)
             {
                 case Link link:
+                    Inventory.AcquireBoomerang();
                     Collect();
                     break;
             }
