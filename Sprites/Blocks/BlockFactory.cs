@@ -15,7 +15,7 @@ namespace sprint0.Sprites
     { 
         public enum BlockType
         {
-            Tile, ChiseledTile, Fish, Dragon, Void, Dirt, Solid, Stair, Brick, Grate, MovableTile 
+            Tile, ChiseledTile, Fish, Dragon, Void, Dirt, Solid, Stair, Brick, Grate, MovableTile, InvisibleBlock 
         }
 
         private BlockType currBlock = BlockType.Tile;
@@ -121,6 +121,13 @@ namespace sprint0.Sprites
             Initialize();
             currBlock = BlockType.MovableTile;
             return new BlockMovableTile(blockSpritesheet, position);
+        }
+
+        public ISprite BuildInvisibleBlock(SpriteBatch sprite, Vector2 position)
+        {
+            Initialize();
+            currBlock = BlockType.InvisibleBlock;
+            return new InvisibleBlock(position);
         }
     }
 }

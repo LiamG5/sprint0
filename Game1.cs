@@ -457,6 +457,9 @@ public class Game1 : Game
         DrawMinimapNumbers(_spriteBatch);
         itemLoader.Draw(_spriteBatch);
         enemyLoader.Draw(_spriteBatch);
+        
+        HandleRoomSpecifics(_spriteBatch);
+        
         _spriteBatch.End();
         
         if (currentState == GameState.GameOver || currentState == GameState.Win)
@@ -714,6 +717,31 @@ public class Game1 : Game
                               0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
             }
         }
+    }
+    
+    private void HandleRoomSpecifics(SpriteBatch spriteBatch)
+    {
+        
+        if (roomManager.CurrentRoomId == 8)
+        {
+            string secretMessage = "EASTMOST PENNINSULA IS THE SECRET";
+            Vector2 textSize = font.MeasureString(secretMessage);
+            Vector2 textPosition = new Vector2((GraphicsDevice.Viewport.Width - textSize.X) / 2, 120);
+            
+            spriteBatch.DrawString(font, secretMessage, textPosition + new Vector2(2, 2), Color.Black);
+            spriteBatch.DrawString(font, secretMessage, textPosition, Color.White);
+            
+            Texture2D miscSpritesheet = sprint0.Sprites.Texture2DStorage.GetMiscSpriteSheet();
+            if (miscSpritesheet != null)
+            {
+                Rectangle oldManSourceRect = new Rectangle(0, 0, 16, 32);
+                float oldManWidth = 16 * 3.0f;
+                Vector2 oldManPosition = new Vector2((GraphicsDevice.Viewport.Width - oldManWidth) / 2, textPosition.Y + textSize.Y + 20);
+                
+                spriteBatch.Draw(miscSpritesheet, oldManPosition, oldManSourceRect, Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+            }
+        }
+        
     }
     
     private Texture2D GetItemIcon(ItemFactory.ItemType itemType)

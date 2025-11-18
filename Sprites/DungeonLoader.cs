@@ -179,6 +179,9 @@ namespace sprint0.Sprites
                         case "MovableTile":
                             block = blocks.BuildMovableTileBlock(null, position) as IBlock;
                             break;
+                        case "InvisibleBlock":
+                            block = blocks.BuildInvisibleBlock(null, position) as IBlock;
+                            break;
                     }
 
                     if (block != null)
