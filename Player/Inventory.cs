@@ -41,7 +41,7 @@ namespace sprint0.Classes
             health = 6;
             bombs = 0;
             keys = 0;
-            rupees = 80;
+            rupees = 0;
             sword = true;
             bow = false;
             boomerang = false;
