@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace sprint0.Classes
 {
-	public class LinkAttackHitbox : ICollidable
+	public class LinkAttackHitbox : IAttack
 	{
 		public Vector2 position { get; set; } = new Vector2(400, 200);
         public bool active = false;
@@ -17,29 +17,23 @@ namespace sprint0.Classes
 		{
 		
 		}
-        public void Update(Vector2 position)
-		{
-            this.position = position;
-		}
-        public void AttackUp()
+        public void AttackUp(Vector2 position)
         {
-            
             this.position = new Vector2((int)position.X, (int)position.Y - 48);
-        }
-        public void AttackDown()
+        }        public void AttackDown(Vector2 position)
         {
             
             this.position = new Vector2((int)position.X, (int)position.Y + 48);
         }
-        public void AttackRight()
+        public void AttackRight(Vector2 position)
         {
             
-            this.position = new Vector2((int)position.X, (int)position.Y + 48);
+            this.position = new Vector2((int)position.X + 48, (int)position.Y);
         }
-        public void AttackLeft()
+        public void AttackLeft(Vector2 position)
         {
             
-            this.position = new Vector2((int)position.X, (int)position.Y - 48);
+            this.position = new Vector2((int)position.X - 48, (int)position.Y);
         }
         
          public Rectangle GetBounds()

@@ -8,7 +8,7 @@ using System;
 
 namespace sprint0.Sprites
 {
-    public class EnemyBladeTrap : ISprite {
+    public class EnemyBladeTrap : ISprite , IEnemy{
 
         private Texture2D enemySS;
         private Vector2 position;

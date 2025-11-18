@@ -25,14 +25,16 @@ namespace sprint0.Sprites
         private int roomId;
         private RoomManager roomManager;
         private ItemLoader itemLoader;
+        private EnemyLoader enemyLoader;
 
         public Texture2D border;
 
-        public DungeonLoader(BlockFactory blocks, ItemLoader itemLoader, string csvContent)
+        public DungeonLoader(BlockFactory blocks, ItemLoader itemLoader, EnemyLoader enemyLoader, string csvContent)
         {
             this.blocks = blocks;
             this.path = csvContent;
             this.itemLoader = itemLoader;
+            this.enemyLoader = enemyLoader;
             int totalCells = 84;
             storage = new ISprite[totalCells];
             storageIdx = 0;
@@ -191,6 +193,7 @@ namespace sprint0.Sprites
                     cellIndex++;
                 }
                 items = itemLoader.GetItems();
+                enemies = enemyLoader.GetEnemies();
             }
             
             // Add wall borders (these are the outer walls that always exist)
@@ -257,6 +260,13 @@ namespace sprint0.Sprites
             foreach (var block in blockObjects)
             {
                 if (block is ISprite sprite)
+                {
+                    sprite.Update(gameTime);
+                }
+            }
+            foreach (var enmey in enemies)
+            {
+                if (enmey is IEnemy sprite)
                 {
                     sprite.Update(gameTime);
                 }
