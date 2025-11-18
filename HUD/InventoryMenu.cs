@@ -13,8 +13,8 @@ namespace sprint0.HUD
     public class InventoryMenu : IHudElement
     {
         private readonly Func<List<ItemType>> getInventoryItems;
-        private readonly Func<ItemType> getItemInSlotB;
-        private readonly Action<ItemType> setItemInSlotB;
+        private readonly Func<ItemType?> getItemInSlotB;
+        private readonly Action<ItemType?> setItemInSlotB;
         private readonly Func<int> getCurrentSelection;
         private readonly Action<int> setCurrentSelection;
         private readonly Func<RoomManager> getRoomManager;
@@ -23,11 +23,15 @@ namespace sprint0.HUD
         private readonly Func<int> getRupees;
         private readonly Func<int> getKeys;
         private readonly Func<int> getBombs;
+        private readonly Func<bool> hasMap;
+        private readonly Func<bool> hasCompass;
         private readonly Texture2D slotBg;
         private readonly Texture2D pixelTexture;
         private readonly SpriteFont font;
         private readonly GraphicsDevice graphicsDevice;
         private readonly Texture2D itemSpriteSheet;
+        private readonly Texture2D hudSpriteSheet;
+        private readonly Texture2D linkSpriteSheet;
         private readonly IItem fullHeartItem;
         private readonly IItem emptyHeartItem;
         
@@ -43,8 +47,8 @@ namespace sprint0.HUD
         
         public InventoryMenu(
             Func<List<ItemType>> getInventoryItems,
-            Func<ItemType> getItemInSlotB,
-            Action<ItemType> setItemInSlotB,
+            Func<ItemType?> getItemInSlotB,
+            Action<ItemType?> setItemInSlotB,
             Func<int> getCurrentSelection,
             Action<int> setCurrentSelection,
             Func<RoomManager> getRoomManager,
@@ -53,6 +57,8 @@ namespace sprint0.HUD
             Func<int> getRupees,
             Func<int> getKeys,
             Func<int> getBombs,
+            Func<bool> hasMap,
+            Func<bool> hasCompass,
             SpriteFont font,
             GraphicsDevice graphicsDevice)
         {
@@ -67,6 +73,8 @@ namespace sprint0.HUD
             this.getRupees = getRupees;
             this.getKeys = getKeys;
             this.getBombs = getBombs;
+            this.hasMap = hasMap ?? (() => false);
+            this.hasCompass = hasCompass ?? (() => false);
             this.font = font;
             this.graphicsDevice = graphicsDevice;
             
@@ -76,6 +84,8 @@ namespace sprint0.HUD
             pixelTexture.SetData(new[] { Color.White });
             
             itemSpriteSheet = Texture2DStorage.GetItemSpriteSheet();
+            hudSpriteSheet = Texture2DStorage.GetHudSpriteSheet();
+            linkSpriteSheet = Texture2DStorage.GetLinkSpriteSheet();
             if (itemSpriteSheet != null)
             {
                 fullHeartItem = new ItemRecoveryHeart(itemSpriteSheet);
@@ -154,13 +164,40 @@ namespace sprint0.HUD
             var mapLabelPos = topLeft + new Vector2(0, 120);
             spriteBatch.DrawString(font, "MAP", mapLabelPos, Color.Orange, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
             
-            var compassLabelPos = mapLabelPos + new Vector2(0, 40);
+            if (hasMap() && hudSpriteSheet != null)
+            {
+                var mapIconRect = GetHudSpriteRect("map_icon");
+                if (mapIconRect.HasValue)
+                {
+                    var mapIconPos = mapLabelPos + new Vector2(0, 20);
+                    spriteBatch.Draw(hudSpriteSheet, mapIconPos, mapIconRect.Value, Color.White, 0f, Vector2.Zero, 2.0f, SpriteEffects.None, 0f);
+                }
+            }
+            
+            var compassLabelPos = mapLabelPos + new Vector2(0, 60);
             spriteBatch.DrawString(font, "COMPASS", compassLabelPos, Color.Orange, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
+            
+            if (hasCompass() && hudSpriteSheet != null)
+            {
+                var compassIconRect = GetHudSpriteRect("compass_icon");
+                if (compassIconRect.HasValue)
+                {
+                    var compassIconPos = compassLabelPos + new Vector2(0, 20);
+                    spriteBatch.Draw(hudSpriteSheet, compassIconPos, compassIconRect.Value, Color.White, 0f, Vector2.Zero, 2.0f, SpriteEffects.None, 0f);
+                }
+            }
             
             var bottomY = screenHeight - 80;
             var bottomLeft = new Vector2(MenuPadding, bottomY);
             
             spriteBatch.DrawString(font, "LEVEL-1", bottomLeft, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
+            
+            if (linkSpriteSheet != null)
+            {
+                var linkSpritePos = bottomLeft + new Vector2(0, 20);
+                var linkSourceRect = new Rectangle(0, 0, 16, 16);
+                spriteBatch.Draw(linkSpriteSheet, linkSpritePos, linkSourceRect, Color.White, 0f, Vector2.Zero, 2.0f, SpriteEffects.None, 0f);
+            }
             
             var itemCountsPos = bottomLeft + new Vector2(120, -8);
             
@@ -168,15 +205,15 @@ namespace sprint0.HUD
             {
                 var rupeeRect = new Rectangle(40 * 4, 40 * 3, 15, 16);
                 spriteBatch.Draw(itemSpriteSheet, itemCountsPos, rupeeRect, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
-                spriteBatch.DrawString(font, "X" + getRupees(), itemCountsPos + new Vector2(20, -2), Color.White, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "x" + getRupees(), itemCountsPos + new Vector2(20, -2), Color.White, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0f);
                 
                 var keyRect = new Rectangle(40 * 7, 40 * 1, 15, 16);
                 spriteBatch.Draw(itemSpriteSheet, itemCountsPos + new Vector2(0, 28), keyRect, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
-                spriteBatch.DrawString(font, "X" + getKeys(), itemCountsPos + new Vector2(20, 26), Color.White, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "x" + getKeys(), itemCountsPos + new Vector2(20, 26), Color.White, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0f);
                 
                 var bombRect = new Rectangle(40 * 5, 40 * 0, 15, 16);
                 spriteBatch.Draw(itemSpriteSheet, itemCountsPos + new Vector2(0, 56), bombRect, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
-                spriteBatch.DrawString(font, "X" + getBombs(), itemCountsPos + new Vector2(20, 54), Color.White, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(font, "x" + getBombs(), itemCountsPos + new Vector2(20, 54), Color.White, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0f);
             }
             
             var slotBPos = bottomLeft + new Vector2(280, 0);
@@ -184,13 +221,7 @@ namespace sprint0.HUD
             var slotBRect = new Rectangle((int)slotBPos.X, (int)slotBPos.Y, SlotSize, SlotSize);
             var slotARect = new Rectangle((int)slotAPos.X, (int)slotAPos.Y, SlotSize, SlotSize);
             
-            ItemType? selectedItem = null;
-            if (selectedIndex >= 0 && selectedIndex < inventoryItems.Count)
-            {
-                selectedItem = inventoryItems[selectedIndex];
-            }
-            
-            DrawSlot(spriteBatch, slotBRect, selectedItem);
+            DrawSlot(spriteBatch, slotBRect, getItemInSlotB());
             DrawSlot(spriteBatch, slotARect, ItemType.Sword);
             
             spriteBatch.DrawString(font, "B", slotBPos + new Vector2(0, -24), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
@@ -214,7 +245,7 @@ namespace sprint0.HUD
                 }
             }
             
-            DrawRectangle(spriteBatch, new Rectangle(0, screenHeight - 4, screenWidth, 4), Color.Blue);
+            DrawRectangle(spriteBatch, new Rectangle(0, screenHeight - 4, screenWidth, 4), new Color(173, 216, 230));
         }
         
         private void DrawSlot(SpriteBatch spriteBatch, Rectangle rect, ItemType? item)
@@ -449,6 +480,18 @@ namespace sprint0.HUD
                 Vector2 pos = start + direction * i;
                 DrawRectangle(spriteBatch, new Rectangle((int)pos.X, (int)pos.Y, thickness, thickness), color);
             }
+        }
+        
+        private Rectangle? GetHudSpriteRect(string spriteName)
+        {
+            if (hudSpriteSheet == null) return null;
+            
+            return spriteName switch
+            {
+                "map_icon" => new Rectangle(0, 0, 16, 16),
+                "compass_icon" => new Rectangle(0, 0, 16, 16),
+                _ => null
+            };
         }
     }
 }

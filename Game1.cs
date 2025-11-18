@@ -72,7 +72,7 @@ public class Game1 : Game
     private HUD.InventoryMenu inventoryMenu;
     private List<ItemFactory.ItemType> inventoryItems;
     private int selectedInventoryIndex = 0;
-    private ItemFactory.ItemType itemInSlotB = ItemFactory.ItemType.Boomerang;
+    private ItemFactory.ItemType? itemInSlotB = null;
     private ItemLoader itemLoader;
     private EnemyLoader enemyLoader;
 
@@ -151,13 +151,7 @@ public class Game1 : Game
         hud.Add(minimapHud);
 
         hud.Add(new HUD.InventorySlotsHud(
-            () => {
-                if (inventoryItems != null && selectedInventoryIndex >= 0 && selectedInventoryIndex < inventoryItems.Count)
-                {
-                    return inventoryItems[selectedInventoryIndex];
-                }
-                return itemInSlotB;
-            },
+            () => itemInSlotB,
             () => ItemFactory.ItemType.Sword,
             HUD.HudConstants.SlotAPos, HUD.HudConstants.SlotBPos,
             hudFont));
@@ -176,18 +170,8 @@ public class Game1 : Game
 
         hud.Add(new HUD.HeartMeter(() => hearts, () => maxHearts, HUD.HudConstants.HeartsPos, hudFont));
 
-        // Initialize inventory
-        inventoryItems = new List<ItemFactory.ItemType>
-        {
-            ItemFactory.ItemType.Boomerang,
-            ItemFactory.ItemType.Bomb,
-            ItemFactory.ItemType.Bow,
-            ItemFactory.ItemType.Arrow,
-            ItemFactory.ItemType.CandleRed,
-            ItemFactory.ItemType.Recorder,
-            ItemFactory.ItemType.Food,
-            ItemFactory.ItemType.PotionRed
-        };
+        // Initialize inventory - start with empty inventory (only sword in slot A)
+        inventoryItems = new List<ItemFactory.ItemType>();
 
         inventoryMenu = new HUD.InventoryMenu(
             () => inventoryItems,
@@ -201,6 +185,8 @@ public class Game1 : Game
             () => rupees,
             () => keys,
             () => bombs,
+            () => Classes.Inventory.HasMap(),
+            () => Classes.Inventory.HasCompass(),
             hudFont,
             GraphicsDevice
         );
@@ -299,6 +285,15 @@ public class Game1 : Game
                 Exit();
             }
         }
+
+        hearts = Classes.Inventory.GetHealth();
+        maxHearts = Classes.Inventory.GetMaxHealth();
+        bombs = Classes.Inventory.GetBombs();
+        rupees = Classes.Inventory.GetRupees();
+        keys = Classes.Inventory.GetKeys();
+        hasMap = Classes.Inventory.HasMap();
+        
+        UpdateInventoryItemsList();
 
         // Update based on game state
         if (currentState == GameState.Gameplay)
@@ -578,19 +573,9 @@ public class Game1 : Game
         hasMap = Classes.Inventory.HasMap();
         levelName = "Level 1";
         
-        inventoryItems = new List<ItemFactory.ItemType>
-        {
-            ItemFactory.ItemType.Boomerang,
-            ItemFactory.ItemType.Bomb,
-            ItemFactory.ItemType.Bow,
-            ItemFactory.ItemType.Arrow,
-            ItemFactory.ItemType.CandleRed,
-            ItemFactory.ItemType.Recorder,
-            ItemFactory.ItemType.Food,
-            ItemFactory.ItemType.PotionRed
-        };
+        inventoryItems = new List<ItemFactory.ItemType>();
         selectedInventoryIndex = 0;
-        itemInSlotB = ItemFactory.ItemType.Boomerang;
+        itemInSlotB = null;
         
         link = new Link(_spriteBatch, this);
 
@@ -781,5 +766,110 @@ public class Game1 : Game
         itemInSlotB = inventoryItems[selectedInventoryIndex];
         
         currentState = GameState.Gameplay;
+    }
+    
+    private void UpdateInventoryItemsList()
+    {
+        HashSet<ItemFactory.ItemType> collectedItems = new HashSet<ItemFactory.ItemType>();
+        
+        if (Classes.Inventory.HasBoomerang())
+        {
+            collectedItems.Add(ItemFactory.ItemType.Boomerang);
+        }
+        if (Classes.Inventory.HasBow())
+        {
+            collectedItems.Add(ItemFactory.ItemType.Bow);
+        }
+        if (Classes.Inventory.GetBombs() > 0)
+        {
+            collectedItems.Add(ItemFactory.ItemType.Bomb);
+        }
+        
+        if (dungeon != null)
+        {
+            foreach (var item in dungeon.GetItems())
+            {
+                if (item.IsCollected())
+                {
+                    ItemFactory.ItemType? itemType = GetItemTypeFromItem(item);
+                    if (itemType.HasValue)
+                    {
+                        collectedItems.Add(itemType.Value);
+                    }
+                }
+            }
+        }
+        
+        if (itemLoader != null)
+        {
+            foreach (var item in itemLoader.GetItems())
+            {
+                if (item.IsCollected())
+                {
+                    ItemFactory.ItemType? itemType = GetItemTypeFromItem(item);
+                    if (itemType.HasValue)
+                    {
+                        collectedItems.Add(itemType.Value);
+                    }
+                }
+            }
+        }
+        
+        inventoryItems = new List<ItemFactory.ItemType>(collectedItems);
+        
+        if (selectedInventoryIndex >= inventoryItems.Count)
+        {
+            selectedInventoryIndex = Math.Max(0, inventoryItems.Count - 1);
+        }
+        
+        if (inventoryItems.Count > 0)
+        {
+            if (selectedInventoryIndex >= 0 && selectedInventoryIndex < inventoryItems.Count)
+            {
+                itemInSlotB = inventoryItems[selectedInventoryIndex];
+            }
+            else
+            {
+                itemInSlotB = inventoryItems[0];
+            }
+        }
+        else
+        {
+            itemInSlotB = null;
+        }
+    }
+    
+    private ItemFactory.ItemType? GetItemTypeFromItem(IItem item)
+    {
+        return item switch
+        {
+            Sprites.ItemBoomerang => ItemFactory.ItemType.Boomerang,
+            Sprites.ItemMagicalBoomerang => ItemFactory.ItemType.MagicalBoomerang,
+            Sprites.ItemBow => ItemFactory.ItemType.Bow,
+            Sprites.ItemBomb => ItemFactory.ItemType.Bomb,
+            Sprites.ItemArrow => ItemFactory.ItemType.Arrow,
+            Sprites.ItemSilverArrow => ItemFactory.ItemType.SilverArrow,
+            Sprites.ItemCandleRed => ItemFactory.ItemType.CandleRed,
+            Sprites.ItemCandleBlue => ItemFactory.ItemType.CandleBlue,
+            Sprites.ItemRecorder => ItemFactory.ItemType.Recorder,
+            Sprites.ItemFood => ItemFactory.ItemType.Food,
+            Sprites.ItemLetter => ItemFactory.ItemType.Letter,
+            Sprites.ItemPotionRed => ItemFactory.ItemType.PotionRed,
+            Sprites.ItemPotionBlue => ItemFactory.ItemType.PotionBlue,
+            Sprites.ItemMagicalRod => ItemFactory.ItemType.MagicalRod,
+            Sprites.ItemSword => ItemFactory.ItemType.Sword,
+            Sprites.ItemWhiteSword => ItemFactory.ItemType.WhiteSword,
+            Sprites.ItemRaft => ItemFactory.ItemType.Raft,
+            Sprites.ItemBookOfMagic => ItemFactory.ItemType.BookOfMagic,
+            Sprites.ItemBlueRing => ItemFactory.ItemType.BlueRing,
+            Sprites.ItemRedRing => ItemFactory.ItemType.RedRing,
+            Sprites.ItemStepladder => ItemFactory.ItemType.Stepladder,
+            Sprites.ItemMagicalKey => ItemFactory.ItemType.MagicalKey,
+            Sprites.ItemPowerBracelet => ItemFactory.ItemType.PowerBracelet,
+            Sprites.ItemCompass => ItemFactory.ItemType.Compass,
+            Sprites.ItemDungeonMap => ItemFactory.ItemType.DungeonMap,
+            Sprites.ItemTriforceFragment => ItemFactory.ItemType.TriforceFragment,
+            _ => null
+        };
     }
 }
