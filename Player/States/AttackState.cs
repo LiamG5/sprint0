@@ -13,8 +13,9 @@ namespace sprint0.PlayerStates
         private SoundEffectInstance sfx = sprint0.Sounds.SoundStorage.LOZ_Sword_Slash.CreateInstance();
 
         private float currentTime = 0;
-        private float duration = 500;
-        LinkAttackHitbox linkAttackHitbox;
+        private float duration = 500; // ms
+        private LinkAttackHitbox linkAttackHitbox;
+
         public AttackState(Link player, LinkAnimation linkAnimation, LinkAttackHitbox linkAttackHitbox)
         {
             this.player = player;
@@ -22,15 +23,17 @@ namespace sprint0.PlayerStates
             this.linkAnimation = linkAnimation;
         }
 
-        public void Enter() { 
+        public void Enter()
+        {
             player.velocity = new Vector2(0, 0);
-            
+            currentTime = 0f;
+            linkAttackHitbox.active = false;
         }
 
         public void Update(GameTime gameTime)
         {
             currentTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            
+
             if (currentTime > duration)
             {
                 player.Idle();
@@ -44,21 +47,36 @@ namespace sprint0.PlayerStates
 
         public void UseState()
         {
-            if(duration/2 < currentTime) linkAttackHitbox.active = true;
+            float startActive = duration * 0.2f;
+            float endActive   = duration * 0.8f;
+
+            if (currentTime >= startActive && currentTime <= endActive)
+            {
+                linkAttackHitbox.active = true;
+            }
+            else
+            {
+                linkAttackHitbox.active = false;
+            }
+
+
             switch (player.direction)
-            {    
+            {
                 case Link.Direction.Up:
                     linkAnimation.LinkAttackingUp(duration, currentTime);
                     linkAttackHitbox.AttackUp(player.position);
                     break;
+
                 case Link.Direction.Down:
                     linkAnimation.LinkAttackingDown(duration, currentTime);
                     linkAttackHitbox.AttackDown(player.position);
                     break;
+
                 case Link.Direction.Left:
                     linkAnimation.LinkAttackingLeft(duration, currentTime);
                     linkAttackHitbox.AttackLeft(player.position);
                     break;
+
                 case Link.Direction.Right:
                     linkAnimation.LinkAttackingRight(duration, currentTime);
                     linkAttackHitbox.AttackRight(player.position);
@@ -69,6 +87,7 @@ namespace sprint0.PlayerStates
         public void Exit()
         {
             linkAttackHitbox.active = false;
+
             if (Inventory.GetHealth() == Inventory.GetMaxHealth())
             {
                 player.FireSwordBeam();
@@ -76,3 +95,4 @@ namespace sprint0.PlayerStates
         }
     }
 }
+

@@ -13,56 +13,66 @@ namespace sprint0.Managers
         private int currentRoomId;
         private Link link;
         private Game1 game;
+        private RoomTransitionManager transitionManager;
+        private int pendingRoomId = -1;
+        private TransitionDirection pendingDirection = TransitionDirection.None;
         
         public int CurrentRoomId => currentRoomId;
+        public RoomTransitionManager TransitionManager => transitionManager;
+        
+        public RoomManager(Link link, Game1 game, RoomTransitionManager transitionManager)
+        {
+            this.link = link;
+            this.game = game;
+            this.transitionManager = transitionManager;
+            this.currentRoomId = 8;
+            this.visitedRooms = new HashSet<int>();
+            this.roomTypes = new Dictionary<int, RoomType>();
+            SetupRoomConnections();
+            SetupRoomTypes();
+            MarkRoomVisited(8);
+        }
         
         public RoomManager(Link link, Game1 game)
         {
             this.link = link;
             this.game = game;
-            this.currentRoomId = 1;
+            this.transitionManager = null;
+            this.currentRoomId = 8;
             this.visitedRooms = new HashSet<int>();
             this.roomTypes = new Dictionary<int, RoomType>();
             SetupRoomConnections();
             SetupRoomTypes();
-            MarkRoomVisited(1);
+            MarkRoomVisited(8);
         }
 
         private void SetupRoomConnections()
         {
             roomConnections = new Dictionary<int, RoomConnections>();
 
-            // Row 1
             roomConnections[16] = new RoomConnections { North = -1, South = -1, East = 17, West = -1 };
             roomConnections[17] = new RoomConnections { North = -1, South = 13, East = -1, West = 16 };
 
-            // Row 2
             roomConnections[13] = new RoomConnections { North = 17, South = 10, East = -1, West = -1 };
             roomConnections[14] = new RoomConnections { North = -1, South = 12, East = 15, West = -1 };
             roomConnections[15] = new RoomConnections { North = -1, South = -1, East = -1, West = 14 };
 
-            // Row 3
             roomConnections[8] = new RoomConnections { North = -1, South = -1, East = 9, West = -1 };
             roomConnections[9] = new RoomConnections { North = -1, South = 5, East = 10, West = 8 };
             roomConnections[10] = new RoomConnections { North = 13, South = 4, East = 11, West = 9 };
             roomConnections[11] = new RoomConnections { North = -1, South = 7, East = 12, West = 10 };
             roomConnections[12] = new RoomConnections { North = 14, South = -1, East = -1, West = 11 };
 
-            // Row 4
             roomConnections[5] = new RoomConnections { North = 9, South = -1, East = 6, West = -1 };
             roomConnections[6] = new RoomConnections { North = 10, South = 4, East = 7, West = 5 };
             roomConnections[7] = new RoomConnections { North = 11, South = -1, East = -1, West = 6 };
 
-            // Row 5
             roomConnections[4] = new RoomConnections { North = 6, South = 2, East = -1, West = -1 };
 
             roomConnections[1] = new RoomConnections { North = -1, South = -1, East = 2, West = -1 };
             roomConnections[2] = new RoomConnections { North = 4, South = -1, East = 3, West = 1 };
             roomConnections[3] = new RoomConnections { North = -1, South = -1, East = -1, West = 2 };
         }
-
-
-
 
         public int GetConnectedRoom(int fromRoomId, TransitionDirection direction)
         {
@@ -154,11 +164,9 @@ namespace sprint0.Managers
         
         public void TransitionToRoom(int newRoomId, TransitionDirection direction)
         {
-            // Validate the transition is allowed
             if (newRoomId < 1 || newRoomId > 17)
                 return;
             
-            // Check if this transition is valid from the current room
             int expectedRoomId = GetConnectedRoom(currentRoomId, direction);
             if (expectedRoomId != newRoomId)
             {
@@ -166,9 +174,35 @@ namespace sprint0.Managers
                 return;
             }
             
-            currentRoomId = newRoomId;
+            if (transitionManager != null)
+            {
+                if (transitionManager.IsTransitioning)
+                    return;
+                
+                pendingRoomId = newRoomId;
+                pendingDirection = direction;
+                
+                transitionManager.StartTransition(PerformRoomChange, direction);
+                
+                System.Console.WriteLine($"[RoomManager] Starting {direction} slide transition from Room {currentRoomId} to Room {newRoomId}");
+            }
+            else
+            {
+                pendingRoomId = newRoomId;
+                pendingDirection = direction;
+                PerformRoomChange();
+                System.Console.WriteLine($"[RoomManager] Instant transition from Room {currentRoomId} to Room {newRoomId} via {direction}");
+            }
+        }
+        
+        private void PerformRoomChange()
+        {
+            if (pendingRoomId == -1) return;
             
-            switch (newRoomId)
+            int oldRoomId = currentRoomId;
+            currentRoomId = pendingRoomId;
+            
+            switch (currentRoomId)
             {
                 case 1: game.GoToRoom1(); break;
                 case 2: game.GoToRoom2(); break;
@@ -189,17 +223,22 @@ namespace sprint0.Managers
                 case 17: game.GoToRoom17(); break;
             }
             
-            RepositionLink(direction);
+            RepositionLink(pendingDirection);
+            
+            System.Console.WriteLine($"[RoomManager] Room changed from {oldRoomId} to {currentRoomId}");
+            
+            pendingRoomId = -1;
+            pendingDirection = TransitionDirection.None;
         }
         
         private void RepositionLink(TransitionDirection direction)
         {
             Vector2 newPosition = direction switch
             {
-                TransitionDirection.North => new Vector2(360, 406),  // Enter from bottom
-                TransitionDirection.South => new Vector2(360, 62),  // Enter from top
-                TransitionDirection.East => new Vector2(78, 240),   // Enter from left
-                TransitionDirection.West => new Vector2(638, 240),   // Enter from right
+                TransitionDirection.North => new Vector2(360, 406),
+                TransitionDirection.South => new Vector2(360, 96),
+                TransitionDirection.East => new Vector2(96, 240),
+                TransitionDirection.West => new Vector2(620, 240),
                 _ => link.position
             };
             

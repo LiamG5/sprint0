@@ -20,14 +20,22 @@ namespace sprint0.Sprites
         private const int ENEMY_WIDTH = 48;  // 16 * 3.0f scale
         private const int ENEMY_HEIGHT = 48;
 
-        public EnemyGel(Texture2D sheet, Vector2 startPosition)
-        { 
+        // NEW: constructor with target provider (for chasing player)
+        public EnemyGel(Texture2D sheet, Vector2 startPosition, Func<Vector2> targetProvider)
+        {
             enemySS = sheet;
-            movement = new EnemyMovementCycle(startPosition);
+            movement = new EnemyMovementCycle(startPosition, targetProvider);
             animation = new EnemyAnimationHelper(frame1, frame2);
         }
 
-        public EnemyGel(Texture2D sheet) : this(sheet, new Vector2(200, 100))
+        // OLD constructors now call the new one with null (random movement)
+        public EnemyGel(Texture2D sheet, Vector2 startPosition)
+            : this(sheet, startPosition, null)
+        {
+        }
+
+        public EnemyGel(Texture2D sheet)
+            : this(sheet, new Vector2(200, 100), null)
         {
         }
 
@@ -48,7 +56,7 @@ namespace sprint0.Sprites
         public void TakeDamage()
         {
             isDead = true;
-            sprint0.Sounds.SoundStorage.LOZ_Enemy_Die.Play(); 
+            sprint0.Sounds.SoundStorage.LOZ_Enemy_Die.Play();
         }
 
         public bool IsDead()
@@ -65,7 +73,7 @@ namespace sprint0.Sprites
         {
             return true;
         }
-        
+
         public bool BlocksProjectiles()
         {
             return true;

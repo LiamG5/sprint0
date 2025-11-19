@@ -9,35 +9,49 @@ using System;
 
 namespace sprint0.Sprites
 {
-    public class EnemyWallmaster : ISprite , IEnemy{
-
+    public class EnemyWallmaster : ISprite, IEnemy
+    {
         private Texture2D enemySS;
-        private  Rectangle frame1 = new Rectangle(16 * 0, 16 * 14, 16, 16);
-        private  Rectangle frame2 = new Rectangle(16 * 1, 16 * 14, 16, 16);
+        private Rectangle frame1 = new Rectangle(16 * 0, 16 * 14, 16, 16);
+        private Rectangle frame2 = new Rectangle(16 * 1, 16 * 14, 16, 16);
         private EnemyAnimationHelper animation;
         private EnemyMovementCycle movement;
         private bool isDead = false;
         private const int ENEMY_WIDTH = 48;  // 16 * 3.0f scale
         private const int ENEMY_HEIGHT = 48;
 
-        public EnemyWallmaster (Texture2D sheet, Vector2 startPosition)
+        // NEW: with target provider
+        public EnemyWallmaster(Texture2D sheet, Vector2 startPosition, Func<Vector2> targetProvider)
         {
             enemySS = sheet;
-            movement = new EnemyMovementCycle(startPosition);
+            movement = new EnemyMovementCycle(startPosition, targetProvider);
             animation = new EnemyAnimationHelper(frame1, frame2);
         }
-        public EnemyWallmaster(Texture2D sheet) : this(sheet, new Vector2(200, 100))
+
+        public EnemyWallmaster(Texture2D sheet, Vector2 startPosition)
+            : this(sheet, startPosition, null)
+        {
+        }
+
+        public EnemyWallmaster(Texture2D sheet)
+            : this(sheet, new Vector2(200, 100), null)
         {
         }
 
         public void Update(GameTime gameTime)
         {
+            movement.Move();
             animation.Update(gameTime);
         }
+
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
-            spriteBatch.Draw(enemySS, position, animation.GetFrame(), Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+            if (!isDead)
+            {
+                spriteBatch.Draw(enemySS, movement.GetPosition(), animation.GetFrame(), Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+            }
         }
+
         public void TakeDamage()
         {
             isDead = true;
@@ -57,7 +71,7 @@ namespace sprint0.Sprites
         {
             return true;
         }
-        
+
         public bool BlocksProjectiles()
         {
             return true;
@@ -88,7 +102,7 @@ namespace sprint0.Sprites
                     break;
                 case IAttack attack when attack.BlocksMovement():
                     TakeDamage();
-                    System.Diagnostics.Debug.WriteLine("Keese took damage");
+                    System.Diagnostics.Debug.WriteLine("Wallmaster took damage");
                     break;
             }
         }

@@ -23,6 +23,10 @@ namespace sprint0.Sprites
         private int ColMult = 48;
         private bool RoomOneSpawned = false; 
 
+        // Store references for boss spawning
+        private DungeonLoader dungeonLoader;
+        private Func<Vector2> playerPositionProvider;
+
     
         public EnemyLoader(EnemySpriteFactory enemies)
         {
@@ -235,7 +239,8 @@ namespace sprint0.Sprites
 
         private void Room14Enemies()
         {
-            // boss room
+            // Boss now receives dungeonLoader (for projectiles) and playerPositionProvider (for chasing)
+            enemyList.Add(enemies.SpawnAquamentus(new Vector2(96 + 48*5, 96 + 48*3), dungeonLoader, playerPositionProvider));
         }
 
         private void Room15Enemies()
@@ -278,6 +283,17 @@ namespace sprint0.Sprites
         public List<IEnemy> GetEnemies()
         {
             return enemyList;
+        }
+
+        // NEW: Methods to set references needed for boss spawning
+        public void SetDungeonLoader(DungeonLoader loader)
+        {
+            this.dungeonLoader = loader;
+        }
+
+        public void SetPlayerPositionProvider(Func<Vector2> provider)
+        {
+            this.playerPositionProvider = provider;
         }
     }
 }
