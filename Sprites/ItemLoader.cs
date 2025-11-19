@@ -11,8 +11,6 @@ namespace sprint0.Sprites
     public class ItemLoader
     {
         private ItemFactory items = ItemFactory.Instance;
-        private int roomId;
-        private RoomManager roomManager;
         public Texture2D border;
         private List<IItem> itemList;
         
@@ -195,6 +193,14 @@ namespace sprint0.Sprites
                 item.Draw(spriteBatch, item.GetPosition());
             }
         }
+
+        public void Update(GameTime gameTime)
+        {
+           foreach (IItem item in itemList)
+            {
+                item.Update(gameTime);
+            }
+        } 
         public List<IItem> GetItems()
         {
             return itemList;

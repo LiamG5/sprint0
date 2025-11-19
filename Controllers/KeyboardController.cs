@@ -113,6 +113,7 @@ namespace sprint0.Classes
                         {
                             game.tile = game.blockCarousel.GetCurrentBlock();
                         }
+                        /*
                         else if (key == Keys.O || key == Keys.P)
                         {
                             game.enemy = game.enemyCarousel.GetCurrentEnemy();
@@ -120,6 +121,7 @@ namespace sprint0.Classes
                         {
                             game.item = game.itemCarousel.GetCurrentItem();
                         }
+                        */
                     }
                 }
 
