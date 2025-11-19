@@ -12,24 +12,48 @@ namespace sprint0.Sprites
     {
         private EnemySpriteFactory enemies;
         private int roomId;
-        private RoomManager roomManager;
         public Texture2D border;
         private List<IEnemy> enemyList;
+        
+        private Dictionary<int, List<IEnemy>> LoadedEnemies;
         private int RowStart = 96;
         private int ColStart = 96;
 
         private int RowMult = 48;
         private int ColMult = 48;
+        private bool RoomOneSpawned = false; 
+
     
         public EnemyLoader(EnemySpriteFactory enemies)
         {
+            roomId = 1;
             this.enemies = enemies;
             this.enemyList = new List<IEnemy>();
+            this.LoadedEnemies = new Dictionary<int, List<IEnemy>>();
+            Room1Enemies();
         }
 
         public void LoadEnemies(int roomId)
         {
-            enemyList.Clear();
+
+            if (LoadedEnemies.ContainsKey(this.roomId))
+            {   
+                LoadedEnemies[this.roomId] = this.enemyList;
+            }
+            else
+            {
+                LoadedEnemies.Add(this.roomId, this.enemyList);
+            }
+
+            this.enemyList = new List<IEnemy>();
+
+            if (LoadedEnemies.ContainsKey(roomId))
+            {   
+                this.enemyList = LoadedEnemies[roomId];
+                this.roomId = roomId;
+                 return;
+            }
+            
             switch (roomId)
             {
                 case 1:
@@ -86,12 +110,11 @@ namespace sprint0.Sprites
                 default:
                     break;
             }
+            this.roomId = roomId;
         }
 
         private void Room1Enemies()
         {
-            
-            
             enemyList.Add(enemies.SpawnKeese(new Vector2(ColStart + ColMult * 1, RowStart + RowMult * 1)));
             enemyList.Add(enemies.SpawnKeese(new Vector2(ColStart + ColMult * 3, RowStart + RowMult * 3)));
             enemyList.Add(enemies.SpawnKeese(new Vector2(ColStart + ColMult * 1, RowStart + RowMult * 5)));
@@ -100,7 +123,6 @@ namespace sprint0.Sprites
 
         private void Room2Enemies()
         {
-            // Add enemies for room 2 here
         }
 
         private void Room3Enemies()
@@ -243,6 +265,15 @@ namespace sprint0.Sprites
                 enemy.Draw(spriteBatch, enemy.GetPosition());
             }
         }
+        public void Update(GameTime gameTime)
+        {
+           foreach (IEnemy enemy in enemyList)
+            {
+                enemy.Update(gameTime);
+            }
+        } 
+        
+
 
         public List<IEnemy> GetEnemies()
         {

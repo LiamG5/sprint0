@@ -1,5 +1,7 @@
 The Goo Crew, Group 6
 
+!! you start in the debug room, restarting will actvate the doors allowing you to leave
+
 Player Controls:
 Move: WASD, Arrows (changes facing)
 Attack: Z or N
@@ -21,10 +23,13 @@ Cycle current enempy/NPC forward: P
 Other Controls:
 Quit: Q
 Reset to initial state: R
+Muisc: m
+Inventory: b
 
 Bugs:
-Link moves incorrectly when damaged because the damage state does not correctly handle movement.
-Movable block collision is in the incorrect direction on the corners of blocks, causing them to stop.
-Room switching is inconsistent with door
-no items currently spawn, no interaction with link
-all blocks that can be movable are movable 
+room 1 is still the the debug room even after re-entering 
+Doors are always open, even if they should be locked or be a wall
+No exploadable doors, no bomb function
+Attemping to change the enemies with the Carousel while in a room with other enemies will change every current enemy spwawned
+enemies can walk though walls
+

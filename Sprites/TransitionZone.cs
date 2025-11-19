@@ -38,12 +38,7 @@ namespace sprint0.Sprites
             return bounds;
         }
 
-        public bool BlocksMovement()
-        {
-            return isBlocking;
-        }
-        
-        public bool BlocksProjectiles()
+        public bool IsSolid()
         {
             return isBlocking;
         }
@@ -85,6 +80,16 @@ namespace sprint0.Sprites
         {
             isLocked = locked;
         }
+        public bool BlocksProjectiles()
+        {
+            return true;
+        }
+         public bool BlocksMovement()
+        {
+            return true;
+        }
+         
+        
 
         public TransitionDirection GetDirection()
         {

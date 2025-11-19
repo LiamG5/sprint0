@@ -90,6 +90,7 @@ public class Game1 : Game
 
     public enum GameState { Gameplay, Pause, Inventory, GameOver, Win };
     public GameState currentState { get; set; } = GameState.Gameplay;
+    private int roomIndex;
 
 
     public Game1()
@@ -210,19 +211,8 @@ public class Game1 : Game
         dungeon.LoadRectangles();
 
         tile = blockCarousel.GetCurrentBlock();
-        enemy = enemyCarousel.GetCurrentEnemy();
-        item = itemCarousel.GetCurrentItem();
+        
 
-        try
-        {
-            Texture2D enemySheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet();
-            var testEnemy = new EnemyGel(enemySheet, new Vector2(400, 100));
-            dungeon.AddEnemy(testEnemy);
-        }
-        catch (Exception ex)
-        {
-            System.Console.WriteLine("[EnemySheet Load] " + ex);
-        }
 
         try
         {
@@ -268,6 +258,7 @@ public class Game1 : Game
         previousMouseState = Mouse.GetState();
 
         System.Console.WriteLine("[LoadContent] completed");
+        roomIndex = 1;
     }
     
 
@@ -325,7 +316,7 @@ public class Game1 : Game
             }
 
             HandleMinimapClicks();
-
+            //this updates the dungeon enemies
             foreach (var e in dungeon.GetEnemies())
             {
                 e.Update(gameTime);
@@ -339,9 +330,11 @@ public class Game1 : Game
                 }
                 dungeon.CleanupDeadEntities();
             }
-
-            enemy.Update(gameTime);
-            item.Update(gameTime);
+            
+            
+            
+            
+            
             hud?.Update(gameTime);
         }
         else if (currentState == GameState.Pause)
@@ -422,20 +415,20 @@ public class Game1 : Game
 
             foreach (var e in dungeon.GetEnemies())
             {
-                if (!e.IsDead())
-                    e.Draw(_spriteBatch, e.GetPosition());
+                e.Draw(_spriteBatch, e.GetPosition());
             }
 
         }
+        
+        if (roomIndex == 1) //change to debugRoom when added
+        {
+            enemyCarousel.Draw(_spriteBatch);
+        }
+        if ( roomIndex == 1) //change to debugRoom when added
+        {
+            itemCarousel.Draw(_spriteBatch);
+        }
 
-        if (enemy != null)
-        {
-            enemy.Draw(_spriteBatch, new Vector2(400, 100));
-        }
-        if (item != null)
-        {
-            item.Draw(_spriteBatch, new Vector2(200, 100));
-        }
         if (link != null)
         {
             link.Draw(_spriteBatch);
@@ -561,6 +554,7 @@ public class Game1 : Game
         
         collisionUpdater = new CollisionUpdater(dungeon, link);
         System.Console.WriteLine($"[LoadRoom] Loaded Room {roomIndex}");
+        this.roomIndex = roomIndex;
     }
 
     public void ResetGame()
@@ -587,8 +581,7 @@ public class Game1 : Game
         itemCarousel = new ItemCarousel(items, _spriteBatch);
 
         tile = blockCarousel.GetCurrentBlock();
-        enemy = enemyCarousel.GetCurrentEnemy();
-        item = itemCarousel.GetCurrentItem();
+        
 
         controllers = new List<IController>();
         keyboard = new KeyboardController(this, null, () => currentState == GameState.Inventory);
@@ -622,23 +615,16 @@ public class Game1 : Game
 
         string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
         itemLoader = new ItemLoader(items);
+        enemyLoader = new EnemyLoader(enemies);
         dungeon = new DungeonLoader(blocks, itemLoader, enemyLoader, File.ReadAllText(dungeonPath));
         dungeon.LoadRectangles();
         
-        try
-        {
-            Texture2D enemySheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet();
-            var testEnemy = new EnemyGel(enemySheet, new Vector2(400, 100));
-            dungeon.AddEnemy(testEnemy);
-        }
-        catch (Exception ex)
-        {
-            System.Console.WriteLine("[ResetGame EnemySheet] " + ex);
-        }
+        
         
         roomManager.SetCurrentRoom(1);
         dungeon.SetRoomManager(roomManager, 1);
         itemLoader.LoadItems(1);
+        enemyLoader.LoadEnemies(1);
 
         collisionUpdater = new CollisionUpdater(dungeon, link);
         collisionUpdater.getList();
@@ -649,6 +635,7 @@ public class Game1 : Game
         currentState = GameState.Gameplay;
         
         System.Console.WriteLine("[ResetGame] Game reset complete");
+        roomIndex = 1;
     }
 
     private MouseState previousMouseState;

@@ -85,6 +85,10 @@ namespace sprint0.Sprites
                 case IBlock block when block.BlocksMovement():
                     movement.ChangeDirection();
                     break;
+                case IAttack attack when attack.BlocksMovement():
+                    TakeDamage();
+                    System.Diagnostics.Debug.WriteLine("Keese took damage");
+                    break;
             }
         }
     }

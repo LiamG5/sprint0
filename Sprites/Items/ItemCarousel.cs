@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 using sprint0.Interfaces;
 using sprint0.Sprites;
 
@@ -189,9 +190,9 @@ namespace sprint0.Sprites
             }
         }
 
-        public ISprite GetCurrentItem()
-        {
-            return currentItem;
+        public void Draw(SpriteBatch spriteBatch)
+        { 
+            currentItem.Draw(spriteBatch, new Vector2(200, 100));
         }
 
         

@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Interfaces;
 using sprint0.Sprites;
@@ -8,7 +9,7 @@ namespace sprint0.Sprites
     {
         private EnemySpriteFactory enemyFactory;
         private SpriteBatch spriteBatch;
-        private ISprite currentEnemy;
+        private IEnemy currentEnemy;
         private int currentIndex = 0;
         private EnemySpriteFactory.EnemyType[] enemyTypes = {
             EnemySpriteFactory.EnemyType.BladeTrap,
@@ -23,7 +24,7 @@ namespace sprint0.Sprites
         {
             this.enemyFactory = enemyFactory;
             this.spriteBatch = spriteBatch;
-            currentEnemy = enemyFactory.SpawnBladeTrap();
+            this.currentEnemy = enemyFactory.SpawnBladeTrap();
         }
 
         public void Next()
@@ -40,6 +41,7 @@ namespace sprint0.Sprites
 
         private void UpdateCurrentEnemy()
         {
+            
             switch (enemyTypes[currentIndex])
             {
                 case EnemySpriteFactory.EnemyType.BladeTrap:
@@ -63,9 +65,9 @@ namespace sprint0.Sprites
             }
         }
 
-        public ISprite GetCurrentEnemy()
+        public void Draw(SpriteBatch spriteBatch)
         {
-            return currentEnemy;
+            currentEnemy.Draw(spriteBatch, new Vector2(400, 100));
         }
     }
 }
