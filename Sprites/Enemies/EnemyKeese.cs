@@ -13,9 +13,9 @@ namespace sprint0.Sprites
     public class EnemyKeese : ISprite, IEnemy {
 
         private Texture2D enemySS;
-        private static Rectangle frame1 = new Rectangle(16 * 6, 16 * 17, 16, 16);
-        private static Rectangle frame2 = new Rectangle(16 * 7, 16 * 17, 16, 16);
-        private EnemyAnimationHelper animation = new EnemyAnimationHelper(frame1, frame2);
+        private  Rectangle frame1 = new Rectangle(16 * 6, 16 * 17, 16, 16);
+        private  Rectangle frame2 = new Rectangle(16 * 7, 16 * 17, 16, 16);
+        private EnemyAnimationHelper animation;
         private EnemyMovementCycle movement;
         private bool isDead = false;
         private const int ENEMY_WIDTH = 48;  // 16 * 3.0f scale
@@ -24,6 +24,7 @@ namespace sprint0.Sprites
         {
             enemySS = sheet;
             movement = new EnemyMovementCycle(startPosition);
+            animation = new EnemyAnimationHelper(frame1, frame2);
         }
         public EnemyKeese(Texture2D sheet) : this(sheet, new Vector2(200, 100))
         {
@@ -77,16 +78,19 @@ namespace sprint0.Sprites
                 case Link link:
                     break;
 
-                case DungeonLongWall wall when wall.BlocksMovement():
-                    movement.ChangeDirection();
+                case DungeonLongWall:
+                    movement.ChangeDirectionCol();
                     break;
 
-                case DungeonTallWall wall when wall.BlocksMovement():
-                    movement.ChangeDirection();
+                case DungeonTallWall:
+                    movement.ChangeDirectionCol();
+                    break;
+                case TransitionZone:
+                    movement.ChangeDirectionCol();
                     break;
 
                 case IBlock block when block.BlocksMovement():
-                    movement.ChangeDirection();
+                    movement.ChangeDirectionCol();
                     break;
                 case IAttack attack when attack.BlocksMovement():
                     TakeDamage();

@@ -29,7 +29,8 @@ Inventory: b
 Bugs:
 room 1 is still the the debug room even after re-entering 
 Doors are always open, even if they should be locked or be a wall
-No exploadable doors, no bomb function
-Attemping to change the enemies with the Carousel while in a room with other enemies will change every current enemy spwawned
-enemies can walk though walls
+No exploadable doors
+Only currently able to use sword and full health sword  
+
+
 

@@ -12,15 +12,15 @@ namespace sprint0.Sprites.Enemies
     public class EnemyAnimationHelper : IAnimate
     {
 
-        private int count = 0;
-        private static Rectangle frame1;
-        private static Rectangle frame2;
-        private static Rectangle temp;
+        private int count = Random.Shared.Next(0,9);
+        private readonly Rectangle frame1;
+        private readonly Rectangle frame2;
+        private  Rectangle temp;
 
         public EnemyAnimationHelper(Rectangle frame1, Rectangle frame2)
         {
-            EnemyAnimationHelper.frame1 = frame1;
-            EnemyAnimationHelper.frame2 = frame2;
+            this.frame1 = frame1;
+            this.frame2 = frame2;
             temp = frame1;
         }
 
