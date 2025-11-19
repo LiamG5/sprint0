@@ -12,9 +12,9 @@ namespace sprint0.Sprites
     public class EnemyStalfos : ISprite, IEnemy {
 
         private Texture2D enemySS;
-        private static Rectangle frame1 = new Rectangle(16 * 0, 16 * 12, 16, 16);
-        private static Rectangle frame2 = new Rectangle(16 * 1, 16 * 12, 16, 16);
-        private EnemyAnimationHelper animation = new EnemyAnimationHelper(frame1, frame2);
+        private  Rectangle frame1 = new Rectangle(16 * 0, 16 * 12, 16, 16);
+        private  Rectangle frame2 = new Rectangle(16 * 1, 16 * 12, 16, 16);
+        private EnemyAnimationHelper animation;
         private EnemyMovementCycle movement;
         private bool isDead = false;
         private const int ENEMY_WIDTH = 48;  // 16 * 3.0f scale
@@ -23,6 +23,7 @@ namespace sprint0.Sprites
         {
             enemySS = sheet;
             movement = new EnemyMovementCycle(startPosition);
+            animation = new EnemyAnimationHelper(frame1, frame2);
         }
         public EnemyStalfos(Texture2D sheet) : this(sheet, new Vector2(200, 100))
         {

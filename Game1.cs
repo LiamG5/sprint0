@@ -316,11 +316,7 @@ public class Game1 : Game
             }
 
             HandleMinimapClicks();
-            //this updates the dungeon enemies
-            foreach (var e in dungeon.GetEnemies())
-            {
-                e.Update(gameTime);
-            }
+            
 
             if (dungeon != null)
             {

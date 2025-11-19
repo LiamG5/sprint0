@@ -12,15 +12,16 @@ namespace sprint0.Sprites
 
         private Texture2D enemySS;
         private Vector2 position;
-        private static int enemyTypeX = 2;
-        private static int enemyTypeY = 21;
-        private static Rectangle enemy = new Rectangle(16 * enemyTypeX, 16 * enemyTypeY, 16, 16);
+        private int enemyTypeX = 2;
+        private int enemyTypeY = 21;
+        private  Rectangle enemy;
         private const int ENEMY_WIDTH = 48;  // 16 * 3.0f scale
         private const int ENEMY_HEIGHT = 48;
         public EnemyBladeTrap (Texture2D sheet, Vector2 startingPosition)
         {
             enemySS = sheet;
             position = startingPosition;
+            enemy = new Rectangle(16 * enemyTypeX, 16 * enemyTypeY, 16, 16);
         }
         public EnemyBladeTrap(Texture2D sheet) : this(sheet, new Vector2(200, 100))
         {

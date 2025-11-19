@@ -51,7 +51,7 @@ namespace sprint0.Sprites
             {   
                 this.enemyList = LoadedEnemies[roomId];
                 this.roomId = roomId;
-                 return;
+                return;
             }
             
             switch (roomId)
@@ -115,8 +115,8 @@ namespace sprint0.Sprites
 
         private void Room1Enemies()
         {
-            enemyList.Add(enemies.SpawnKeese(new Vector2(ColStart + ColMult * 1, RowStart + RowMult * 1)));
-            enemyList.Add(enemies.SpawnKeese(new Vector2(ColStart + ColMult * 3, RowStart + RowMult * 3)));
+            enemyList.Add(enemies.SpawnKeese(new Vector2(ColStart + ColMult * 0, RowStart + RowMult * 1)));
+            enemyList.Add(enemies.SpawnKeese(new Vector2(ColStart + ColMult * 4, RowStart + RowMult * 3)));
             enemyList.Add(enemies.SpawnKeese(new Vector2(ColStart + ColMult * 1, RowStart + RowMult * 5)));
             
         }
