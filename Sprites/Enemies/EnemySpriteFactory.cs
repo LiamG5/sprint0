@@ -89,6 +89,8 @@ namespace sprint0.Sprites
             currEnemy = EnemyType.Stalfos;
             return new EnemyStalfos(enemySpritesheet, position);
         }
+        
+
         public IEnemy SpawnWallmaster()
         {
             currEnemy = EnemyType.Wallmaster;

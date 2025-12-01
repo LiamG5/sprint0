@@ -19,6 +19,7 @@ namespace sprint0.Sprites
         private bool isDead = false;
         private const int ENEMY_WIDTH = 48;  // 16 * 3.0f scale
         private const int ENEMY_HEIGHT = 48;
+        
         public EnemyStalfos (Texture2D sheet, Vector2 startPosition)
         {
             enemySS = sheet;
@@ -79,15 +80,17 @@ namespace sprint0.Sprites
                     break;
 
                 case DungeonLongWall wall when wall.BlocksMovement():
-                    movement.ChangeDirection();
+                    movement.ChangeDirectionCol();
                     break;
 
                 case DungeonTallWall wall when wall.BlocksMovement():
-                    movement.ChangeDirection();
+                    movement.ChangeDirectionCol();
                     break;
-
+                case TransitionZone:
+                    movement.ChangeDirectionCol();
+                    break;
                 case IBlock block when block.BlocksMovement():
-                    movement.ChangeDirection();
+                    movement.ChangeDirectionCol();
                     break;
                 case IAttack attack when attack.BlocksMovement():
                     TakeDamage();
