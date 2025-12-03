@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Classes;
 using sprint0.Collisions;
+using sprint0.Commands;
 using sprint0.Interfaces;
 using sprint0.Sprites.Enemies;
 using System;
@@ -20,7 +21,7 @@ namespace sprint0.Sprites
         private const int ENEMY_WIDTH = 48;  // 16 * 3.0f scale
         private const int ENEMY_HEIGHT = 48;
         
-        public EnemyStalfos (Texture2D sheet, Vector2 startPosition)
+        public EnemyStalfos (Texture2D sheet, Vector2 startPosition, Func<Vector2> targetProvider)
         {
             enemySS = sheet;
             movement = new EnemyMovementCycle(startPosition, targetProvider);
@@ -86,6 +87,7 @@ namespace sprint0.Sprites
             switch (other)
             {
                 case Link link:
+                    
                     break;
 
                 case DungeonLongWall wall when wall.BlocksMovement():

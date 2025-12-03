@@ -218,17 +218,17 @@ namespace sprint0.Sprites
 
         private void Room12Enemies()
         {
-            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * 0, RowStart + RowMult *3)));
-            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * 0, RowStart + RowMult *4)));
+            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * -1, RowStart + RowMult *5)));
+            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * -1, RowStart + RowMult *5)));
 
-            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * 2, RowStart + RowMult *0 )));
-            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * 3, RowStart + RowMult *0 )));
+            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * -1, RowStart + RowMult *5 )));
+            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * -1, RowStart + RowMult *5)));
 
-            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * 10, RowStart + RowMult *3 )));
-            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * 11, RowStart + RowMult *4 )));
+            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * -1, RowStart + RowMult *5 )));
+            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * -1, RowStart + RowMult *5 )));
 
-            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult *11, RowStart + RowMult *4 )));
-            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult *11, RowStart + RowMult *5 )));
+            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult *-1, RowStart + RowMult *5 )));
+            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult *-1, RowStart + RowMult *5 )));
         }
 
         private void Room13Enemies()

@@ -4,6 +4,7 @@ using sprint0.PlayerStates;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using sprint0.Sprites;
 
 
 namespace sprint0.Classes
@@ -229,6 +230,9 @@ namespace sprint0.Classes
 		{
 			switch (other)
 			{
+			case EnemyWallmaster wallmaster:
+				game.GoToRoom2();
+				break;
 			case IEnemy enemy:
 				if (!(state is DamagedState) && !(state is KnockbackState))
 				{

@@ -410,7 +410,7 @@ public class Game1 : Game
         }
 
         itemLoader.Draw(spriteBatch);
-        enemyLoader.Draw(spriteBatch);
+        //enemyLoader.Draw(spriteBatch);
         HandleRoomSpecifics(spriteBatch);
     }
 
@@ -549,6 +549,7 @@ public class Game1 : Game
     public void ResetGame()
     {
         Classes.Inventory.Reset();
+        EnemyWallmaster.ResetSpawning();
 
         hearts = Classes.Inventory.GetHealth();
         maxHearts = Classes.Inventory.GetMaxHealth();
