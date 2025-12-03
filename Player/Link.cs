@@ -173,10 +173,54 @@ namespace sprint0.Classes
 		{
 			ChangeState(new ItemState(this, linkAnimation, 1));
 		}
-		public void UseItem2()
+	public void UseItem2()
+	{
+		if (game != null)
 		{
-			ChangeState(new ItemState(this, linkAnimation, 2));
+			var itemInSlotB = game.GetItemInSlotB();
+			if (itemInSlotB.HasValue && 
+			    (itemInSlotB.Value == sprint0.Sprites.ItemFactory.ItemType.Boomerang || 
+			     itemInSlotB.Value == sprint0.Sprites.ItemFactory.ItemType.MagicalBoomerang))
+			{
+				ThrowBoomerang();
+				return;
+			}
 		}
+		ChangeState(new ItemState(this, linkAnimation, 2));
+	}
+
+	private void ThrowBoomerang()
+	{
+		Rectangle sourceRect = new Rectangle(40 * 7, 40 * 0, 15, 16);
+		Vector2 velocity = new Vector2(0, 0);
+		Vector2 startPosition = position + new Vector2(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2);
+		
+		switch (direction)
+		{
+			case Direction.Up:
+				velocity = new Vector2(0, -6);
+				break;
+			case Direction.Down:
+				velocity = new Vector2(0, 6);
+				break;
+			case Direction.Left:
+				velocity = new Vector2(-6, 0);
+				break;
+			case Direction.Right:
+				velocity = new Vector2(6, 0);
+				break;
+		}
+		
+		var boomerang = new sprint0.Sprites.BoomerangProjectile(
+			sprint0.Sprites.Texture2DStorage.GetItemSpriteSheet(),
+			sourceRect,
+			startPosition,
+			velocity,
+			this
+		);
+		
+		game.AddBoomerangProjectile(boomerang);
+	}
 		public void UseItem3()
 		{
 			ChangeState(new ItemState(this, linkAnimation, 3));

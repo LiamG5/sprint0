@@ -10,6 +10,8 @@ namespace sprint0.HUD
     {
         private readonly Func<int> getCurrentRoom;
         private readonly Func<bool> hasMap;
+        private readonly Func<bool> hasCompass;
+        private readonly Func<int> getTriforceRoom;
         private readonly Func<int, RoomConnections> getRoomConnections;
         private readonly Vector2 pos;
         private readonly int rows;
@@ -17,13 +19,13 @@ namespace sprint0.HUD
         private readonly int cellWidth;
         private readonly int cellHeight;
         private readonly Texture2D pixelTexture;
+        private double flashTimer = 0;
+        private const double FlashInterval = 0.5;
         
         private const int RoomWidth = 12;
         private const int RoomHeight = 8;
         private const int RoomSpacing = 2;
 
-        // We still treat the logical layout as 6x6, but will only show
-        // 3 visible rows at a time (top half or bottom half).
         private const int VisibleRows = 3;
 
         private static readonly int[] RoomLayout = new int[]
@@ -42,10 +44,14 @@ namespace sprint0.HUD
             Func<int, RoomConnections> getRoomConnections,
             Vector2 position,
             GraphicsDevice graphicsDevice,
-            int rows = 6, int cols = 6, int cellSize = 14)
+            int rows = 6, int cols = 6, int cellSize = 14,
+            Func<bool> hasCompass = null,
+            Func<int> getTriforceRoom = null)
         {
             this.getCurrentRoom = getCurrentRoom;
             this.hasMap = hasMap;
+            this.hasCompass = hasCompass ?? (() => false);
+            this.getTriforceRoom = getTriforceRoom ?? (() => 15);
             this.getRoomConnections = getRoomConnections;
             this.pos = position;
             this.rows = rows;
@@ -57,12 +63,18 @@ namespace sprint0.HUD
             pixelTexture.SetData(new[] { Color.White });
         }
 
-        public void Update(GameTime gameTime) { }
+        public void Update(GameTime gameTime)
+        {
+            if (hasCompass())
+            {
+                flashTimer += gameTime.ElapsedGameTime.TotalSeconds;
+                if (flashTimer >= FlashInterval * 2)
+                {
+                    flashTimer = 0;
+                }
+            }
+        }
 
-        /// <summary>
-        /// Get the logical row (0-rows-1) where a room lives in the RoomLayout.
-        /// Returns 0 if not found.
-        /// </summary>
         private int GetRoomRow(int roomNum)
         {
             for (int i = 0; i < RoomLayout.Length; i++)
@@ -75,25 +87,20 @@ namespace sprint0.HUD
             return 0;
         }
 
-        /// <summary>
-        /// Decide which 3-row window (0-2 or 3-5) to show based on the
-        /// current room's row.
-        /// </summary>
         private void GetVisibleRowRange(out int startRow, out int endRow)
         {
             int currentRoom = getCurrentRoom();
             int currentRoomRow = GetRoomRow(currentRoom);
 
-            // Top half if the current room is in rows 0-2; bottom half otherwise.
             if (currentRoomRow < rows / 2)
             {
                 startRow = 0;
-                endRow = VisibleRows - 1;          // 0,1,2
+                endRow = VisibleRows - 1;
             }
             else
             {
-                startRow = rows / 2;               // 3
-                endRow = rows - 1;                 // 5
+                startRow = rows / 2;
+                endRow = rows - 1;
             }
         }
 
@@ -103,7 +110,6 @@ namespace sprint0.HUD
 
             GetVisibleRowRange(out int visibleStartRow, out int visibleEndRow);
 
-            // Find the logical row/col for this room
             int foundIndex = -1;
             for (int i = 0; i < RoomLayout.Length; i++)
             {
@@ -119,13 +125,11 @@ namespace sprint0.HUD
             int row = foundIndex / cols;
             int col = foundIndex % cols;
 
-            // If this room is not in the currently visible half, return null
             if (row < visibleStartRow || row > visibleEndRow)
             {
                 return null;
             }
 
-            // Convert the logical row into the visible row index (0..VisibleRows-1)
             int visibleRowIndex = row - visibleStartRow;
 
             var cellPos = new Vector2(
@@ -150,7 +154,6 @@ namespace sprint0.HUD
 
             GetVisibleRowRange(out int visibleStartRow, out int visibleEndRow);
 
-            // Only check rooms in the currently visible half
             for (int row = visibleStartRow; row <= visibleEndRow; row++)
             {
                 int visibleRowIndex = row - visibleStartRow;
@@ -163,7 +166,6 @@ namespace sprint0.HUD
                     int roomNum = RoomLayout[idx];
                     if (roomNum == -1) continue;
 
-                    // Bounds uses the same visible-row mapping
                     var bounds = GetRoomBounds(roomNum);
                     if (bounds.HasValue && bounds.Value.Contains(point))
                     {
@@ -216,9 +218,22 @@ namespace sprint0.HUD
                         rectHeight
                     );
 
-                    Color roomColor = (roomNum == currentRoom)
-                        ? Color.Green
-                        : new Color(0, 200, 255);
+                    Color roomColor;
+                    int triforceRoom = getTriforceRoom();
+                    
+                    if (roomNum == currentRoom)
+                    {
+                        roomColor = Color.Green;
+                    }
+                    else if (hasCompass() && roomNum == triforceRoom)
+                    {
+                        bool isFlashing = (flashTimer < FlashInterval);
+                        roomColor = isFlashing ? Color.Red : new Color(0, 200, 255);
+                    }
+                    else
+                    {
+                        roomColor = new Color(0, 200, 255);
+                    }
 
                     spriteBatch.Draw(pixelTexture, roomRect, roomColor);
                     roomsDrawn++;

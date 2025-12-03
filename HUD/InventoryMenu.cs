@@ -161,36 +161,32 @@ namespace sprint0.HUD
             var mapPos = topLeft + new Vector2(screenWidth - MenuPadding - MapWidth, 120);
             DrawVisitedRoomsMap(spriteBatch, mapPos, MapWidth, MapHeight);
             
-            var mapLabelPos = topLeft + new Vector2(0, 120);
+            var mapLabelPos = topLeft + new Vector2(0, 140);
             spriteBatch.DrawString(font, "MAP", mapLabelPos, Color.Orange, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
             
-            if (hasMap() && hudSpriteSheet != null)
+            if (hasMap() && itemSpriteSheet != null)
             {
-                var mapIconRect = GetHudSpriteRect("map_icon");
-                if (mapIconRect.HasValue)
-                {
-                    var mapIconPos = mapLabelPos + new Vector2(0, 20);
-                    spriteBatch.Draw(hudSpriteSheet, mapIconPos, mapIconRect.Value, Color.White, 0f, Vector2.Zero, 2.0f, SpriteEffects.None, 0f);
-                }
+                var mapIconRect = new Rectangle(40 * 6, 40 * 2, 15, 16);
+                var mapIconPos = mapLabelPos + new Vector2(0, 30);
+                spriteBatch.Draw(itemSpriteSheet, mapIconPos, mapIconRect, Color.White, 0f, Vector2.Zero, 2.0f, SpriteEffects.None, 0f);
             }
             
-            var compassLabelPos = mapLabelPos + new Vector2(0, 60);
+            var compassLabelPos = mapLabelPos + new Vector2(0, 80);
             spriteBatch.DrawString(font, "COMPASS", compassLabelPos, Color.Orange, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
             
-            if (hasCompass() && hudSpriteSheet != null)
+            if (hasCompass() && itemSpriteSheet != null)
             {
-                var compassIconRect = GetHudSpriteRect("compass_icon");
-                if (compassIconRect.HasValue)
-                {
-                    var compassIconPos = compassLabelPos + new Vector2(0, 20);
-                    spriteBatch.Draw(hudSpriteSheet, compassIconPos, compassIconRect.Value, Color.White, 0f, Vector2.Zero, 2.0f, SpriteEffects.None, 0f);
-                }
+                var compassIconRect = new Rectangle(40 * 2, 40 * 1, 15, 16);
+                var compassIconPos = compassLabelPos + new Vector2(0, 30);
+                spriteBatch.Draw(itemSpriteSheet, compassIconPos, compassIconRect, Color.White, 0f, Vector2.Zero, 2.0f, SpriteEffects.None, 0f);
             }
             
             var bottomY = screenHeight - 80;
             var bottomLeft = new Vector2(MenuPadding, bottomY);
             
-            spriteBatch.DrawString(font, "LEVEL-1", bottomLeft, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
+            var roomMgr = getRoomManager();
+            int currentLevel = roomMgr != null ? roomMgr.GetRoomLevel(roomMgr.CurrentRoomId) : 1;
+            spriteBatch.DrawString(font, $"LEVEL-{currentLevel}", bottomLeft, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f);
             
             if (linkSpriteSheet != null)
             {
