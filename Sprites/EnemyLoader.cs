@@ -35,7 +35,7 @@ namespace sprint0.Sprites
 
         public void LoadEnemies(int roomId)
         {
-            //when new room loaded save last room's enemies if neede
+            //when new room loaded save last room's enemies if needed
             if (LoadedEnemies.ContainsKey(this.roomId))
             {   
                 LoadedEnemies[this.roomId] = this.enemyList;
@@ -271,7 +271,9 @@ namespace sprint0.Sprites
            foreach (IEnemy enemy in enemyList)
             {
                 enemy.Update(gameTime);
+
             }
+
         } 
         
 
