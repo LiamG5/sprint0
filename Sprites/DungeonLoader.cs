@@ -322,6 +322,8 @@ namespace sprint0.Sprites
             foreach (var chiseledTile in chiseledTiles) {
                 chiseledTile.Draw(sprite, chiseledTile.GetPosition());
             }
+
+            
         }
         
         public List<Rectangle> GetBlockList()
