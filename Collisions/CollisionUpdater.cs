@@ -32,6 +32,7 @@ namespace sprint0.Collisions
             allCollidables.AddRange(dungeonLoader.GetBlocks());
             allCollidables.AddRange(dungeonLoader.GetEnemies());
             allCollidables.AddRange(dungeonLoader.GetProjectiles());
+            allCollidables.AddRange(dungeonLoader.GetBoomerangProjectiles());
             allCollidables.AddRange(dungeonLoader.GetItems());
 
         }
@@ -48,6 +49,7 @@ namespace sprint0.Collisions
             allCollidables.AddRange(dungeonLoader.GetBlocks());
             allCollidables.AddRange(dungeonLoader.GetEnemies());
             allCollidables.AddRange(dungeonLoader.GetProjectiles());
+            allCollidables.AddRange(dungeonLoader.GetBoomerangProjectiles());
             allCollidables.AddRange(dungeonLoader.GetItems());
             allCollidables.AddRange(dungeonLoader.GetTransitionZones());
             

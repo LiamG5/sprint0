@@ -67,7 +67,6 @@ public class Game1 : Game
     private int rupees = 0;
     private int keys = 0;
     private bool hasMap = true; // TODO: Connect to actual map item
-    private string levelName = "Level 1";
 
     // Inventory system
     private HUD.InventoryMenu inventoryMenu;
@@ -142,17 +141,19 @@ public class Game1 : Game
 
         hud.Add(new HUD.HudBackground(GraphicsDevice.Viewport.Width, HUD.HudConstants.HudHeight, GraphicsDevice));
 
-        hud.Add(new HUD.LevelLabelHud(() => levelName, hudFont, HUD.HudConstants.LevelLabelPos));
+        hud.Add(new HUD.LevelLabelHud(() => $"Level {roomManager.GetRoomLevel(roomManager.CurrentRoomId)}", hudFont, HUD.HudConstants.LevelLabelPos));
 
         minimapHud = new HUD.MinimapHud(
             () => roomManager.CurrentRoomId,
-            () => true,
+            () => Classes.Inventory.HasMap(),
             (roomId) => roomManager.GetRoomConnections(roomId),
             HUD.HudConstants.MinimapPos,
             GraphicsDevice,
             rows: 6,
             cols: 6,
-            cellSize: 16);
+            cellSize: 16,
+            () => Classes.Inventory.HasCompass(),
+            () => 15);
         hud.Add(minimapHud);
 
         hud.Add(new HUD.InventorySlotsHud(
@@ -407,6 +408,13 @@ public class Game1 : Game
                     projectile.Draw(spriteBatch, projectile.GetPosition());
                 }
             }
+            foreach (var boomerang in dungeon.GetBoomerangProjectiles())
+            {
+                if (!boomerang.ShouldDestroy)
+                {
+                    boomerang.Draw(_spriteBatch, boomerang.GetPosition());
+                }
+            }
         }
 
         itemLoader.Draw(spriteBatch);
@@ -501,6 +509,19 @@ public class Game1 : Game
         }
     }
 
+    public void AddBoomerangProjectile(Sprites.BoomerangProjectile boomerang)
+    {
+        if (dungeon != null)
+        {
+            dungeon.AddBoomerangProjectile(boomerang);
+        }
+    }
+
+    public ItemFactory.ItemType? GetItemInSlotB()
+    {
+        return itemInSlotB;
+    }
+
     private void LoadRoom(int roomIndex)
     {
         var csvPath = System.IO.Path.Combine("Content", "Dungeon", $"Room{roomIndex}.csv");
@@ -557,7 +578,6 @@ public class Game1 : Game
         rupees = Classes.Inventory.GetRupees();
         keys = Classes.Inventory.GetKeys();
         hasMap = Classes.Inventory.HasMap();
-        levelName = "Level 1";
 
         inventoryItems = new List<ItemFactory.ItemType>();
         selectedInventoryIndex = 0;
@@ -643,7 +663,7 @@ public class Game1 : Game
 
     private void HandleMinimapClicks()
     {
-        if (minimapHud == null || !hasMap) return;
+        if (minimapHud == null || !Classes.Inventory.HasMap()) return;
 
         var currentMouse = Mouse.GetState();
         var pos = new Point(currentMouse.X, currentMouse.Y);
