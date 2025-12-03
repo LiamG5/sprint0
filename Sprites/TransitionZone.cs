@@ -13,6 +13,7 @@ namespace sprint0.Sprites
         private readonly bool isBlocking;   
         private bool isLocked;
         private readonly RoomManager roomManager;
+        private bool hasTriggered; // Prevent multiple triggers
 
         // Normal constructor (for regular door transitions)
         public TransitionZone(Rectangle bounds, TransitionDirection direction, RoomManager manager)
@@ -21,7 +22,8 @@ namespace sprint0.Sprites
             this.direction = direction;
             this.roomManager = manager;
             this.isLocked = false;
-            this.isBlocking = false; 
+            this.isBlocking = false;
+            this.hasTriggered = false;
         }
 
         public TransitionZone(Rectangle bounds, TransitionDirection direction, RoomManager manager, bool isBlocking)
@@ -31,6 +33,7 @@ namespace sprint0.Sprites
             this.roomManager = manager;
             this.isLocked = false;
             this.isBlocking = isBlocking;
+            this.hasTriggered = false;
         }
 
         public Rectangle GetBounds()
@@ -50,14 +53,17 @@ namespace sprint0.Sprites
 
         public void OnCollision(ICollidable other, CollisionDirection collisionDirection)
         {
-            // Skip if not Link or currently locked
-            if (!(other is Link) || isLocked)
+            // Skip if not Link, currently locked, or transition already triggered
+            if (!(other is Link) || isLocked || hasTriggered)
+                return;
+
+            // Skip if a transition is already in progress
+            if (roomManager.TransitionManager != null && roomManager.TransitionManager.IsTransitioning)
                 return;
 
             // If this is a blocking zone, do not allow passage or transitions
             if (isBlocking)
             {
-                // Optional debug log
                 System.Console.WriteLine($"[TransitionZone] Blocked passage at {direction} in Room {roomManager.CurrentRoomId}");
                 return;
             }
@@ -67,7 +73,8 @@ namespace sprint0.Sprites
 
             if (targetRoomId != -1)
             {
-                System.Console.WriteLine($"[TransitionZone] Transitioning from Room {currentRoom} to Room {targetRoomId} via {direction}");
+                System.Console.WriteLine($"[TransitionZone] Triggering transition from Room {currentRoom} to Room {targetRoomId} via {direction}");
+                hasTriggered = true;
                 roomManager.TransitionToRoom(targetRoomId, direction);
             }
             else
@@ -80,16 +87,21 @@ namespace sprint0.Sprites
         {
             isLocked = locked;
         }
+        
+        public void ResetTrigger()
+        {
+            hasTriggered = false;
+        }
+        
         public bool BlocksProjectiles()
         {
             return true;
         }
-         public bool BlocksMovement()
-        {
-            return true;
-        }
-         
         
+        public bool BlocksMovement()
+        {
+            return isBlocking;
+        }
 
         public TransitionDirection GetDirection()
         {

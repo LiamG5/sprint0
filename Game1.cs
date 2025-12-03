@@ -51,8 +51,9 @@ public class Game1 : Game
     private KeyboardState previousKeyboardState;
     private CollisionUpdater collisionUpdater;
     private RoomManager roomManager;
+    private RoomTransitionManager transitionManager;
     private Song bgm;
-    
+
     // HUD
     private HUD.HudManager hud;
     private HUD.MinimapHud minimapHud;
@@ -67,7 +68,7 @@ public class Game1 : Game
     private int keys = 0;
     private bool hasMap = true; // TODO: Connect to actual map item
     private string levelName = "Level 1";
-    
+
     // Inventory system
     private HUD.InventoryMenu inventoryMenu;
     private List<ItemFactory.ItemType> inventoryItems;
@@ -76,7 +77,6 @@ public class Game1 : Game
     private ItemLoader itemLoader;
     private EnemyLoader enemyLoader;
 
-    // Minimap click area
     private Rectangle mapRect = new Rectangle(32, 32, 6 * 24, 3 * 24);
     private const int MapRows = 3;
     private const int MapCols = 6;
@@ -92,13 +92,12 @@ public class Game1 : Game
     public GameState currentState { get; set; } = GameState.Gameplay;
     private int roomIndex;
 
-
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-        
+
         _graphics.PreferredBackBufferWidth = 768;
         _graphics.PreferredBackBufferHeight = 620;
         _graphics.IsFullScreen = false;
@@ -114,7 +113,6 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        // Debug:
         System.Console.WriteLine($"[Window Size] Requested: 768x620, Actual: {GraphicsDevice.Viewport.Width}x{GraphicsDevice.Viewport.Height}");
 
         sprint0.Sprites.Texture2DStorage.Init(GraphicsDevice);
@@ -131,8 +129,14 @@ public class Game1 : Game
 
         hudFont = Content.Load<SpriteFont>("Font/font");
 
+        transitionManager = new RoomTransitionManager(
+            GraphicsDevice,
+            GraphicsDevice.Viewport.Width,
+            GraphicsDevice.Viewport.Height
+        );
+
         link = new Link(_spriteBatch, this);
-        roomManager = new RoomManager(link, this);
+        roomManager = new RoomManager(link, this, transitionManager);
 
         hud = new HUD.HudManager();
 
@@ -142,13 +146,13 @@ public class Game1 : Game
 
         minimapHud = new HUD.MinimapHud(
             () => roomManager.CurrentRoomId,
-            () => hasMap,
+            () => true,
             (roomId) => roomManager.GetRoomConnections(roomId),
             HUD.HudConstants.MinimapPos,
             GraphicsDevice,
-            rows: 3,
+            rows: 6,
             cols: 6,
-            cellSize: 14);
+            cellSize: 16);
         hud.Add(minimapHud);
 
         hud.Add(new HUD.InventorySlotsHud(
@@ -171,7 +175,6 @@ public class Game1 : Game
 
         hud.Add(new HUD.HeartMeter(() => hearts, () => maxHearts, HUD.HudConstants.HeartsPos, hudFont));
 
-        // Initialize inventory - start with empty inventory (only sword in slot A)
         inventoryItems = new List<ItemFactory.ItemType>();
 
         inventoryMenu = new HUD.InventoryMenu(
@@ -203,16 +206,17 @@ public class Game1 : Game
         enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
         itemCarousel = new ItemCarousel(items, _spriteBatch);
 
-        string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
+        string dungeonPath = Path.Combine(Content.RootDirectory, "Dungeon/Room8.csv");
         itemLoader = new ItemLoader(items);
         enemyLoader = new EnemyLoader(enemies);
         dungeon = new DungeonLoader(blocks, itemLoader, enemyLoader, File.ReadAllText(dungeonPath));
 
+        enemyLoader.SetDungeonLoader(dungeon);
+        enemyLoader.SetPlayerPositionProvider(() => link.GetPosition());
+
         dungeon.LoadRectangles();
 
         tile = blockCarousel.GetCurrentBlock();
-        
-
 
         try
         {
@@ -260,237 +264,226 @@ public class Game1 : Game
         System.Console.WriteLine("[LoadContent] completed");
         roomIndex = 1;
     }
-    
-
 
     protected override void Update(GameTime gameTime)
     {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+        transitionManager?.Update(gameTime);
+
+        if (transitionManager == null || !transitionManager.IsTransitioning)
         {
-            if (currentState == GameState.Inventory)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
-                currentState = GameState.Gameplay;
-            }
-            else
-            {
-                Exit();
-            }
-        }
-
-        hearts = Classes.Inventory.GetHealth();
-        maxHearts = Classes.Inventory.GetMaxHealth();
-        bombs = Classes.Inventory.GetBombs();
-        rupees = Classes.Inventory.GetRupees();
-        keys = Classes.Inventory.GetKeys();
-        hasMap = Classes.Inventory.HasMap();
-        
-        UpdateInventoryItemsList();
-
-        // Update based on game state
-        if (currentState == GameState.Gameplay)
-        {
-            link.Update(gameTime);
-            collisionUpdater.Update();
-            dungeon.Update(gameTime);
-
-            if (Classes.Inventory.IsDead())
-            {
-                new Commands.GameOverCommand(this).Execute();
-            }
-
-            if (dungeon != null)
-            {
-                foreach (var item in dungeon.GetItems())
+                if (currentState == GameState.Inventory)
                 {
-                    if (item is Sprites.ItemTriforceFragment triforce && triforce.IsCollected())
+                    currentState = GameState.Gameplay;
+                }
+                else
+                {
+                    Exit();
+                }
+            }
+
+            hearts = Classes.Inventory.GetHealth();
+            maxHearts = Classes.Inventory.GetMaxHealth();
+            bombs = Classes.Inventory.GetBombs();
+            rupees = Classes.Inventory.GetRupees();
+            keys = Classes.Inventory.GetKeys();
+            hasMap = Classes.Inventory.HasMap();
+
+            UpdateInventoryItemsList();
+
+            if (currentState == GameState.Gameplay)
+            {
+                link.Update(gameTime);
+                collisionUpdater.Update();
+                dungeon.Update(gameTime);
+
+                if (Classes.Inventory.IsDead())
+                {
+                    new Commands.GameOverCommand(this).Execute();
+                }
+
+                if (dungeon != null)
+                {
+                    foreach (var item in dungeon.GetItems())
                     {
-                        new Commands.WinCommand(this).Execute();
-                        break;
+                        if (item is Sprites.ItemTriforceFragment triforce && triforce.IsCollected())
+                        {
+                            new Commands.WinCommand(this).Execute();
+                            break;
+                        }
                     }
                 }
-            }
 
-            foreach (var controller in controllers)
-            {
-                controller.Update();
-            }
-
-            HandleMinimapClicks();
-            
-
-            if (dungeon != null)
-            {
-                foreach (var projectile in dungeon.GetProjectiles())
+                foreach (var controller in controllers)
                 {
-                    projectile.Update(gameTime);
+                    controller.Update();
                 }
-                dungeon.CleanupDeadEntities();
-            }
-            
-            
-            
-            
-            
-            hud?.Update(gameTime);
-        }
-        else if (currentState == GameState.Pause)
-        {
-            foreach (var controller in controllers)
-            {
-                controller.Update();
-            }
-        }
-        else if (currentState == GameState.Inventory)
-        {
-            foreach (var controller in controllers)
-            {
-                controller.Update();
-            }
-            inventoryMenu.Update(gameTime);
-        }
-        else if (currentState == GameState.GameOver)
-        {
-            foreach (var controller in controllers)
-            {
-                controller.Update();
-            }
-        }
-        else if (currentState == GameState.Win)
-        {
-            foreach (var controller in controllers)
-            {
-                controller.Update();
-            }
-        }
-        
-    if (Keyboard.GetState().IsKeyDown(Keys.M))
-        {
-            if (MediaPlayer.State == MediaState.Playing)
-            {
-                MediaPlayer.Pause();
-            }
-            else
-            {
-                MediaPlayer.IsMuted = false;
-                MediaPlayer.Play(sprint0.Sounds.SoundStorage.dungeon);
-                MediaPlayer.Volume = 0.5f;
-                MediaPlayer.IsRepeating = true;
-            }
-        }
 
+                HandleMinimapClicks();
 
+                if (dungeon != null)
+                {
+                    foreach (var projectile in dungeon.GetProjectiles())
+                    {
+                        projectile.Update(gameTime);
+                    }
+                    dungeon.CleanupDeadEntities();
+                }
 
+                hud?.Update(gameTime);
+            }
+            else if (currentState == GameState.Pause)
+            {
+                foreach (var controller in controllers)
+                {
+                    controller.Update();
+                }
+            }
+            else if (currentState == GameState.Inventory)
+            {
+                foreach (var controller in controllers)
+                {
+                    controller.Update();
+                }
+                inventoryMenu.Update(gameTime);
+            }
+            else if (currentState == GameState.GameOver)
+            {
+                foreach (var controller in controllers)
+                {
+                    controller.Update();
+                }
+            }
+            else if (currentState == GameState.Win)
+            {
+                foreach (var controller in controllers)
+                {
+                    controller.Update();
+                }
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.M))
+            {
+                if (MediaPlayer.State == MediaState.Playing)
+                {
+                    MediaPlayer.Pause();
+                }
+                else
+                {
+                    MediaPlayer.IsMuted = false;
+                    MediaPlayer.Play(sprint0.Sounds.SoundStorage.dungeon);
+                    MediaPlayer.Volume = 0.5f;
+                    MediaPlayer.IsRepeating = true;
+                }
+            }
+        }
         base.Update(gameTime);
     }
 
-    protected override void Draw(GameTime gameTime)
-{
-    GraphicsDevice.Clear(Color.CornflowerBlue);
-
-    if (currentState == GameState.Inventory)
+    private void DrawGameWorld(SpriteBatch spriteBatch)
     {
-        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-        inventoryMenu?.Draw(_spriteBatch);
-        _spriteBatch.End();
-    }
-    else
-    {
-        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-        hud?.Draw(_spriteBatch);
-        _spriteBatch.End();
-
-        Matrix transform = Matrix.CreateTranslation(0, HUD.HudConstants.HudHeight, 0);
-        
-        _spriteBatch.Begin(
-            samplerState: SamplerState.PointClamp,
-            transformMatrix: transform);
-
         if (dungeon != null)
         {
-            dungeon.Draw(_spriteBatch, GraphicsDevice);
+            dungeon.Draw(spriteBatch, GraphicsDevice);
 
             foreach (var e in dungeon.GetEnemies())
             {
-                e.Draw(_spriteBatch, e.GetPosition());
+                e.Draw(spriteBatch, e.GetPosition());
             }
-
-        }
-        
-        if (roomIndex == 1) //change to debugRoom when added
-        {
-            enemyCarousel.Draw(_spriteBatch);
-        }
-        if ( roomIndex == 1) //change to debugRoom when added
-        {
-            itemCarousel.Draw(_spriteBatch);
         }
 
         if (link != null)
         {
-            link.Draw(_spriteBatch);
+            link.Draw(spriteBatch);
         }
-        
+
         if (dungeon != null)
         {
             foreach (var projectile in dungeon.GetProjectiles())
             {
                 if (!projectile.ShouldDestroy)
                 {
-                    projectile.Draw(_spriteBatch, projectile.GetPosition());
+                    projectile.Draw(spriteBatch, projectile.GetPosition());
                 }
             }
         }
 
-        itemLoader.Draw(_spriteBatch);
-        enemyLoader.Draw(_spriteBatch);
-        
-        HandleRoomSpecifics(_spriteBatch);
-        
-        _spriteBatch.End();
-        
-        if (currentState == GameState.GameOver || currentState == GameState.Win)
-        {
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            
-            string message = "";
-            
-            if (currentState == GameState.GameOver)
-            {
-                message = "Game Over";
-            }
-            else if (currentState == GameState.Win)
-            {
-                message = "Win";
-            }
-            
-            if (font != null)
-            {
-                Vector2 textSize = font.MeasureString(message);
-                Vector2 screenCenter = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
-                Vector2 textPosition = screenCenter - textSize / 2;
-                
-                _spriteBatch.DrawString(font, message, textPosition + new Vector2(2, 2), Color.Black);
-                _spriteBatch.DrawString(font, message, textPosition, Color.White);
-            }
-            
-            _spriteBatch.End();
-        }
+        itemLoader.Draw(spriteBatch);
+        enemyLoader.Draw(spriteBatch);
+        HandleRoomSpecifics(spriteBatch);
     }
 
-    base.Draw(gameTime);
-}
+    protected override void Draw(GameTime gameTime)
+    {
+        GraphicsDevice.Clear(Color.CornflowerBlue);
 
+        if (transitionManager != null && transitionManager.NeedsRoomCapture())
+        {
+            Matrix transform = Matrix.CreateTranslation(0, HUD.HudConstants.HudHeight, 0);
+            transitionManager.CaptureOldRoom(_spriteBatch, () =>
+            {
+                DrawGameWorld(_spriteBatch);
+            });
+        }
 
+        if (transitionManager != null && transitionManager.NeedsNewRoomCapture())
+        {
+            Matrix transform = Matrix.CreateTranslation(0, HUD.HudConstants.HudHeight, 0);
+            transitionManager.CaptureNewRoom(_spriteBatch, () =>
+            {
+                DrawGameWorld(_spriteBatch);
+            });
+        }
 
-    public void GoToRoom1()  => LoadRoom(1);
-    public void GoToRoom2()  => LoadRoom(2);
-    public void GoToRoom3()  => LoadRoom(3);
-    public void GoToRoom4()  => LoadRoom(4);
-    public void GoToRoom5()  => LoadRoom(5);
-    public void GoToRoom6()  => LoadRoom(6);
-    public void GoToRoom7()  => LoadRoom(7);
-    public void GoToRoom8()  => LoadRoom(8);
-    public void GoToRoom9()  => LoadRoom(9);
+        if (currentState == GameState.Inventory)
+        {
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            inventoryMenu?.Draw(_spriteBatch);
+            _spriteBatch.End();
+        }
+        else
+        {
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            hud?.Draw(_spriteBatch);
+            _spriteBatch.End();
+            Matrix transform = Matrix.CreateTranslation(0, HUD.HudConstants.HudHeight, 0);
+
+            _spriteBatch.Begin(
+                samplerState: SamplerState.PointClamp,
+                transformMatrix: transform);
+
+            if (transitionManager != null && transitionManager.IsTransitioning)
+            {
+                transitionManager.Draw(_spriteBatch);
+            }
+            else
+            {
+                // Normal drawing
+                DrawGameWorld(_spriteBatch);
+            }
+
+            _spriteBatch.End();
+
+            if (currentState == GameState.GameOver || currentState == GameState.Win)
+            {
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                _spriteBatch.End();
+            }
+        }
+
+        base.Draw(gameTime);
+    }
+
+    public void GoToRoom1() => LoadRoom(1);
+    public void GoToRoom2() => LoadRoom(2);
+    public void GoToRoom3() => LoadRoom(3);
+    public void GoToRoom4() => LoadRoom(4);
+    public void GoToRoom5() => LoadRoom(5);
+    public void GoToRoom6() => LoadRoom(6);
+    public void GoToRoom7() => LoadRoom(7);
+    public void GoToRoom8() => LoadRoom(8);
+    public void GoToRoom9() => LoadRoom(9);
     public void GoToRoom10() => LoadRoom(10);
     public void GoToRoom11() => LoadRoom(11);
     public void GoToRoom12() => LoadRoom(12);
@@ -519,7 +512,7 @@ public class Game1 : Game
         var csv = System.IO.File.ReadAllText(csvPath);
         dungeon = new DungeonLoader(BlockFactory.Instance, itemLoader, enemyLoader, csv);
         dungeon.LoadRectangles();
-        
+
         if (roomManager != null)
         {
             Inventory.PingRoomNum(roomIndex);
@@ -528,26 +521,26 @@ public class Game1 : Game
             itemLoader.LoadItems(roomIndex);
             enemyLoader.LoadEnemies(roomIndex);
         }
-         csvPath = (roomIndex == 1)
-        ? System.IO.Path.Combine("Content", "dungeon.csv")
-        : System.IO.Path.Combine("Content", "Dungeon", $"Room{roomIndex}.csv");
+        csvPath = (roomIndex == 1)
+            ? System.IO.Path.Combine("Content", "dungeon.csv")
+            : System.IO.Path.Combine("Content", "Dungeon", $"Room{roomIndex}.csv");
 
-    if (!System.IO.File.Exists(csvPath))
-    {
-        System.Console.WriteLine($"[LoadRoom] Missing CSV: {csvPath}");
-        return;
-    }
+        if (!System.IO.File.Exists(csvPath))
+        {
+            System.Console.WriteLine($"[LoadRoom] Missing CSV: {csvPath}");
+            return;
+        }
 
-    csv = System.IO.File.ReadAllText(csvPath);
-    dungeon = new DungeonLoader(BlockFactory.Instance, itemLoader, enemyLoader, csv);
-    dungeon.LoadRectangles();
+        csv = System.IO.File.ReadAllText(csvPath);
+        dungeon = new DungeonLoader(BlockFactory.Instance, itemLoader, enemyLoader, csv);
+        dungeon.LoadRectangles();
 
-    if (roomManager != null)
-    {
-        roomManager.SetCurrentRoom(roomIndex);
-        dungeon.SetRoomManager(roomManager, roomIndex);
-    }
-        
+        if (roomManager != null)
+        {
+            roomManager.SetCurrentRoom(roomIndex);
+            dungeon.SetRoomManager(roomManager, roomIndex);
+        }
+
         collisionUpdater = new CollisionUpdater(dungeon, link);
         System.Console.WriteLine($"[LoadRoom] Loaded Room {roomIndex}");
         this.roomIndex = roomIndex;
@@ -556,7 +549,7 @@ public class Game1 : Game
     public void ResetGame()
     {
         Classes.Inventory.Reset();
-        
+
         hearts = Classes.Inventory.GetHealth();
         maxHearts = Classes.Inventory.GetMaxHealth();
         bombs = Classes.Inventory.GetBombs();
@@ -565,11 +558,11 @@ public class Game1 : Game
         keys = Classes.Inventory.GetKeys();
         hasMap = Classes.Inventory.HasMap();
         levelName = "Level 1";
-        
+
         inventoryItems = new List<ItemFactory.ItemType>();
         selectedInventoryIndex = 0;
         itemInSlotB = null;
-        
+
         link = new Link(_spriteBatch, this);
 
         blockCarousel = new BlockCarousel(blocks, _spriteBatch);
@@ -577,12 +570,11 @@ public class Game1 : Game
         itemCarousel = new ItemCarousel(items, _spriteBatch);
 
         tile = blockCarousel.GetCurrentBlock();
-        
 
         controllers = new List<IController>();
         keyboard = new KeyboardController(this, null, () => currentState == GameState.Inventory);
         controllers.Add(keyboard);
-        
+
         mapCellCommands = new Dictionary<int, ICommand>
         {
             {  0, new GoToRoom1Command(this)  },
@@ -603,24 +595,37 @@ public class Game1 : Game
             { 15, new GoToRoom16Command(this) },
             { 16, new GoToRoom17Command(this) },
         };
-        
+
         mouse = new MouseController(mapRect, MapRows, MapCols, mapCellCommands);
         controllers.Add(mouse);
 
-        roomManager = new RoomManager(link, this);
+        if (transitionManager == null)
+        {
+            transitionManager = new RoomTransitionManager(
+                GraphicsDevice,
+                GraphicsDevice.Viewport.Width,
+                GraphicsDevice.Viewport.Height
+            );
+        }
+        else
+        {
+            transitionManager.Reset();
+        }
+
+        roomManager = new RoomManager(link, this, transitionManager);
 
         string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
         itemLoader = new ItemLoader(items);
         enemyLoader = new EnemyLoader(enemies);
         dungeon = new DungeonLoader(blocks, itemLoader, enemyLoader, File.ReadAllText(dungeonPath));
+        enemyLoader.SetDungeonLoader(dungeon);
+        enemyLoader.SetPlayerPositionProvider(() => link.GetPosition());
         dungeon.LoadRectangles();
-        
-        
-        
-        roomManager.SetCurrentRoom(1);
-        dungeon.SetRoomManager(roomManager, 1);
-        itemLoader.LoadItems(1);
-        enemyLoader.LoadEnemies(1);
+
+        roomManager.SetCurrentRoom(8);
+        dungeon.SetRoomManager(roomManager, 8);
+        itemLoader.LoadItems(8);
+        enemyLoader.LoadEnemies(8);
 
         collisionUpdater = new CollisionUpdater(dungeon, link);
         collisionUpdater.getList();
@@ -629,21 +634,21 @@ public class Game1 : Game
         previousMouseState = Mouse.GetState();
 
         currentState = GameState.Gameplay;
-        
+
         System.Console.WriteLine("[ResetGame] Game reset complete");
         roomIndex = 1;
     }
 
     private MouseState previousMouseState;
-    
+
     private void HandleMinimapClicks()
     {
         if (minimapHud == null || !hasMap) return;
-        
+
         var currentMouse = Mouse.GetState();
         var pos = new Point(currentMouse.X, currentMouse.Y);
-        
-        if (currentMouse.LeftButton == ButtonState.Pressed && 
+
+        if (currentMouse.LeftButton == ButtonState.Pressed &&
             previousMouseState.LeftButton == ButtonState.Released)
         {
             var roomNum = minimapHud.GetRoomAtPoint(pos);
@@ -652,7 +657,7 @@ public class Game1 : Game
                 LoadRoom(roomNum.Value);
             }
         }
-        
+
         previousMouseState = currentMouse;
     }
 
@@ -687,32 +692,30 @@ public class Game1 : Game
             }
         }
     }
-    
+
     private void HandleRoomSpecifics(SpriteBatch spriteBatch)
     {
-        
         if (roomManager.CurrentRoomId == 8)
         {
             string secretMessage = "EASTMOST PENNINSULA IS THE SECRET";
             Vector2 textSize = font.MeasureString(secretMessage);
             Vector2 textPosition = new Vector2((GraphicsDevice.Viewport.Width - textSize.X) / 2, 120);
-            
+
             spriteBatch.DrawString(font, secretMessage, textPosition + new Vector2(2, 2), Color.Black);
             spriteBatch.DrawString(font, secretMessage, textPosition, Color.White);
-            
+
             Texture2D miscSpritesheet = sprint0.Sprites.Texture2DStorage.GetMiscSpriteSheet();
             if (miscSpritesheet != null)
             {
                 Rectangle oldManSourceRect = new Rectangle(0, 0, 16, 32);
                 float oldManWidth = 16 * 3.0f;
                 Vector2 oldManPosition = new Vector2((GraphicsDevice.Viewport.Width - oldManWidth) / 2, textPosition.Y + textSize.Y + 20);
-                
+
                 spriteBatch.Draw(miscSpritesheet, oldManPosition, oldManSourceRect, Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
             }
         }
-        
     }
-    
+
     private Texture2D GetItemIcon(ItemFactory.ItemType itemType)
     {
         return itemType switch
@@ -732,20 +735,19 @@ public class Game1 : Game
             _ => null
         };
     }
-    
 
     public void NavigateInventory(InventoryNavigateCommand.Direction direction)
     {
         if (currentState != GameState.Inventory || inventoryItems == null || inventoryItems.Count == 0)
             return;
-        
+
         const int cols = 4;
         const int rows = 2;
         int maxItems = Math.Min(inventoryItems.Count, 8);
-        
+
         int currentRow = selectedInventoryIndex / cols;
         int currentCol = selectedInventoryIndex % cols;
-        
+
         switch (direction)
         {
             case InventoryNavigateCommand.Direction.Up:
@@ -761,28 +763,28 @@ public class Game1 : Game
                 currentCol = (currentCol + 1) % cols;
                 break;
         }
-        
+
         int newIndex = currentRow * cols + currentCol;
         if (newIndex < maxItems)
         {
             selectedInventoryIndex = newIndex;
         }
     }
-    
+
     public void SelectInventoryItem()
     {
         if (currentState != GameState.Inventory || inventoryItems == null || selectedInventoryIndex < 0 || selectedInventoryIndex >= inventoryItems.Count)
             return;
-        
+
         itemInSlotB = inventoryItems[selectedInventoryIndex];
-        
+
         currentState = GameState.Gameplay;
     }
-    
+
     private void UpdateInventoryItemsList()
     {
         HashSet<ItemFactory.ItemType> collectedItems = new HashSet<ItemFactory.ItemType>();
-        
+
         if (Classes.Inventory.HasBoomerang())
         {
             collectedItems.Add(ItemFactory.ItemType.Boomerang);
@@ -795,7 +797,7 @@ public class Game1 : Game
         {
             collectedItems.Add(ItemFactory.ItemType.Bomb);
         }
-        
+
         if (dungeon != null)
         {
             foreach (var item in dungeon.GetItems())
@@ -810,7 +812,7 @@ public class Game1 : Game
                 }
             }
         }
-        
+
         if (itemLoader != null)
         {
             foreach (var item in itemLoader.GetItems())
@@ -825,14 +827,14 @@ public class Game1 : Game
                 }
             }
         }
-        
+
         inventoryItems = new List<ItemFactory.ItemType>(collectedItems);
-        
+
         if (selectedInventoryIndex >= inventoryItems.Count)
         {
             selectedInventoryIndex = Math.Max(0, inventoryItems.Count - 1);
         }
-        
+
         if (inventoryItems.Count > 0)
         {
             if (selectedInventoryIndex >= 0 && selectedInventoryIndex < inventoryItems.Count)
@@ -849,7 +851,7 @@ public class Game1 : Game
             itemInSlotB = null;
         }
     }
-    
+
     private ItemFactory.ItemType? GetItemTypeFromItem(IItem item)
     {
         return item switch

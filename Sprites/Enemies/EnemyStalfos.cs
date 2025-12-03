@@ -9,11 +9,11 @@ using System;
 
 namespace sprint0.Sprites
 {
-    public class EnemyStalfos : ISprite, IEnemy {
-
+    public class EnemyStalfos : ISprite, IEnemy
+    {
         private Texture2D enemySS;
-        private  Rectangle frame1 = new Rectangle(16 * 0, 16 * 12, 16, 16);
-        private  Rectangle frame2 = new Rectangle(16 * 1, 16 * 12, 16, 16);
+        private Rectangle frame1 = new Rectangle(16 * 0, 16 * 12, 16, 16);
+        private Rectangle frame2 = new Rectangle(16 * 1, 16 * 12, 16, 16);
         private EnemyAnimationHelper animation;
         private EnemyMovementCycle movement;
         private bool isDead = false;
@@ -23,17 +23,26 @@ namespace sprint0.Sprites
         public EnemyStalfos (Texture2D sheet, Vector2 startPosition)
         {
             enemySS = sheet;
-            movement = new EnemyMovementCycle(startPosition);
+            movement = new EnemyMovementCycle(startPosition, targetProvider);
             animation = new EnemyAnimationHelper(frame1, frame2);
         }
-        public EnemyStalfos(Texture2D sheet) : this(sheet, new Vector2(200, 100))
+
+        public EnemyStalfos(Texture2D sheet, Vector2 startPosition)
+            : this(sheet, startPosition, null)
         {
         }
+
+        public EnemyStalfos(Texture2D sheet)
+            : this(sheet, new Vector2(200, 100), null)
+        {
+        }
+
         public void Update(GameTime gameTime)
         {
             movement.Move();
             animation.Update(gameTime);
         }
+
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
             if (!isDead)
@@ -61,7 +70,7 @@ namespace sprint0.Sprites
         {
             return true;
         }
-        
+
         public bool BlocksProjectiles()
         {
             return true;
@@ -97,6 +106,5 @@ namespace sprint0.Sprites
                     break;
             }
         }
-
     }
 }

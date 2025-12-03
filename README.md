@@ -8,6 +8,12 @@ Attack: Z or N
 Use Item: 1, 2, 3
 Take Damge: E
 
+Inventory Controls:
+Open / Close Inventory: B
+Move selection in inventory: Arrow Keys
+Equip highlighted item to B slot: Enter
+Use equipped B-slot item in gameplay: 2
+
 Block/Obstacle Controls
 Cycle current block backward: T
 Cycle current block forward: Y
@@ -28,9 +34,14 @@ Inventory: b
 
 Bugs:
 room 1 is still the the debug room even after re-entering 
-Doors are always open, even if they should be locked or be a wall
+Locked doors do not have locked door image
+all 4 doors show even if it should be a wall
 No exploadable doors
-Only currently able to use sword and full health sword  
+Only currently able to use sword and full health sword
+Items dont work other than sword
+Link sometimes stays red after being damaged
+Spamming R keeps spawning enemies
+
 
 
 
