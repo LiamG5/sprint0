@@ -12,7 +12,9 @@ namespace sprint0.Sprites
     {
         private ItemFactory items = ItemFactory.Instance;
         public Texture2D border;
-        private List<IItem> itemList;
+        public List<IItem> itemList;
+        private Dictionary<int, List<IItem>> LoadedItems;
+        private int roomId = 1;
         
 
 
@@ -21,13 +23,37 @@ namespace sprint0.Sprites
         {
             this.items = items;
             this.itemList = new List<IItem>();
+            this.LoadedItems = new Dictionary<int, List<IItem>>();
+            Room1Items();
         }
 
         public void LoadItems(int roomId)
         {
-            itemList.Clear();
-            if (!Inventory.isItemCollected())
+            //when new room loaded save last room's items if needed
+            if (LoadedItems.ContainsKey(this.roomId))
+            {   
+                LoadedItems[this.roomId] = this.itemList;
+            }
+            else
             {
+                LoadedItems.Add(this.roomId, this.itemList);
+            }
+
+            this.itemList = new List<IItem>();
+
+            //load items if already loaded
+            if (LoadedItems.ContainsKey(roomId))
+            {   
+                this.itemList = LoadedItems[roomId];
+                this.roomId = roomId;
+                return;
+            }
+
+
+
+            itemList.Clear();
+            
+            
                 switch (roomId)
                 {
                     case 1:
@@ -85,7 +111,7 @@ namespace sprint0.Sprites
                         break;
 
                 }
-            }
+            
         }
 
         private void Room1Items()

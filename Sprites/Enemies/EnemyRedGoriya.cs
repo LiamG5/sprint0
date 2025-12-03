@@ -91,15 +91,18 @@ namespace sprint0.Sprites
                     break;
 
                 case DungeonLongWall wall when wall.BlocksMovement():
-                    movement.ChangeDirection();
+                    movement.ChangeDirectionCol();
                     break;
 
                 case DungeonTallWall wall when wall.BlocksMovement():
-                    movement.ChangeDirection();
+                    movement.ChangeDirectionCol();
+                    break;
+                case TransitionZone:
+                    movement.ChangeDirectionCol();
                     break;
 
                 case IBlock block when block.BlocksMovement():
-                    movement.ChangeDirection();
+                    movement.ChangeDirectionCol();
                     break;
                 case IAttack attack when attack.BlocksMovement():
                     TakeDamage();
