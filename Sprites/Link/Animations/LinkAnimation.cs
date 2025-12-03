@@ -150,6 +150,46 @@ namespace sprint0.Classes
                 linkSprite.LinkDrawAttackingRight();
             }
         }
+        public void LinkBoomerangDown(float totalTime, float currentTime)
+        {
+            float progress = currentTime / totalTime;
+            if (progress <= 0.5f)
+            {
+                linkSprite.LinkDrawAttacking0Down();
+            }
+            
+        }
+
+        public void LinkBoomerangLeft(float totalTime, float currentTime)
+        {
+            float progress = currentTime / totalTime;
+            if (progress <= 0.5f)
+            {
+                linkSprite.LinkDrawAttacking0Left();
+            }
+            
+        }
+
+        public void LinkBoomerangUp(float totalTime, float currentTime)
+        {
+            float progress = currentTime / totalTime;
+            if (progress <= 0.5f)
+            {
+                linkSprite.LinkDrawAttacking0Up();
+            }
+            
+        }
+
+        public void LinkBoomerangRight(float totalTime, float currentTime)
+        {
+            float progress = currentTime / totalTime;
+            if (progress <= 0.5f)
+            {
+                linkSprite.LinkDrawAttacking0Right();
+            }
+            
+        }
+
 
         public void LinkMagicDown(float totalTime, float currentTime)
         {

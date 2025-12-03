@@ -39,7 +39,7 @@ namespace sprint0.Sprites
 
         public void LoadEnemies(int roomId)
         {
-
+            //when new room loaded save last room's enemies if needed
             if (LoadedEnemies.ContainsKey(this.roomId))
             {   
                 LoadedEnemies[this.roomId] = this.enemyList;
@@ -51,6 +51,7 @@ namespace sprint0.Sprites
 
             this.enemyList = new List<IEnemy>();
 
+            //load enemies if already loaded
             if (LoadedEnemies.ContainsKey(roomId))
             {   
                 this.enemyList = LoadedEnemies[roomId];
@@ -232,7 +233,7 @@ namespace sprint0.Sprites
 
         private void Room13Enemies()
         {
-            enemyList.Add(enemies.SpawnStalfos(new Vector2(ColStart + ColMult * 2, RowStart + RowMult *2 )));
+            enemyList.Add(enemies.SpawnStalfos(new Vector2(ColStart + ColMult * 1, RowStart + RowMult *2 )));
             enemyList.Add(enemies.SpawnStalfos(new Vector2(ColStart + ColMult * 3, RowStart + RowMult *3 )));
             enemyList.Add(enemies.SpawnStalfos(new Vector2(ColStart + ColMult *10, RowStart + RowMult *3 )));
         }
@@ -275,7 +276,9 @@ namespace sprint0.Sprites
            foreach (IEnemy enemy in enemyList)
             {
                 enemy.Update(gameTime);
+
             }
+
         } 
         
 
