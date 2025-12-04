@@ -41,10 +41,17 @@ namespace sprint0.Sprites
 
             this.itemList = new List<IItem>();
 
-            //load items if already loaded
             if (LoadedItems.ContainsKey(roomId))
             {   
-                this.itemList = LoadedItems[roomId];
+                this.itemList = new List<IItem>();
+                foreach (var item in LoadedItems[roomId])
+                {
+                    if (!item.IsCollected())
+                    {
+                        this.itemList.Add(item);
+                    }
+                }
+                LoadedItems[roomId] = this.itemList;
                 this.roomId = roomId;
                 return;
             }
@@ -150,7 +157,10 @@ namespace sprint0.Sprites
         
          private void Room7Items()
         {
-            itemList.Add(items.BuildCompass(new Vector2(580, 240)));
+            if (!Inventory.HasCompass())
+            {
+                itemList.Add(items.BuildCompass(new Vector2(580, 240)));
+            }
         }
 
 
@@ -167,8 +177,10 @@ namespace sprint0.Sprites
 
         private void Room10Items()
         {
-            
-            itemList.Add(items.BuildDungeonMap(new Vector2(580, 240)));
+            if (!Inventory.HasMap())
+            {
+                itemList.Add(items.BuildDungeonMap(new Vector2(580, 240)));
+            }
         }
 
         private void Room11Items()
@@ -230,6 +242,13 @@ namespace sprint0.Sprites
         public List<IItem> GetItems()
         {
             return itemList;
+        }
+
+        public void Reset()
+        {
+            LoadedItems.Clear();
+            itemList.Clear();
+            this.roomId = 1;
         }
         
 

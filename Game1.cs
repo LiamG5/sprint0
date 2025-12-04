@@ -208,7 +208,14 @@ public class Game1 : Game
         itemCarousel = new ItemCarousel(items, _spriteBatch);
 
         string dungeonPath = Path.Combine(Content.RootDirectory, "Dungeon/Room8.csv");
-        itemLoader = new ItemLoader(items);
+        if (itemLoader != null)
+        {
+            itemLoader.Reset();
+        }
+        else
+        {
+            itemLoader = new ItemLoader(items);
+        }
         enemyLoader = new EnemyLoader(enemies);
         dungeon = new DungeonLoader(blocks, itemLoader, enemyLoader, File.ReadAllText(dungeonPath));
 
@@ -635,7 +642,14 @@ public class Game1 : Game
         roomManager = new RoomManager(link, this, transitionManager);
 
         string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
-        itemLoader = new ItemLoader(items);
+        if (itemLoader != null)
+        {
+            itemLoader.Reset();
+        }
+        else
+        {
+            itemLoader = new ItemLoader(items);
+        }
         enemyLoader = new EnemyLoader(enemies);
         dungeon = new DungeonLoader(blocks, itemLoader, enemyLoader, File.ReadAllText(dungeonPath));
         enemyLoader.SetDungeonLoader(dungeon);
