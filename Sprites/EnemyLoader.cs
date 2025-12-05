@@ -187,7 +187,9 @@ namespace sprint0.Sprites
 
         private void Room8Enemies()
         {
-            // Add enemies for room 8 here
+            enemyList.Add(enemies.SpawnFlame(new Vector2(ColStart + ColMult * 3, RowStart + RowMult * 2)));
+            enemyList.Add(enemies.SpawnFlame(new Vector2(ColStart + ColMult * 8 , RowStart + RowMult * 2)));
+            
         }
 
         private void Room9Enemies()
