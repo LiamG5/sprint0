@@ -233,6 +233,9 @@ namespace sprint0.Classes
 			case EnemyWallmaster wallmaster:
 				game.GoToRoom2();
 				break;
+			case EnemyFlame flame:
+				HandleBlockCollision(flame, direction);
+				break;
 			case IEnemy enemy:
 				if (!(state is DamagedState) && !(state is KnockbackState))
 				{

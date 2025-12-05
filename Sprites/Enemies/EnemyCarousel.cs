@@ -17,7 +17,9 @@ namespace sprint0.Sprites
             EnemySpriteFactory.EnemyType.Keese,
             EnemySpriteFactory.EnemyType.RedGoriya,
             EnemySpriteFactory.EnemyType.Stalfos,
-            EnemySpriteFactory.EnemyType.Wallmaster
+            EnemySpriteFactory.EnemyType.Wallmaster,
+            EnemySpriteFactory.EnemyType.Flame
+
         };
 
         public EnemyCarousel(EnemySpriteFactory enemyFactory, SpriteBatch spriteBatch)
@@ -61,6 +63,9 @@ namespace sprint0.Sprites
                     break;
                 case EnemySpriteFactory.EnemyType.Wallmaster:
                     currentEnemy = enemyFactory.SpawnWallmaster();
+                    break;
+                case EnemySpriteFactory.EnemyType.Flame:
+                    currentEnemy = enemyFactory.SpawnFlame();
                     break;
             }
         }
