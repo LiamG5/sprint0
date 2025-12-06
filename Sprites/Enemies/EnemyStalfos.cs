@@ -22,7 +22,6 @@ namespace sprint0.Sprites
         private const int ENEMY_HEIGHT = 48;
         
         public EnemyStalfos(Texture2D sheet, Vector2 startPosition, Func<Vector2> targetProvider)
-        public EnemyStalfos (Texture2D sheet, Vector2 startPosition, Func<Vector2> targetProvider)
         {
             enemySS = sheet;
             movement = new EnemyMovementCycle(startPosition, targetProvider);
