@@ -178,12 +178,22 @@ namespace sprint0.Classes
 		if (game != null)
 		{
 			var itemInSlotB = game.GetItemInSlotB();
-			if (itemInSlotB.HasValue && 
-			    (itemInSlotB.Value == sprint0.Sprites.ItemFactory.ItemType.Boomerang || 
-			     itemInSlotB.Value == sprint0.Sprites.ItemFactory.ItemType.MagicalBoomerang))
+			if (itemInSlotB.HasValue)
 			{
-				ThrowBoomerang();
-				return;
+				if (itemInSlotB.Value == sprint0.Sprites.ItemFactory.ItemType.Boomerang || 
+				    itemInSlotB.Value == sprint0.Sprites.ItemFactory.ItemType.MagicalBoomerang)
+				{
+					ThrowBoomerang();
+					return;
+				}
+				else if (itemInSlotB.Value == sprint0.Sprites.ItemFactory.ItemType.Bomb)
+				{
+					if (Inventory.UseBomb())
+					{
+						DropBomb();
+						return;
+					}
+				}
 			}
 		}
 		ChangeState(new ItemState(this, linkAnimation, 2));
@@ -191,6 +201,11 @@ namespace sprint0.Classes
 
 	private void ThrowBoomerang()
 	{
+		if (game.HasActiveBoomerang())
+		{
+			return;
+		}
+		
 		Rectangle sourceRect = new Rectangle(40 * 7, 40 * 0, 15, 16);
 		Vector2 velocity = new Vector2(0, 0);
 		Vector2 startPosition = position + new Vector2(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2);
@@ -221,6 +236,21 @@ namespace sprint0.Classes
 		
 		game.AddBoomerangProjectile(boomerang);
 	}
+
+	private void DropBomb()
+	{
+		Rectangle sourceRect = new Rectangle(40 * 5, 40 * 0, 15, 16);
+		Vector2 startPosition = position + new Vector2(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2);
+		
+		var bomb = new sprint0.Sprites.BombProjectile(
+			sprint0.Sprites.Texture2DStorage.GetItemSpriteSheet(),
+			sourceRect,
+			startPosition
+		);
+		
+		game.AddBombProjectile(bomb);
+	}
+
 		public void UseItem3()
 		{
 			ChangeState(new ItemState(this, linkAnimation, 3));

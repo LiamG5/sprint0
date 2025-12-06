@@ -22,6 +22,7 @@ namespace sprint0.Classes
         private static bool boomerang = false;
         private static bool compass = false;
         private static bool map = false;
+        private static bool bomb = true;
 
         private static int roomNum = 1;
 
@@ -39,7 +40,7 @@ namespace sprint0.Classes
         {
             maxHealth = 6;
             health = 6;
-            bombs = 0;
+            bombs = 5;
             keys = 0;
             rupees = 0;
             sword = true;
@@ -47,6 +48,7 @@ namespace sprint0.Classes
             boomerang = false;
             compass = false;
             map = false;
+            bomb = true;
         }
 
         // Health methods
@@ -215,6 +217,21 @@ namespace sprint0.Classes
         {
             
             map = true;
+        }
+
+        public static bool HasBomb()
+        {
+            return bomb;
+        }
+
+        public static void SetBomb(bool value)
+        {
+            bomb = value;
+        }
+
+        public static void AcquireBomb()
+        {
+            bomb = true;
         }
 
         

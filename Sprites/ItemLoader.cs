@@ -29,29 +29,32 @@ namespace sprint0.Sprites
 
         public void LoadItems(int roomId)
         {
-            //when new room loaded save last room's items if needed
-            if (LoadedItems.ContainsKey(this.roomId))
-            {   
-                LoadedItems[this.roomId] = this.itemList;
-            }
-            else
+            if (this.itemList.Count > 0)
             {
-                LoadedItems.Add(this.roomId, this.itemList);
+                var uncollectedItems = new List<IItem>();
+                foreach (var item in this.itemList)
+                {
+                    if (!item.IsCollected())
+                    {
+                        uncollectedItems.Add(item);
+                    }
+                }
+                
+                if (LoadedItems.ContainsKey(this.roomId))
+                {
+                    LoadedItems[this.roomId] = uncollectedItems;
+                }
+                else
+                {
+                    LoadedItems.Add(this.roomId, uncollectedItems);
+                }
             }
 
             this.itemList = new List<IItem>();
 
             if (LoadedItems.ContainsKey(roomId))
-            {   
-                this.itemList = new List<IItem>();
-                foreach (var item in LoadedItems[roomId])
-                {
-                    if (!item.IsCollected())
-                    {
-                        this.itemList.Add(item);
-                    }
-                }
-                LoadedItems[roomId] = this.itemList;
+            {
+                this.itemList = new List<IItem>(LoadedItems[roomId]);
                 this.roomId = roomId;
                 return;
             }
@@ -185,8 +188,10 @@ namespace sprint0.Sprites
 
         private void Room11Items()
         {
-
-            itemList.Add(items.BuildBoomerang(new Vector2(388, 144)));
+            if (!Inventory.HasBoomerang())
+            {
+                itemList.Add(items.BuildBoomerang(new Vector2(388, 144)));
+            }
         }
 
         private void Room12Items()
