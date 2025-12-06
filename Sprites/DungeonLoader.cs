@@ -20,6 +20,7 @@ namespace sprint0.Sprites
         private List<IEnemy> enemies;
         private List<Projectile> projectiles;
         private List<BoomerangProjectile> boomerangProjectiles;
+        private List<BombProjectile> bombProjectiles;
         private List<IItem> items;
         private List<ICollidable> boarders;
         private List<TransitionZone> transitionZones;
@@ -44,6 +45,7 @@ namespace sprint0.Sprites
             this.enemies = new List<IEnemy>();
             this.projectiles = new List<Projectile>();
             this.boomerangProjectiles = new List<BoomerangProjectile>();
+            this.bombProjectiles = new List<BombProjectile>();
             this.items = new List<IItem>();
             this.border = Texture2DStorage.GetDungeonBorder();
             this.boarders = new List<ICollidable>();
@@ -280,6 +282,10 @@ namespace sprint0.Sprites
             {
                 boomerang.Update(gameTime);
             }
+            foreach (var bomb in bombProjectiles)
+            {
+                bomb.Update(gameTime);
+            }
         }
         
         public void Draw(SpriteBatch sprite, GraphicsDevice graphics)
@@ -390,12 +396,28 @@ namespace sprint0.Sprites
         {
             return boomerangProjectiles;
         }
+
+        public void AddBombProjectile(BombProjectile bomb)
+        {
+            bombProjectiles.Add(bomb);
+        }
+        
+        public void RemoveBombProjectile(BombProjectile bomb)
+        {
+            bombProjectiles.Remove(bomb);
+        }
+
+        public List<BombProjectile> GetBombProjectiles()
+        {
+            return bombProjectiles;
+        }
         
         public void CleanupDeadEntities()
         {
             enemies.RemoveAll(e => e.IsDead());
             projectiles.RemoveAll(p => p.ShouldDestroy);
             boomerangProjectiles.RemoveAll(b => b.ShouldDestroy);
+            bombProjectiles.RemoveAll(b => b.ShouldDestroy);
             items.RemoveAll(i => i.IsCollected());
         }
         

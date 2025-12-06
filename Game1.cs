@@ -208,7 +208,14 @@ public class Game1 : Game
         itemCarousel = new ItemCarousel(items, _spriteBatch);
 
         string dungeonPath = Path.Combine(Content.RootDirectory, "Dungeon/Room8.csv");
-        itemLoader = new ItemLoader(items);
+        if (itemLoader != null)
+        {
+            itemLoader.Reset();
+        }
+        else
+        {
+            itemLoader = new ItemLoader(items);
+        }
         enemyLoader = new EnemyLoader(enemies);
         dungeon = new DungeonLoader(blocks, itemLoader, enemyLoader, File.ReadAllText(dungeonPath));
 
@@ -415,6 +422,13 @@ public class Game1 : Game
                     boomerang.Draw(_spriteBatch, boomerang.GetPosition());
                 }
             }
+            foreach (var bomb in dungeon.GetBombProjectiles())
+            {
+                if (!bomb.ShouldDestroy)
+                {
+                    bomb.Draw(_spriteBatch, bomb.GetPosition());
+                }
+            }
         }
 
         itemLoader.Draw(spriteBatch);
@@ -515,6 +529,24 @@ public class Game1 : Game
         {
             dungeon.AddBoomerangProjectile(boomerang);
         }
+    }
+
+    public void AddBombProjectile(Sprites.BombProjectile bomb)
+    {
+        if (dungeon != null)
+        {
+            dungeon.AddBombProjectile(bomb);
+        }
+    }
+
+    public bool HasActiveBoomerang()
+    {
+        if (dungeon != null)
+        {
+            var boomerangs = dungeon.GetBoomerangProjectiles();
+            return boomerangs != null && boomerangs.Count > 0;
+        }
+        return false;
     }
 
     public ItemFactory.ItemType? GetItemInSlotB()
@@ -636,7 +668,14 @@ public class Game1 : Game
         roomManager = new RoomManager(link, this, transitionManager);
 
         string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
-        itemLoader = new ItemLoader(items);
+        if (itemLoader != null)
+        {
+            itemLoader.Reset();
+        }
+        else
+        {
+            itemLoader = new ItemLoader(items);
+        }
         enemyLoader = new EnemyLoader(enemies);
         dungeon = new DungeonLoader(blocks, itemLoader, enemyLoader, File.ReadAllText(dungeonPath));
         enemyLoader.SetDungeonLoader(dungeon);
@@ -814,7 +853,7 @@ public class Game1 : Game
         {
             collectedItems.Add(ItemFactory.ItemType.Bow);
         }
-        if (Classes.Inventory.GetBombs() > 0)
+        if (Classes.Inventory.HasBomb())
         {
             collectedItems.Add(ItemFactory.ItemType.Bomb);
         }
