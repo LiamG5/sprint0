@@ -39,7 +39,7 @@ namespace sprint0.Sprites
 
         public void LoadEnemies(int roomId)
         {
-
+            //when new room loaded save last room's enemies if needed
             if (LoadedEnemies.ContainsKey(this.roomId))
             {   
                 LoadedEnemies[this.roomId] = this.enemyList;
@@ -51,6 +51,7 @@ namespace sprint0.Sprites
 
             this.enemyList = new List<IEnemy>();
 
+            //load enemies if already loaded
             if (LoadedEnemies.ContainsKey(roomId))
             {   
                 this.enemyList = LoadedEnemies[roomId];
@@ -186,7 +187,9 @@ namespace sprint0.Sprites
 
         private void Room8Enemies()
         {
-            // Add enemies for room 8 here
+            enemyList.Add(enemies.SpawnFlame(new Vector2(ColStart + ColMult * 3, RowStart + RowMult * 2)));
+            enemyList.Add(enemies.SpawnFlame(new Vector2(ColStart + ColMult * 8 , RowStart + RowMult * 2)));
+            
         }
 
         private void Room9Enemies()
@@ -217,22 +220,22 @@ namespace sprint0.Sprites
 
         private void Room12Enemies()
         {
-            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * 0, RowStart + RowMult *3)));
-            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * 0, RowStart + RowMult *4)));
+            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * -1, RowStart + RowMult *5)));
+            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * -1, RowStart + RowMult *5)));
 
-            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * 2, RowStart + RowMult *0 )));
-            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * 3, RowStart + RowMult *0 )));
+            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * -1, RowStart + RowMult *5 )));
+            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * -1, RowStart + RowMult *5)));
 
-            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * 10, RowStart + RowMult *3 )));
-            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * 11, RowStart + RowMult *4 )));
+            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * -1, RowStart + RowMult *5 )));
+            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult * -1, RowStart + RowMult *5 )));
 
-            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult *11, RowStart + RowMult *4 )));
-            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult *11, RowStart + RowMult *5 )));
+            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult *-1, RowStart + RowMult *5 )));
+            enemyList.Add(enemies.SpawnWallmaster(new Vector2(ColStart + ColMult *-1, RowStart + RowMult *5 )));
         }
 
         private void Room13Enemies()
         {
-            enemyList.Add(enemies.SpawnStalfos(new Vector2(ColStart + ColMult * 2, RowStart + RowMult *2 )));
+            enemyList.Add(enemies.SpawnStalfos(new Vector2(ColStart + ColMult * 1, RowStart + RowMult *2 )));
             enemyList.Add(enemies.SpawnStalfos(new Vector2(ColStart + ColMult * 3, RowStart + RowMult *3 )));
             enemyList.Add(enemies.SpawnStalfos(new Vector2(ColStart + ColMult *10, RowStart + RowMult *3 )));
         }
@@ -275,7 +278,9 @@ namespace sprint0.Sprites
            foreach (IEnemy enemy in enemyList)
             {
                 enemy.Update(gameTime);
+
             }
+
         } 
         
 

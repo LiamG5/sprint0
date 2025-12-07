@@ -22,7 +22,8 @@ namespace sprint0.Classes
         private static bool boomerang = false;
         private static bool compass = false;
         private static bool map = false;
-        private static bool[] itemCollected = new bool[30];
+        private static bool bomb = true;
+
         private static int roomNum = 1;
 
 
@@ -39,7 +40,7 @@ namespace sprint0.Classes
         {
             maxHealth = 6;
             health = 6;
-            bombs = 0;
+            bombs = 5;
             keys = 0;
             rupees = 0;
             sword = true;
@@ -47,6 +48,7 @@ namespace sprint0.Classes
             boomerang = false;
             compass = false;
             map = false;
+            bomb = true;
         }
 
         // Health methods
@@ -110,7 +112,7 @@ namespace sprint0.Classes
 
         public static void AddKeys(int count)
         {
-            itemCollect();
+            
             keys += count;
         }
 
@@ -163,7 +165,7 @@ namespace sprint0.Classes
 
         public static void AcquireBow()
         {
-            itemCollect();
+
             bow = true;
         }
 
@@ -180,7 +182,6 @@ namespace sprint0.Classes
 
         public static void AcquireBoomerang()
         {
-            itemCollect();
             boomerang = true;
         }
 
@@ -197,7 +198,7 @@ namespace sprint0.Classes
 
         public static void AcquireCompass()
         {
-            itemCollect();
+            
             compass = true;
         }
 
@@ -214,8 +215,23 @@ namespace sprint0.Classes
 
         public static void AcquireMap()
         {
-            itemCollect();
+            
             map = true;
+        }
+
+        public static bool HasBomb()
+        {
+            return bomb;
+        }
+
+        public static void SetBomb(bool value)
+        {
+            bomb = value;
+        }
+
+        public static void AcquireBomb()
+        {
+            bomb = true;
         }
 
         
@@ -239,15 +255,9 @@ namespace sprint0.Classes
             health = maxHealth;
         }
 
-        public static void itemCollect()
-        {
-            itemCollected[roomNum] = true;
-        }
+        
 
-         public static bool isItemCollected()
-        {
-            return itemCollected[roomNum];
-        }
+         
         public static void PingRoomNum(int i)
         {
             roomNum = i;

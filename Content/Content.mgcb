@@ -308,6 +308,18 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/legendofzelda_hud_sheet.png
 
+#begin Sprites/legendofzelda_HUD.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/legendofzelda_HUD.png
+
 #begin Sprites/room_2_border.png
 /importer:TextureImporter
 /processor:TextureProcessor

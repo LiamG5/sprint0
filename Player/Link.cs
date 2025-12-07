@@ -4,6 +4,7 @@ using sprint0.PlayerStates;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using sprint0.Sprites;
 
 
 namespace sprint0.Classes
@@ -142,10 +143,84 @@ namespace sprint0.Classes
 		{
 			ChangeState(new ItemState(this, linkAnimation, 1));
 		}
-		public void UseItem2()
+	public void UseItem2()
+	{
+		if (game != null)
 		{
-			ChangeState(new ItemState(this, linkAnimation, 2));
+			var itemInSlotB = game.GetItemInSlotB();
+			if (itemInSlotB.HasValue)
+			{
+				if (itemInSlotB.Value == sprint0.Sprites.ItemFactory.ItemType.Boomerang || 
+				    itemInSlotB.Value == sprint0.Sprites.ItemFactory.ItemType.MagicalBoomerang)
+				{
+					ThrowBoomerang();
+					return;
+				}
+				else if (itemInSlotB.Value == sprint0.Sprites.ItemFactory.ItemType.Bomb)
+				{
+					if (Inventory.UseBomb())
+					{
+						DropBomb();
+						return;
+					}
+				}
+			}
 		}
+		ChangeState(new ItemState(this, linkAnimation, 2));
+	}
+
+	private void ThrowBoomerang()
+	{
+		if (game.HasActiveBoomerang())
+		{
+			return;
+		}
+		
+		Rectangle sourceRect = new Rectangle(40 * 7, 40 * 0, 15, 16);
+		Vector2 velocity = new Vector2(0, 0);
+		Vector2 startPosition = position + new Vector2(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2);
+		
+		switch (direction)
+		{
+			case Direction.Up:
+				velocity = new Vector2(0, -6);
+				break;
+			case Direction.Down:
+				velocity = new Vector2(0, 6);
+				break;
+			case Direction.Left:
+				velocity = new Vector2(-6, 0);
+				break;
+			case Direction.Right:
+				velocity = new Vector2(6, 0);
+				break;
+		}
+		
+		var boomerang = new sprint0.Sprites.BoomerangProjectile(
+			sprint0.Sprites.Texture2DStorage.GetItemSpriteSheet(),
+			sourceRect,
+			startPosition,
+			velocity,
+			this
+		);
+		
+		game.AddBoomerangProjectile(boomerang);
+	}
+
+	private void DropBomb()
+	{
+		Rectangle sourceRect = new Rectangle(40 * 5, 40 * 0, 15, 16);
+		Vector2 startPosition = position + new Vector2(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2);
+		
+		var bomb = new sprint0.Sprites.BombProjectile(
+			sprint0.Sprites.Texture2DStorage.GetItemSpriteSheet(),
+			sourceRect,
+			startPosition
+		);
+		
+		game.AddBombProjectile(bomb);
+	}
+
 		public void UseItem3()
 		{
 			ChangeState(new ItemState(this, linkAnimation, 3));
@@ -198,6 +273,12 @@ namespace sprint0.Classes
 		{
 			switch (other)
 			{
+			case EnemyWallmaster wallmaster:
+				game.GoToRoom2();
+				break;
+			case EnemyFlame flame:
+				HandleBlockCollision(flame, direction);
+				break;
 			case IEnemy enemy:
 				if (!(state is DamagedState) && !(state is KnockbackState))
 				{

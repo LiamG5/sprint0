@@ -12,7 +12,9 @@ namespace sprint0.Sprites
     {
         private ItemFactory items = ItemFactory.Instance;
         public Texture2D border;
-        private List<IItem> itemList;
+        public List<IItem> itemList;
+        private Dictionary<int, List<IItem>> LoadedItems;
+        private int roomId = 1;
         
 
 
@@ -21,13 +23,47 @@ namespace sprint0.Sprites
         {
             this.items = items;
             this.itemList = new List<IItem>();
+            this.LoadedItems = new Dictionary<int, List<IItem>>();
+            Room1Items();
         }
 
         public void LoadItems(int roomId)
         {
-            itemList.Clear();
-            if (!Inventory.isItemCollected())
+            if (this.itemList.Count > 0)
             {
+                var uncollectedItems = new List<IItem>();
+                foreach (var item in this.itemList)
+                {
+                    if (!item.IsCollected())
+                    {
+                        uncollectedItems.Add(item);
+                    }
+                }
+                
+                if (LoadedItems.ContainsKey(this.roomId))
+                {
+                    LoadedItems[this.roomId] = uncollectedItems;
+                }
+                else
+                {
+                    LoadedItems.Add(this.roomId, uncollectedItems);
+                }
+            }
+
+            this.itemList = new List<IItem>();
+
+            if (LoadedItems.ContainsKey(roomId))
+            {
+                this.itemList = new List<IItem>(LoadedItems[roomId]);
+                this.roomId = roomId;
+                return;
+            }
+
+
+
+            itemList.Clear();
+            
+            
                 switch (roomId)
                 {
                     case 1:
@@ -85,7 +121,7 @@ namespace sprint0.Sprites
                         break;
 
                 }
-            }
+            
         }
 
         private void Room1Items()
@@ -124,7 +160,10 @@ namespace sprint0.Sprites
         
          private void Room7Items()
         {
-            itemList.Add(items.BuildCompass(new Vector2(580, 240)));
+            if (!Inventory.HasCompass())
+            {
+                itemList.Add(items.BuildCompass(new Vector2(580, 240)));
+            }
         }
 
 
@@ -141,14 +180,18 @@ namespace sprint0.Sprites
 
         private void Room10Items()
         {
-            
-            itemList.Add(items.BuildDungeonMap(new Vector2(580, 240)));
+            if (!Inventory.HasMap())
+            {
+                itemList.Add(items.BuildDungeonMap(new Vector2(580, 240)));
+            }
         }
 
         private void Room11Items()
         {
-
-            itemList.Add(items.BuildBoomerang(new Vector2(388, 144)));
+            if (!Inventory.HasBoomerang())
+            {
+                itemList.Add(items.BuildBoomerang(new Vector2(388, 144)));
+            }
         }
 
         private void Room12Items()
@@ -204,6 +247,13 @@ namespace sprint0.Sprites
         public List<IItem> GetItems()
         {
             return itemList;
+        }
+
+        public void Reset()
+        {
+            LoadedItems.Clear();
+            itemList.Clear();
+            this.roomId = 1;
         }
         
 

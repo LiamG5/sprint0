@@ -9,6 +9,7 @@ namespace sprint0.Managers
     {
         private Dictionary<int, RoomConnections> roomConnections;
         private Dictionary<int, RoomType> roomTypes;
+        private Dictionary<int, int> roomLevels;
         private HashSet<int> visitedRooms;
         private int currentRoomId;
         private Link link;
@@ -28,8 +29,10 @@ namespace sprint0.Managers
             this.currentRoomId = 8;
             this.visitedRooms = new HashSet<int>();
             this.roomTypes = new Dictionary<int, RoomType>();
+            this.roomLevels = new Dictionary<int, int>();
             SetupRoomConnections();
             SetupRoomTypes();
+            SetupRoomLevels();
             MarkRoomVisited(8);
         }
         
@@ -41,8 +44,10 @@ namespace sprint0.Managers
             this.currentRoomId = 8;
             this.visitedRooms = new HashSet<int>();
             this.roomTypes = new Dictionary<int, RoomType>();
+            this.roomLevels = new Dictionary<int, int>();
             SetupRoomConnections();
             SetupRoomTypes();
+            SetupRoomLevels();
             MarkRoomVisited(8);
         }
 
@@ -115,6 +120,23 @@ namespace sprint0.Managers
             {
                 roomTypes[i] = RoomType.Regular;
             }
+        }
+
+        private void SetupRoomLevels()
+        {
+            for (int i = 1; i <= 9; i++)
+            {
+                roomLevels[i] = 1;
+            }
+            for (int i = 10; i <= 17; i++)
+            {
+                roomLevels[i] = 2;
+            }
+        }
+
+        public int GetRoomLevel(int roomId)
+        {
+            return roomLevels.ContainsKey(roomId) ? roomLevels[roomId] : 1;
         }
         
         public void MarkRoomVisited(int roomId)
