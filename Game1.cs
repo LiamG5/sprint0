@@ -221,6 +221,7 @@ public class Game1 : Game
 
         enemyLoader.SetDungeonLoader(dungeon);
         enemyLoader.SetPlayerPositionProvider(() => link.GetPosition());
+        enemyLoader.SetLink(link);
 
         dungeon.LoadRectangles();
 
@@ -271,7 +272,7 @@ public class Game1 : Game
         rupees = Classes.Inventory.GetRupees();
         keys = Classes.Inventory.GetKeys();
         hasMap = Classes.Inventory.HasMap();
-        levelName = "Level 1";
+        //levelName = "Level 1";
 
         // Set up room manager and load initial room
         roomManager.SetCurrentRoom(8);
@@ -698,6 +699,7 @@ public class Game1 : Game
         dungeon = new DungeonLoader(blocks, itemLoader, enemyLoader, File.ReadAllText(dungeonPath));
         enemyLoader.SetDungeonLoader(dungeon);
         enemyLoader.SetPlayerPositionProvider(() => link.GetPosition());
+        enemyLoader.SetLink(link);
         dungeon.LoadRectangles();
 
         roomManager.SetCurrentRoom(8);

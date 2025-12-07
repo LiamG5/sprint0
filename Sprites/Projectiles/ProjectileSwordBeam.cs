@@ -9,10 +9,10 @@ namespace sprint0.Sprites.Projectiles
         private const int speed = 8;
         private const int damage = 2;
 
-        private Rectangle RightSourceRect = new Rectangle(85, 225, 22, 22);
-        private Rectangle LeftSourceRect = new Rectangle(26, 225, 22, 22);
-        private Rectangle UpSourceRect = new Rectangle(60, 220, 22, 22);
-        private Rectangle DownSourceRect = new Rectangle(0, 220, 22, 22);
+        private static Rectangle RightSourceRect = new Rectangle(85, 225, 22, 22);
+        private static Rectangle LeftSourceRect = new Rectangle(26, 225, 22, 22);
+        private static Rectangle UpSourceRect = new Rectangle(60, 220, 22, 22);
+        private static Rectangle DownSourceRect = new Rectangle(0, 220, 22, 22);
 
         public static Projectile Create(Vector2 position, Link.Direction direction)
         {
