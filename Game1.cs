@@ -206,7 +206,7 @@ public class Game1 : Game
         enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
         itemCarousel = new ItemCarousel(items, _spriteBatch);
 
-        string dungeonPath = Path.Combine(Content.RootDirectory, "Dungeon/Room8.csv");
+        string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
         itemLoader = new ItemLoader(items);
         enemyLoader = new EnemyLoader(enemies);
         dungeon = new DungeonLoader(blocks, itemLoader, enemyLoader, File.ReadAllText(dungeonPath));
@@ -255,14 +255,32 @@ public class Game1 : Game
         mouse = new MouseController(mapRect, MapRows, MapCols, mapCellCommands);
         controllers.Add(mouse);
 
+        // Initialize Inventory state
+        Classes.Inventory.Reset();
+        hearts = Classes.Inventory.GetHealth();
+        maxHearts = Classes.Inventory.GetMaxHealth();
+        bombs = Classes.Inventory.GetBombs();
+        rupees = Classes.Inventory.GetRupees();
+        keys = Classes.Inventory.GetKeys();
+        hasMap = Classes.Inventory.HasMap();
+        levelName = "Level 1";
+
+        // Set up room manager and load initial room
+        roomManager.SetCurrentRoom(8);
+        dungeon.SetRoomManager(roomManager, 8);
+        itemLoader.LoadItems(8);
+        enemyLoader.LoadEnemies(8);
+
         collisionUpdater = new CollisionUpdater(dungeon, link);
         collisionUpdater.getList();
 
         previousKeyboardState = Keyboard.GetState();
         previousMouseState = Mouse.GetState();
 
+        currentState = GameState.Gameplay;
+
         System.Console.WriteLine("[LoadContent] completed");
-        roomIndex = 1;
+        roomIndex = 8;
     }
 
     protected override void Update(GameTime gameTime)
