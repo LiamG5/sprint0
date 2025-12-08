@@ -69,6 +69,16 @@ namespace sprint0.Classes
             KeyboardState currentState = Keyboard.GetState();
             bool inventoryOpen = isInventoryOpen();
 
+            if (game.currentState == Game1.GameState.GameOver || game.currentState == Game1.GameState.Win)
+            {
+                if (currentState.IsKeyDown(Keys.R) && previousState.IsKeyUp(Keys.R))
+                {
+                    new ResetCommand(game).Execute();
+                }
+                previousState = currentState;
+                return;
+            }
+
             if (inventoryOpen)
             {
                 // Handle inventory navigation

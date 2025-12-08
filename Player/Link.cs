@@ -28,8 +28,8 @@ namespace sprint0.Classes
 		public Vector2 position { get; set; } = new Vector2(400, 200);
 		public Vector2 velocity { get; set; } = new Vector2(0, 0);
 
-		private const int PLAYER_WIDTH = 48;
-		private const int PLAYER_HEIGHT = 48;
+		private const int PLAYER_WIDTH = 44;
+		private const int PLAYER_HEIGHT = 44;
 		public LinkAttackHitbox linkAttackHitbox;
 		public Link(SpriteBatch spriteBatch, Game1 game)
 		{
@@ -242,6 +242,11 @@ namespace sprint0.Classes
 		public void UseMagic()
 		{
 			ChangeState(new MagicState(this, linkAnimation));
+		}
+
+		public void Win()
+		{
+			ChangeState(new WinState(this, linkAnimation));
 		}
 
 		public Rectangle GetBounds()

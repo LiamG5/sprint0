@@ -87,6 +87,8 @@ public class Game1 : Game
     private static readonly Color _minimapColor = new Color(255, 0, 0, 96);
     private static readonly Color _minimapTextColor = Color.Yellow;
 
+    private Texture2D blackTexture;
+
     public enum GameState { Gameplay, Pause, Inventory, GameOver, Win };
     public GameState currentState { get; set; } = GameState.Gameplay;
     private int roomIndex;
@@ -198,6 +200,9 @@ public class Game1 : Game
 
         _minimapOverlay = new Texture2D(GraphicsDevice, 1, 1);
         _minimapOverlay.SetData(new[] { Color.White });
+
+        blackTexture = new Texture2D(GraphicsDevice, 1, 1);
+        blackTexture.SetData(new[] { Color.Black });
 
         blocks = BlockFactory.Instance;
         enemies = EnemySpriteFactory.Instance;
@@ -384,6 +389,7 @@ public class Game1 : Game
             }
             else if (currentState == GameState.Win)
             {
+                link.Update(gameTime);
                 foreach (var controller in controllers)
                 {
                     controller.Update();
@@ -506,9 +512,37 @@ public class Game1 : Game
 
             _spriteBatch.End();
 
-            if (currentState == GameState.GameOver || currentState == GameState.Win)
+            if (currentState == GameState.GameOver)
             {
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                _spriteBatch.Draw(blackTexture, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.Black);
+                
+                string gameOverText = "Game Over";
+                Vector2 gameOverSize = font.MeasureString(gameOverText);
+                Vector2 gameOverPos = new Vector2((GraphicsDevice.Viewport.Width - gameOverSize.X) / 2, (GraphicsDevice.Viewport.Height - gameOverSize.Y) / 2 - 30);
+                _spriteBatch.DrawString(font, gameOverText, gameOverPos, Color.Red);
+                
+                string retryText = "r to retry";
+                Vector2 retrySize = font.MeasureString(retryText);
+                Vector2 retryPos = new Vector2((GraphicsDevice.Viewport.Width - retrySize.X) / 2, gameOverPos.Y + gameOverSize.Y + 20);
+                _spriteBatch.DrawString(font, retryText, retryPos, Color.White);
+                _spriteBatch.End();
+            }
+            else if (currentState == GameState.Win)
+            {
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                
+                string winText = "WIN";
+                float winScale = 3.0f;
+                Vector2 winSize = font.MeasureString(winText) * winScale;
+                Vector2 winPos = new Vector2((GraphicsDevice.Viewport.Width - winSize.X) / 2, (GraphicsDevice.Viewport.Height - winSize.Y) / 2 - 150);
+                _spriteBatch.DrawString(font, winText, winPos, Color.Gold, 0f, Vector2.Zero, winScale, SpriteEffects.None, 0f);
+                
+                string restartText = "r to restart";
+                float restartScale = 1.5f;
+                Vector2 restartSize = font.MeasureString(restartText) * restartScale;
+                Vector2 restartPos = new Vector2((GraphicsDevice.Viewport.Width - restartSize.X) / 2, (GraphicsDevice.Viewport.Height - restartSize.Y) / 2 + 150);
+                _spriteBatch.DrawString(font, restartText, restartPos, Color.White, 0f, Vector2.Zero, restartScale, SpriteEffects.None, 0f);
                 _spriteBatch.End();
             }
         }
