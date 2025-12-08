@@ -4,7 +4,7 @@ using sprint0.Sprites;
 
 namespace sprint0.Sprites.Projectiles
 {
-    public static class ProjectileSwordBeam
+    public class ProjectileSwordBeam
     {
         private const int speed = 8;
         private const int damage = 2;
