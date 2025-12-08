@@ -263,6 +263,12 @@ namespace sprint0.Classes
             
         }
 
+        public void LinkHoldingItem()
+        {
+            linkSprite.LinkDrawUseItem1();
+            linkObjSprite.LinkObjDrawTriforce();
+        }
+
         public void LinkDamagedUp(float totalTime, float currentTime)
         {
             float progress = currentTime / totalTime;

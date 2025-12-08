@@ -28,8 +28,8 @@ namespace sprint0.Classes
 		public Vector2 position { get; set; } = new Vector2(400, 200);
 		public Vector2 velocity { get; set; } = new Vector2(0, 0);
 
-		private const int PLAYER_WIDTH = 48;
-		private const int PLAYER_HEIGHT = 48;
+		private const int PLAYER_WIDTH = 44;
+		private const int PLAYER_HEIGHT = 44;
 		public LinkAttackHitbox linkAttackHitbox;
 		public Link(SpriteBatch spriteBatch, Game1 game)
 		{
@@ -132,41 +132,10 @@ namespace sprint0.Classes
 				ChangeState(new AttackState(this, linkAnimation, linkAttackHitbox));
 			}
 		}
+		
 		public void FireSwordBeam()
-		{			
-			Rectangle sourceRect = new Rectangle(0, 0, 0, 0);
-			Vector2 velocity = new Vector2(0, 0);
-			Vector2 startPosition = position;
-			
-			switch (direction)
-			{
-				case Direction.Up:
-					sourceRect = new Rectangle(60, 220, 22, 22); 
-					velocity = new Vector2(0, -8);
-					break;
-				case Direction.Down:
-					sourceRect = new Rectangle(0, 220, 22, 22); 
-					velocity = new Vector2(0, 8);
-					break;
-				case Direction.Left:
-					sourceRect = new Rectangle(26, 225, 22, 22);
-					velocity = new Vector2(-8, 0);
-					break;
-				case Direction.Right:
-					sourceRect = new Rectangle(85, 225, 22, 22);
-					velocity = new Vector2(8, 0);
-					break;
-			}
-						
-			var swordBeam = new sprint0.Sprites.Projectile(
-				sprint0.Sprites.Texture2DStorage.GetLinkSpriteSheet(), 
-				sourceRect, 
-				position, 
-				velocity, 
-				damage: 2, 
-				isEnemyProjectile: false
-			);			
-
+		{
+			var swordBeam = sprint0.Sprites.Projectiles.ProjectileSwordBeam.Create(position, direction);
 			game.AddProjectile(swordBeam);
 		}
 
@@ -273,6 +242,11 @@ namespace sprint0.Classes
 		public void UseMagic()
 		{
 			ChangeState(new MagicState(this, linkAnimation));
+		}
+
+		public void Win()
+		{
+			ChangeState(new WinState(this, linkAnimation));
 		}
 
 		public Rectangle GetBounds()

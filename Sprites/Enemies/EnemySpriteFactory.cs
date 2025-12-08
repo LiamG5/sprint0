@@ -45,10 +45,10 @@ namespace sprint0.Sprites
             currEnemy = EnemyType.BladeTrap;
             return new EnemyBladeTrap(enemySpritesheet);
         }
-        public IEnemy SpawnBladeTrap(Vector2 position)
+        public IEnemy SpawnBladeTrap(Vector2 position, Link link)
         {
             currEnemy = EnemyType.BladeTrap;
-            return new EnemyBladeTrap(enemySpritesheet, position);
+            return new EnemyBladeTrap(enemySpritesheet, position, link);
         }
 
         public IEnemy SpawnGel()

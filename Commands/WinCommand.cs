@@ -14,6 +14,7 @@ namespace sprint0.Commands
         public void Execute()
         {
             game.currentState = Game1.GameState.Win;
+            game.link.Win();
         }
     }
 }
