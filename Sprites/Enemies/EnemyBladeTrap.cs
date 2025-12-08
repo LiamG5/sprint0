@@ -196,7 +196,7 @@ namespace sprint0.Sprites
             spriteBatch.Draw(enemySS, this.position, enemy, Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
         }
 
-        public void TakeDamage()
+        public void TakeDamage(int damage)
         {
             // Can't take damage
         }

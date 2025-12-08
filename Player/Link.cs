@@ -225,9 +225,9 @@ namespace sprint0.Classes
 		{
 			ChangeState(new ItemState(this, linkAnimation, 3));
 		}
-		public void TakeDamage()
+		public void TakeDamage(int damage)
 		{
-			Inventory.TakeDamage(1);
+			Inventory.TakeDamage(damage);
 
 			if (Inventory.IsDead())
 			{
@@ -321,7 +321,7 @@ namespace sprint0.Classes
 		
 		private void HandleEnemyCollision(ICollidable enemy, Collisions.CollisionDirection direction)
 		{
-			TakeDamage();
+			TakeDamage(1);
 
 			switch (direction)
 			{

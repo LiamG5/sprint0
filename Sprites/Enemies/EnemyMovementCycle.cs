@@ -47,6 +47,11 @@ namespace sprint0.Sprites.Enemies
             return position;
         }
 
+        public void SetPosition(Vector2 newPosition)
+        {
+            position = newPosition;
+        }
+
         public Vector2 wallMasterSpawn()
         {
             position = new Vector2(position.X + 1, position.Y);

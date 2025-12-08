@@ -6,7 +6,8 @@ namespace sprint0.Commands
     public sealed class DamageCommand : ICommand
     {
         private readonly Link link;
-        public DamageCommand(Link link) { this.link = link; }
-        public void Execute() => link.TakeDamage();
+        private readonly int damage;
+        public DamageCommand(Link link, int damage) { this.link = link; this.damage = damage; }
+        public void Execute() => link.TakeDamage(damage);
     }
 }
