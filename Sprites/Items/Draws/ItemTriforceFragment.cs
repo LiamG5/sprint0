@@ -13,7 +13,7 @@ namespace sprint0.Sprites
         private Texture2D itemSS;
         private Vector2 position;
         private bool isCollected = false;
-        private static Rectangle block = new Rectangle(320, 120, 16, 16);
+        private  Rectangle block = new Rectangle(320, 120, 16, 16);
         private const int ITEM_WIDTH = 48;  // 16 * 3.0f
         private const int ITEM_HEIGHT = 48;
         private int frameNum = 0;

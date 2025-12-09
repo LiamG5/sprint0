@@ -76,6 +76,8 @@ public class Game1 : Game
     private ItemLoader itemLoader;
     private EnemyLoader enemyLoader;
 
+    private ItemDroper itemDroper;
+
     private Rectangle mapRect = new Rectangle(32, 32, 6 * 24, 3 * 24);
     private const int MapRows = 3;
     private const int MapCols = 6;
@@ -213,13 +215,16 @@ public class Game1 : Game
         itemCarousel = new ItemCarousel(items, _spriteBatch);
 
         string dungeonPath = Path.Combine(Content.RootDirectory, "Dungeon/Room8.csv");
+        itemDroper = new ItemDroper();
+        itemLoader = new ItemLoader(items, itemDroper);
+        enemyLoader = new EnemyLoader(enemies, itemDroper);
         if (itemLoader != null)
         {
             itemLoader.Reset();
         }
         else
         {
-            itemLoader = new ItemLoader(items);
+            itemLoader = new ItemLoader(items, itemDroper);
         }
         enemyLoader = new EnemyLoader(enemies);
         dungeon = new DungeonLoader(blocks, itemLoader, enemyLoader, File.ReadAllText(dungeonPath));
@@ -721,13 +726,15 @@ public class Game1 : Game
         roomManager = new RoomManager(link, this, transitionManager);
 
         string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
+        itemLoader = new ItemLoader(items, itemDroper);
+        enemyLoader = new EnemyLoader(enemies, itemDroper);
         if (itemLoader != null)
         {
             itemLoader.Reset();
         }
         else
         {
-            itemLoader = new ItemLoader(items);
+            itemLoader = new ItemLoader(items, itemDroper);
         }
         enemyLoader = new EnemyLoader(enemies);
         dungeon = new DungeonLoader(blocks, itemLoader, enemyLoader, File.ReadAllText(dungeonPath));
