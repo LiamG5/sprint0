@@ -226,7 +226,7 @@ public class Game1 : Game
         {
             itemLoader = new ItemLoader(items, itemDroper);
         }
-        enemyLoader = new EnemyLoader(enemies);
+        enemyLoader = new EnemyLoader(enemies, itemDroper);
         dungeon = new DungeonLoader(blocks, itemLoader, enemyLoader, File.ReadAllText(dungeonPath));
 
         enemyLoader.SetDungeonLoader(dungeon);
@@ -736,7 +736,7 @@ public class Game1 : Game
         {
             itemLoader = new ItemLoader(items, itemDroper);
         }
-        enemyLoader = new EnemyLoader(enemies);
+        enemyLoader = new EnemyLoader(enemies, itemDroper);
         dungeon = new DungeonLoader(blocks, itemLoader, enemyLoader, File.ReadAllText(dungeonPath));
         enemyLoader.SetDungeonLoader(dungeon);
         enemyLoader.SetPlayerPositionProvider(() => link.GetPosition());
