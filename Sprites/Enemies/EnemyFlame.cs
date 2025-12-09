@@ -54,9 +54,9 @@ namespace sprint0.Sprites
             }
         }
 
-        public void TakeDamage()
+        public void TakeDamage(int damage)
         {
-            
+            // Can't take damage
         }
 
         public bool IsDead()

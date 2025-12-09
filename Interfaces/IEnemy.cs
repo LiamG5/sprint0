@@ -4,7 +4,7 @@ namespace sprint0.Interfaces
 {
     public interface IEnemy : ISprite, ICollidable
     {
-        void TakeDamage();
+        void TakeDamage(int damage);
         bool IsDead();
     }
 }

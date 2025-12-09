@@ -127,7 +127,7 @@ namespace sprint0.Sprites
 
                 case IEnemy enemy:
                     sprint0.Sounds.SoundStorage.LOZ_Enemy_Hit.Play();
-                    enemy.TakeDamage();
+                    enemy.TakeDamage(1);
                     if (!isReturning)
                     {
                         isReturning = true;

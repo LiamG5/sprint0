@@ -80,19 +80,15 @@ namespace sprint0.Sprites
             switch (other)
             {
                 case Link link when isEnemyProjectile:
-                    link.TakeDamage();
+                    link.TakeDamage(damage);
                     shouldDestroy = true;
                     break;
 
                 case Link link when !isEnemyProjectile:
                     break;
 
-                case LinkAttackHitbox hitbox when !isEnemyProjectile:
-                    break;
-
                 case IEnemy enemy when !isEnemyProjectile:
-                    sprint0.Sounds.SoundStorage.LOZ_Enemy_Hit.Play();
-                    enemy.TakeDamage();
+                    enemy.TakeDamage(damage);
                     shouldDestroy = true;
                     break;
 

@@ -13,6 +13,8 @@ namespace sprint0.Classes
 	{
 		public Vector2 position { get; set; } = new Vector2(400, 200);
         public bool active = false;
+        private int damage = 1;
+
         public LinkAttackHitbox()
 		{
 		
@@ -51,7 +53,14 @@ namespace sprint0.Classes
         }
         public void OnCollision(ICollidable other, CollisionDirection direction)
         {
-            
+            if (active) {
+                switch (other)
+                {
+                    case IEnemy enemy:
+                        enemy.TakeDamage(damage);
+                        break;
+                }
+            }
         }
     }
 }
