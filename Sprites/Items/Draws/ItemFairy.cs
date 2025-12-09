@@ -15,9 +15,9 @@ namespace sprint0.Sprites
         private bool isCollected = false;
         private static int ItemRow = 1;
         private static int ItemCol = 3;
-        private static Rectangle frame1 = new Rectangle(40 * ItemCol, 40 * ItemRow, 15, 16);
-        private static Rectangle frame2 = new Rectangle(40 * ItemCol, 40 * ItemRow, 15, 16);
-        private static Rectangle temp = frame1;
+        private  Rectangle frame1 = new Rectangle(40 * ItemCol, 40 * ItemRow, 15, 16);
+        private  Rectangle frame2 = new Rectangle(40 * ItemCol, 40 * ItemRow, 15, 16);
+        private  Rectangle temp;
         private int count = 0;
         private const int ITEM_WIDTH = 45;
         private const int ITEM_HEIGHT = 48;
@@ -26,6 +26,7 @@ namespace sprint0.Sprites
         {
             itemSS = sheet;
             position = startPosition;
+            temp = frame1;
         }
 
         public ItemFairy(Texture2D sheet) : this(sheet, new Vector2(200, 100))
@@ -82,6 +83,7 @@ namespace sprint0.Sprites
             switch (other)
             {
                 case Link link:
+                    Inventory.GetMaxHealth();
                     Collect();
                     break;
             }

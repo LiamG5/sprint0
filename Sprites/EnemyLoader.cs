@@ -14,7 +14,7 @@ namespace sprint0.Sprites
         private int roomId;
         public Texture2D border;
         private List<IEnemy> enemyList;
-        
+        private ItemDroper itemDroper;
         private Dictionary<int, List<IEnemy>> LoadedEnemies;
         private int RowStart = 96;
         private int ColStart = 96;
@@ -28,13 +28,15 @@ namespace sprint0.Sprites
         private Func<Vector2> playerPositionProvider;
 
     
-        public EnemyLoader(EnemySpriteFactory enemies)
+        public EnemyLoader(EnemySpriteFactory enemies, ItemDroper itemDroper)
         {
             roomId = 1;
             this.enemies = enemies;
             this.enemyList = new List<IEnemy>();
             this.LoadedEnemies = new Dictionary<int, List<IEnemy>>();
-            Room1Enemies();
+            this.itemDroper = itemDroper;
+            
+
         }
 
         public void LoadEnemies(int roomId)
@@ -266,21 +268,16 @@ namespace sprint0.Sprites
             enemyList.Add(enemies.SpawnRedGoriya(new Vector2(ColStart + ColMult * 7, RowStart + RowMult * 4)));
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        
+        public void Update()
         {
-            foreach (IEnemy enemy in enemyList)
-            {
-                enemy.Draw(spriteBatch, enemy.GetPosition());
-            }
-        }
-        public void Update(GameTime gameTime)
-        {
-           foreach (IEnemy enemy in enemyList)
-            {
-                enemy.Update(gameTime);
-
-            }
-
+        for (int i = enemyList.Count - 1; i >= 0; i--){
+                if (enemyList[i].IsDead())
+                {
+                itemDroper.LoadItem(enemyList[i].GetPosition());
+                enemyList.RemoveAt(i);
+                }
+            }   
         } 
         
 

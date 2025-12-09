@@ -14,7 +14,7 @@ namespace sprint0.Sprites
         private Vector2 position;
         private bool isCollected = false;
         private static int ItemRow = 2;
-        private static Rectangle block = new Rectangle(360, 40*ItemRow, 13, 16);
+        private  Rectangle block = new Rectangle(360, 40*ItemRow, 13, 16);
         private const int ITEM_WIDTH = 39;  // 13 * 3.0f
         private const int ITEM_HEIGHT = 48;
 
