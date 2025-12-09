@@ -67,7 +67,6 @@ public class Game1 : Game
     private int rupees = 0;
     private int keys = 0;
     private bool hasMap = true; // TODO: Connect to actual map item
-    private string levelName = "Level 1";
 
     // Inventory system
     private HUD.InventoryMenu inventoryMenu;
@@ -89,6 +88,8 @@ public class Game1 : Game
     private Texture2D _minimapOverlay;
     private static readonly Color _minimapColor = new Color(255, 0, 0, 96);
     private static readonly Color _minimapTextColor = Color.Yellow;
+
+    private Texture2D blackTexture;
 
     public enum GameState { Gameplay, Pause, Inventory, GameOver, Win };
     public GameState currentState { get; set; } = GameState.Gameplay;
@@ -144,17 +145,19 @@ public class Game1 : Game
 
         hud.Add(new HUD.HudBackground(GraphicsDevice.Viewport.Width, HUD.HudConstants.HudHeight, GraphicsDevice));
 
-        hud.Add(new HUD.LevelLabelHud(() => levelName, hudFont, HUD.HudConstants.LevelLabelPos));
+        hud.Add(new HUD.LevelLabelHud(() => $"Level {roomManager.GetRoomLevel(roomManager.CurrentRoomId)}", hudFont, HUD.HudConstants.LevelLabelPos));
 
         minimapHud = new HUD.MinimapHud(
             () => roomManager.CurrentRoomId,
-            () => true,
+            () => Classes.Inventory.HasMap(),
             (roomId) => roomManager.GetRoomConnections(roomId),
             HUD.HudConstants.MinimapPos,
             GraphicsDevice,
             rows: 6,
             cols: 6,
-            cellSize: 16);
+            cellSize: 16,
+            () => Classes.Inventory.HasCompass(),
+            () => 15);
         hud.Add(minimapHud);
 
         hud.Add(new HUD.InventorySlotsHud(
@@ -200,6 +203,9 @@ public class Game1 : Game
         _minimapOverlay = new Texture2D(GraphicsDevice, 1, 1);
         _minimapOverlay.SetData(new[] { Color.White });
 
+        blackTexture = new Texture2D(GraphicsDevice, 1, 1);
+        blackTexture.SetData(new[] { Color.Black });
+
         blocks = BlockFactory.Instance;
         enemies = EnemySpriteFactory.Instance;
         items = ItemFactory.Instance;
@@ -212,10 +218,20 @@ public class Game1 : Game
         itemDroper = new ItemDroper();
         itemLoader = new ItemLoader(items, itemDroper);
         enemyLoader = new EnemyLoader(enemies, itemDroper);
+        if (itemLoader != null)
+        {
+            itemLoader.Reset();
+        }
+        else
+        {
+            itemLoader = new ItemLoader(items, itemDroper);
+        }
+        enemyLoader = new EnemyLoader(enemies);
         dungeon = new DungeonLoader(blocks, itemLoader, enemyLoader, File.ReadAllText(dungeonPath));
 
         enemyLoader.SetDungeonLoader(dungeon);
         enemyLoader.SetPlayerPositionProvider(() => link.GetPosition());
+        enemyLoader.SetLink(link);
 
         dungeon.LoadRectangles();
 
@@ -258,14 +274,32 @@ public class Game1 : Game
         mouse = new MouseController(mapRect, MapRows, MapCols, mapCellCommands);
         controllers.Add(mouse);
 
+        // Initialize Inventory state
+        Classes.Inventory.Reset();
+        hearts = Classes.Inventory.GetHealth();
+        maxHearts = Classes.Inventory.GetMaxHealth();
+        bombs = Classes.Inventory.GetBombs();
+        rupees = Classes.Inventory.GetRupees();
+        keys = Classes.Inventory.GetKeys();
+        hasMap = Classes.Inventory.HasMap();
+        //levelName = "Level 1";
+
+        // Set up room manager and load initial room
+        roomManager.SetCurrentRoom(8);
+        dungeon.SetRoomManager(roomManager, 8);
+        itemLoader.LoadItems(8);
+        enemyLoader.LoadEnemies(8);
+
         collisionUpdater = new CollisionUpdater(dungeon, link);
         collisionUpdater.getList();
 
         previousKeyboardState = Keyboard.GetState();
         previousMouseState = Mouse.GetState();
 
+        currentState = GameState.Gameplay;
+
         System.Console.WriteLine("[LoadContent] completed");
-        roomIndex = 1;
+        roomIndex = 8;
     }
 
     protected override void Update(GameTime gameTime)
@@ -360,6 +394,7 @@ public class Game1 : Game
             }
             else if (currentState == GameState.Win)
             {
+                link.Update(gameTime);
                 foreach (var controller in controllers)
                 {
                     controller.Update();
@@ -408,6 +443,20 @@ public class Game1 : Game
                 if (!projectile.ShouldDestroy)
                 {
                     projectile.Draw(spriteBatch, projectile.GetPosition());
+                }
+            }
+            foreach (var boomerang in dungeon.GetBoomerangProjectiles())
+            {
+                if (!boomerang.ShouldDestroy)
+                {
+                    boomerang.Draw(_spriteBatch, boomerang.GetPosition());
+                }
+            }
+            foreach (var bomb in dungeon.GetBombProjectiles())
+            {
+                if (!bomb.ShouldDestroy)
+                {
+                    bomb.Draw(_spriteBatch, bomb.GetPosition());
                 }
             }
         }
@@ -468,9 +517,37 @@ public class Game1 : Game
 
             _spriteBatch.End();
 
-            if (currentState == GameState.GameOver || currentState == GameState.Win)
+            if (currentState == GameState.GameOver)
             {
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                _spriteBatch.Draw(blackTexture, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.Black);
+                
+                string gameOverText = "Game Over";
+                Vector2 gameOverSize = font.MeasureString(gameOverText);
+                Vector2 gameOverPos = new Vector2((GraphicsDevice.Viewport.Width - gameOverSize.X) / 2, (GraphicsDevice.Viewport.Height - gameOverSize.Y) / 2 - 30);
+                _spriteBatch.DrawString(font, gameOverText, gameOverPos, Color.Red);
+                
+                string retryText = "r to retry";
+                Vector2 retrySize = font.MeasureString(retryText);
+                Vector2 retryPos = new Vector2((GraphicsDevice.Viewport.Width - retrySize.X) / 2, gameOverPos.Y + gameOverSize.Y + 20);
+                _spriteBatch.DrawString(font, retryText, retryPos, Color.White);
+                _spriteBatch.End();
+            }
+            else if (currentState == GameState.Win)
+            {
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                
+                string winText = "WIN";
+                float winScale = 3.0f;
+                Vector2 winSize = font.MeasureString(winText) * winScale;
+                Vector2 winPos = new Vector2((GraphicsDevice.Viewport.Width - winSize.X) / 2, (GraphicsDevice.Viewport.Height - winSize.Y) / 2 - 150);
+                _spriteBatch.DrawString(font, winText, winPos, Color.Gold, 0f, Vector2.Zero, winScale, SpriteEffects.None, 0f);
+                
+                string restartText = "r to restart";
+                float restartScale = 1.5f;
+                Vector2 restartSize = font.MeasureString(restartText) * restartScale;
+                Vector2 restartPos = new Vector2((GraphicsDevice.Viewport.Width - restartSize.X) / 2, (GraphicsDevice.Viewport.Height - restartSize.Y) / 2 + 150);
+                _spriteBatch.DrawString(font, restartText, restartPos, Color.White, 0f, Vector2.Zero, restartScale, SpriteEffects.None, 0f);
                 _spriteBatch.End();
             }
         }
@@ -502,6 +579,37 @@ public class Game1 : Game
         {
             dungeon.AddProjectile(projectile);
         }
+    }
+
+    public void AddBoomerangProjectile(Sprites.BoomerangProjectile boomerang)
+    {
+        if (dungeon != null)
+        {
+            dungeon.AddBoomerangProjectile(boomerang);
+        }
+    }
+
+    public void AddBombProjectile(Sprites.BombProjectile bomb)
+    {
+        if (dungeon != null)
+        {
+            dungeon.AddBombProjectile(bomb);
+        }
+    }
+
+    public bool HasActiveBoomerang()
+    {
+        if (dungeon != null)
+        {
+            var boomerangs = dungeon.GetBoomerangProjectiles();
+            return boomerangs != null && boomerangs.Count > 0;
+        }
+        return false;
+    }
+
+    public ItemFactory.ItemType? GetItemInSlotB()
+    {
+        return itemInSlotB;
     }
 
     private void LoadRoom(int roomIndex)
@@ -561,7 +669,6 @@ public class Game1 : Game
         rupees = Classes.Inventory.GetRupees();
         keys = Classes.Inventory.GetKeys();
         hasMap = Classes.Inventory.HasMap();
-        levelName = "Level 1";
 
         inventoryItems = new List<ItemFactory.ItemType>();
         selectedInventoryIndex = 0;
@@ -621,9 +728,19 @@ public class Game1 : Game
         string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
         itemLoader = new ItemLoader(items, itemDroper);
         enemyLoader = new EnemyLoader(enemies, itemDroper);
+        if (itemLoader != null)
+        {
+            itemLoader.Reset();
+        }
+        else
+        {
+            itemLoader = new ItemLoader(items, itemDroper);
+        }
+        enemyLoader = new EnemyLoader(enemies);
         dungeon = new DungeonLoader(blocks, itemLoader, enemyLoader, File.ReadAllText(dungeonPath));
         enemyLoader.SetDungeonLoader(dungeon);
         enemyLoader.SetPlayerPositionProvider(() => link.GetPosition());
+        enemyLoader.SetLink(link);
         dungeon.LoadRectangles();
 
         roomManager.SetCurrentRoom(8);
@@ -647,7 +764,7 @@ public class Game1 : Game
 
     private void HandleMinimapClicks()
     {
-        if (minimapHud == null || !hasMap) return;
+        if (minimapHud == null || !Classes.Inventory.HasMap()) return;
 
         var currentMouse = Mouse.GetState();
         var pos = new Point(currentMouse.X, currentMouse.Y);
@@ -797,7 +914,7 @@ public class Game1 : Game
         {
             collectedItems.Add(ItemFactory.ItemType.Bow);
         }
-        if (Classes.Inventory.GetBombs() > 0)
+        if (Classes.Inventory.HasBomb())
         {
             collectedItems.Add(ItemFactory.ItemType.Bomb);
         }

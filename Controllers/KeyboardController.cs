@@ -43,7 +43,7 @@ namespace sprint0.Classes
             pressOnceCommands[Keys.Z] = new AttackCommand(game.link);
             pressOnceCommands[Keys.N] = new AttackCommand(game.link);
             pressOnceCommands[Keys.D3] = new UseItemCommand(game.link, 3);
-            pressOnceCommands[Keys.E] = new DamageCommand(game.link);
+            pressOnceCommands[Keys.E] = new DamageCommand(game.link, 1);
             pressOnceCommands[Keys.T] = new PrevCommand(game.blockCarousel);
             pressOnceCommands[Keys.Y] = new NextCommand(game.blockCarousel);
             pressOnceCommands[Keys.O] = new PrevCommand(game.enemyCarousel);
@@ -68,6 +68,16 @@ namespace sprint0.Classes
         {
             KeyboardState currentState = Keyboard.GetState();
             bool inventoryOpen = isInventoryOpen();
+
+            if (game.currentState == Game1.GameState.GameOver || game.currentState == Game1.GameState.Win)
+            {
+                if (currentState.IsKeyDown(Keys.R) && previousState.IsKeyUp(Keys.R))
+                {
+                    new ResetCommand(game).Execute();
+                }
+                previousState = currentState;
+                return;
+            }
 
             if (inventoryOpen)
             {

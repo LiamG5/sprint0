@@ -19,7 +19,14 @@ namespace sprint0.Sprites
         private bool isDead = false;
         private int health = 10;
         private int invulnerabilityTimer = 0;
-        private const int invulnerabilityDuration = 30; // Half second of invulnerability after being hit
+        private const int invulnerabilityDuration = 30;
+        
+        private enum EnemyState { Normal, Knockback, Invulnerable }
+        private EnemyState currentState = EnemyState.Normal;
+        private float knockbackTimer = 0f;
+        private const float KNOCKBACK_DURATION = 200f;
+        private Vector2 knockbackVelocity = Vector2.Zero;
+        private const float KNOCKBACK_SPEED = 2f;
         private const int BOSS_WIDTH = 72;
         private const int BOSS_HEIGHT = 96;
         private int attackTimer = 0;
@@ -59,56 +66,100 @@ namespace sprint0.Sprites
         {
             animation.Update(gameTime);
             
-            // Update invulnerability timer
-            if (invulnerabilityTimer > 0)
+            float elapsedMs = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            
+            switch (currentState)
             {
-                invulnerabilityTimer--;
+                case EnemyState.Knockback:
+                    float knockbackDistance = KNOCKBACK_SPEED * (elapsedMs / 16.67f);
+                    Vector2 knockbackDirection = knockbackVelocity;
+                    if (knockbackDirection.LengthSquared() > 0)
+                    {
+                        knockbackDirection.Normalize();
+                        position += knockbackDirection * knockbackDistance;
+                    }
+                    knockbackTimer += elapsedMs;
+                    if (knockbackTimer >= KNOCKBACK_DURATION)
+                    {
+                        knockbackTimer = 0f;
+                        knockbackVelocity = Vector2.Zero;
+                        currentState = EnemyState.Invulnerable;
+                        invulnerabilityTimer = invulnerabilityDuration;
+                    }
+                    if (invulnerabilityTimer > 0)
+                    {
+                        invulnerabilityTimer--;
+                    }
+                    break;
+
+                case EnemyState.Invulnerable:
+                    if (invulnerabilityTimer > 0)
+                    {
+                        invulnerabilityTimer--;
+                    }
+                    else
+                    {
+                        currentState = EnemyState.Normal;
+                    }
+                    break;
+
+                case EnemyState.Normal:
+                default:
+                    if (invulnerabilityTimer > 0)
+                    {
+                        invulnerabilityTimer--;
+                    }
+                    break;
             }
             
-            // Check if boss is stuck (hasn't moved)
-            if (Vector2.Distance(position, lastPosition) < 0.5f)
+            // Only do normal movement if not in knockback
+            if (currentState != EnemyState.Knockback)
             {
-                stuckTimer++;
-            }
-            else
-            {
-                stuckTimer = 0;
-                wallCollisionCount = 0; // Reset collision count if moving
-            }
-            lastPosition = position;
-            
-            // If stuck or hit walls too many times, change direction immediately
-            if (stuckTimer >= stuckThreshold || wallCollisionCount >= 2)
-            {
-                stuckTimer = 0;
-                wallCollisionCount = 0;
-                ChooseNewDirection();
-            }
-            
-            // Handle movement - boss is always moving
-            moveTimer++;
-            
-            // Always moving - just update position
-            position += velocity;
-            moveDuration--;
-            
-            // Change direction when timer expires or duration ends
-            if (moveTimer >= moveInterval || moveDuration <= 0)
-            {
-                // Time to change direction
-                moveTimer = 0;
-                moveDuration = maxMoveDuration;
-                
-                // 40% chance to chase player, 60% chance for random movement
-                if (playerPositionProvider != null && random.Next(100) < 40)
+                // Check if boss is stuck (hasn't moved)
+                if (Vector2.Distance(position, lastPosition) < 0.5f)
                 {
-                    isChasing = true;
-                    ChasePlayer();
+                    stuckTimer++;
                 }
                 else
                 {
-                    isChasing = false;
+                    stuckTimer = 0;
+                    wallCollisionCount = 0; // Reset collision count if moving
+                }
+                lastPosition = position;
+                
+                // If stuck or hit walls too many times, change direction immediately
+                if (stuckTimer >= stuckThreshold || wallCollisionCount >= 2)
+                {
+                    stuckTimer = 0;
+                    wallCollisionCount = 0;
                     ChooseNewDirection();
+                }
+                
+                // Handle movement - boss is always moving
+                moveTimer++;
+                
+                // Always moving - just update position
+                position += velocity;
+                moveDuration--;
+                
+                // Change direction when timer expires or duration ends
+                if (moveTimer >= moveInterval || moveDuration <= 0)
+                {
+                    // Time to change direction
+                    moveTimer = 0;
+                    moveDuration = maxMoveDuration;
+                    
+                    // 40% chance to chase player, 60% chance for random movement
+                    if (playerPositionProvider != null && random.Next(100) < 40)
+                    {
+                        isChasing = true;
+                        ChasePlayer();
+                    }
+                    else
+                    {
+                        isChasing = false;
+                        ChooseNewDirection();
+                    }
                 }
             }
             
@@ -248,30 +299,57 @@ namespace sprint0.Sprites
         {
             if (!isDead && bossSpriteSheet != null)
             {
-                // Flash red when invulnerable to show damage feedback
-                Color drawColor = (invulnerabilityTimer > 0 && invulnerabilityTimer % 6 < 3) ? Color.Red : Color.White;
+                Color drawColor = Color.White;
+                if (currentState == EnemyState.Invulnerable || currentState == EnemyState.Knockback)
+                {
+                    drawColor = (invulnerabilityTimer % 6 < 3) ? Color.Red : Color.White;
+                }
                 spriteBatch.Draw(bossSpriteSheet, position, animation.GetFrame(), drawColor, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
             }
         }
 
-        public void TakeDamage()
+        public void TakeDamage(int damage)
         {
-            // Only take damage if not currently invulnerable
-            if (invulnerabilityTimer > 0)
+            if (!(currentState == EnemyState.Invulnerable || currentState == EnemyState.Knockback))
             {
-                return;
+                health -= damage;
+                sprint0.Sounds.SoundStorage.LOZ_Enemy_Hit.Play();
+                
+                System.Diagnostics.Debug.WriteLine($"Boss took damage! Health remaining: {health}");
+                
+                if (health <= 0)
+                {
+                    isDead = true;
+                    sprint0.Sounds.SoundStorage.LOZ_Enemy_Die.Play();
+                }
             }
-            
-            health--;
-            invulnerabilityTimer = invulnerabilityDuration; // Start invulnerability period
-            sprint0.Sounds.SoundStorage.LOZ_Enemy_Hit.Play();
-            
-            System.Diagnostics.Debug.WriteLine($"Boss took damage! Health remaining: {health}");
-            
-            if (health <= 0)
+        }
+
+        public void TakeKnockback(CollisionDirection direction)
+        {
+            if (currentState == EnemyState.Normal && !isDead)
             {
-                isDead = true;
-                sprint0.Sounds.SoundStorage.LOZ_Enemy_Die.Play();
+                switch (direction)
+                {
+                    case CollisionDirection.Left:
+                        knockbackVelocity = new Vector2(KNOCKBACK_SPEED, 0f);
+                        break;
+                    case CollisionDirection.Right:
+                        knockbackVelocity = new Vector2(-KNOCKBACK_SPEED, 0f);
+                        break;
+                    case CollisionDirection.Up:
+                        knockbackVelocity = new Vector2(0f, KNOCKBACK_SPEED);
+                        break;
+                    case CollisionDirection.Down:
+                        knockbackVelocity = new Vector2(0f, -KNOCKBACK_SPEED);
+                        break;
+                    default:
+                        knockbackVelocity = new Vector2(KNOCKBACK_SPEED, 0f);
+                        break;
+                }
+
+                currentState = EnemyState.Knockback;
+                knockbackTimer = 0f;
             }
         }
 
@@ -307,33 +385,44 @@ namespace sprint0.Sprites
                 case Link link:
                     break;
 
-                case IAttack attack when attack.BlocksMovement():
-                    TakeDamage();
+                case LinkAttackHitbox hitbox when hitbox.BlocksMovement():
+                    TakeKnockback(direction);
+                    break;
+
+                case Projectile projectile when !projectile.IsEnemyProjectile:
+                    TakeKnockback(direction);
                     break;
                     
                 case DungeonLongWall wall when wall.BlocksMovement():
-                    // Track wall collision and change direction immediately
-                    wallCollisionCount++;
-                    ChooseNewDirection();
-                    moveDuration = maxMoveDuration;
-                    moveTimer = 0;
+                    HandleBlockCollision(wall, direction);
                     break;
 
                 case DungeonTallWall wall when wall.BlocksMovement():
-                    // Track wall collision and change direction immediately
-                    wallCollisionCount++;
-                    ChooseNewDirection();
-                    moveDuration = maxMoveDuration;
-                    moveTimer = 0;
+                    HandleBlockCollision(wall, direction);
                     break;
 
                 case IBlock block when block.BlocksMovement():
-                    // Track block collision and change direction immediately
-                    wallCollisionCount++;
-                    ChooseNewDirection();
-                    moveDuration = maxMoveDuration;
-                    moveTimer = 0;
+                    HandleBlockCollision(block, direction);
                     break;
+            }
+        }
+
+        private void HandleBlockCollision(ICollidable block, CollisionDirection direction)
+        {
+            if (currentState == EnemyState.Knockback)
+            {
+                knockbackVelocity = Vector2.Zero;
+                var collisionResponse = new CollisionResponse();
+                Vector2 resolvedPosition = collisionResponse.ResolveCollisionDirection(
+                    this.GetBounds(), block.GetBounds(), direction);
+                position = resolvedPosition;
+            }
+            else
+            {
+                wallCollisionCount++;
+                ChooseNewDirection();
+                moveDuration = maxMoveDuration;
+                moveTimer = 0;
             }
         }
     }

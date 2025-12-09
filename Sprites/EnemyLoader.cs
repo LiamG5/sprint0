@@ -26,6 +26,7 @@ namespace sprint0.Sprites
         // Store references for boss spawning
         private DungeonLoader dungeonLoader;
         private Func<Vector2> playerPositionProvider;
+        private Link link;
 
     
         public EnemyLoader(EnemySpriteFactory enemies, ItemDroper itemDroper)
@@ -255,10 +256,10 @@ namespace sprint0.Sprites
 
         private void Room16Enemies()
         {
-            enemyList.Add(enemies.SpawnBladeTrap(new Vector2(ColStart + ColMult * 0, RowStart + RowMult * 0)));
-            enemyList.Add(enemies.SpawnBladeTrap(new Vector2(ColStart + ColMult * 11, RowStart + RowMult * 0)));
-            enemyList.Add(enemies.SpawnBladeTrap(new Vector2(ColStart + ColMult * 0, RowStart + RowMult * 6)));
-            enemyList.Add(enemies.SpawnBladeTrap(new Vector2(ColStart + ColMult * 11, RowStart + RowMult * 6)));
+            enemyList.Add(enemies.SpawnBladeTrap(new Vector2(ColStart + ColMult * 0, RowStart + RowMult * 0), link));
+            enemyList.Add(enemies.SpawnBladeTrap(new Vector2(ColStart + ColMult * 11, RowStart + RowMult * 0), link));
+            enemyList.Add(enemies.SpawnBladeTrap(new Vector2(ColStart + ColMult * 0, RowStart + RowMult * 6), link));
+            enemyList.Add(enemies.SpawnBladeTrap(new Vector2(ColStart + ColMult * 11, RowStart + RowMult * 6), link));
         }
 
         private void Room17Enemies()
@@ -296,6 +297,11 @@ namespace sprint0.Sprites
         public void SetPlayerPositionProvider(Func<Vector2> provider)
         {
             this.playerPositionProvider = provider;
+        }
+
+        public void SetLink(Link link)
+        {
+            this.link = link;
         }
     }
 }

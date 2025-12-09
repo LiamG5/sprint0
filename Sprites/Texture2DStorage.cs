@@ -18,6 +18,7 @@ namespace sprint0.Sprites
 	public static Texture2D miscSpriteSheet;
 	public static Texture2D dungeonBorder;
 	public static Texture2D hudSpriteSheet;
+	public static Texture2D hudMainSpriteSheet;
 	public static SpriteFont font;
 	
 	private static GraphicsDevice graphicsDevice;
@@ -34,6 +35,7 @@ namespace sprint0.Sprites
 		miscSpriteSheet = Content.Load<Texture2D>("legendofzelda_misccharacters_sheet");
 		dungeonBorder = Content.Load<Texture2D>("Room2Border");
 		hudSpriteSheet = Content.Load<Texture2D>("Sprites/legendofzelda_hud_sheet");
+		hudMainSpriteSheet = Content.Load<Texture2D>("Sprites/legendofzelda_HUD");
 		font = Content.Load<SpriteFont>("Font/font");
 	}
 
@@ -41,7 +43,6 @@ namespace sprint0.Sprites
 	{
 		return linkSpriteSheet;
 	}
-
 	public static Texture2D GetBlockSpriteSheet()
 	{
 		return blockSpriteSheet;
@@ -70,6 +71,10 @@ namespace sprint0.Sprites
 	public static Texture2D GetHudSpriteSheet()
 	{
 		return hudSpriteSheet;
+	}
+	public static Texture2D GetHudMainSpriteSheet()
+	{
+		return hudMainSpriteSheet;
 	}
 	public static SpriteFont GetFont()
 	{

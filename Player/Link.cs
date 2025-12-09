@@ -28,8 +28,8 @@ namespace sprint0.Classes
 		public Vector2 position { get; set; } = new Vector2(400, 200);
 		public Vector2 velocity { get; set; } = new Vector2(0, 0);
 
-		private const int PLAYER_WIDTH = 48;
-		private const int PLAYER_HEIGHT = 48;
+		private const int PLAYER_WIDTH = 44;
+		private const int PLAYER_HEIGHT = 44;
 		public LinkAttackHitbox linkAttackHitbox;
 		public Link(SpriteBatch spriteBatch, Game1 game)
 		{
@@ -132,41 +132,10 @@ namespace sprint0.Classes
 				ChangeState(new AttackState(this, linkAnimation, linkAttackHitbox));
 			}
 		}
+		
 		public void FireSwordBeam()
-		{			
-			Rectangle sourceRect = new Rectangle(0, 0, 0, 0);
-			Vector2 velocity = new Vector2(0, 0);
-			Vector2 startPosition = position;
-			
-			switch (direction)
-			{
-				case Direction.Up:
-					sourceRect = new Rectangle(60, 220, 22, 22); 
-					velocity = new Vector2(0, -8);
-					break;
-				case Direction.Down:
-					sourceRect = new Rectangle(0, 220, 22, 22); 
-					velocity = new Vector2(0, 8);
-					break;
-				case Direction.Left:
-					sourceRect = new Rectangle(26, 225, 22, 22);
-					velocity = new Vector2(-8, 0);
-					break;
-				case Direction.Right:
-					sourceRect = new Rectangle(85, 225, 22, 22);
-					velocity = new Vector2(8, 0);
-					break;
-			}
-						
-			var swordBeam = new sprint0.Sprites.Projectile(
-				sprint0.Sprites.Texture2DStorage.GetLinkSpriteSheet(), 
-				sourceRect, 
-				position, 
-				velocity, 
-				damage: 2, 
-				isEnemyProjectile: false
-			);			
-
+		{
+			var swordBeam = sprint0.Sprites.Projectiles.ProjectileSwordBeam.Create(position, direction);
 			game.AddProjectile(swordBeam);
 		}
 
@@ -174,17 +143,91 @@ namespace sprint0.Classes
 		{
 			ChangeState(new ItemState(this, linkAnimation, 1));
 		}
-		public void UseItem2()
+	public void UseItem2()
+	{
+		if (game != null)
 		{
-			ChangeState(new ItemState(this, linkAnimation, 2));
+			var itemInSlotB = game.GetItemInSlotB();
+			if (itemInSlotB.HasValue)
+			{
+				if (itemInSlotB.Value == sprint0.Sprites.ItemFactory.ItemType.Boomerang || 
+				    itemInSlotB.Value == sprint0.Sprites.ItemFactory.ItemType.MagicalBoomerang)
+				{
+					ThrowBoomerang();
+					return;
+				}
+				else if (itemInSlotB.Value == sprint0.Sprites.ItemFactory.ItemType.Bomb)
+				{
+					if (Inventory.UseBomb())
+					{
+						DropBomb();
+						return;
+					}
+				}
+			}
 		}
+		ChangeState(new ItemState(this, linkAnimation, 2));
+	}
+
+	private void ThrowBoomerang()
+	{
+		if (game.HasActiveBoomerang())
+		{
+			return;
+		}
+		
+		Rectangle sourceRect = new Rectangle(40 * 7, 40 * 0, 15, 16);
+		Vector2 velocity = new Vector2(0, 0);
+		Vector2 startPosition = position + new Vector2(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2);
+		
+		switch (direction)
+		{
+			case Direction.Up:
+				velocity = new Vector2(0, -6);
+				break;
+			case Direction.Down:
+				velocity = new Vector2(0, 6);
+				break;
+			case Direction.Left:
+				velocity = new Vector2(-6, 0);
+				break;
+			case Direction.Right:
+				velocity = new Vector2(6, 0);
+				break;
+		}
+		
+		var boomerang = new sprint0.Sprites.BoomerangProjectile(
+			sprint0.Sprites.Texture2DStorage.GetItemSpriteSheet(),
+			sourceRect,
+			startPosition,
+			velocity,
+			this
+		);
+		
+		game.AddBoomerangProjectile(boomerang);
+	}
+
+	private void DropBomb()
+	{
+		Rectangle sourceRect = new Rectangle(40 * 5, 40 * 0, 15, 16);
+		Vector2 startPosition = position + new Vector2(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2);
+		
+		var bomb = new sprint0.Sprites.BombProjectile(
+			sprint0.Sprites.Texture2DStorage.GetItemSpriteSheet(),
+			sourceRect,
+			startPosition
+		);
+		
+		game.AddBombProjectile(bomb);
+	}
+
 		public void UseItem3()
 		{
 			ChangeState(new ItemState(this, linkAnimation, 3));
 		}
-		public void TakeDamage()
+		public void TakeDamage(int damage)
 		{
-			Inventory.TakeDamage(1);
+			Inventory.TakeDamage(damage);
 
 			if (Inventory.IsDead())
 			{
@@ -199,6 +242,11 @@ namespace sprint0.Classes
 		public void UseMagic()
 		{
 			ChangeState(new MagicState(this, linkAnimation));
+		}
+
+		public void Win()
+		{
+			ChangeState(new WinState(this, linkAnimation));
 		}
 
 		public Rectangle GetBounds()
@@ -273,7 +321,7 @@ namespace sprint0.Classes
 		
 		private void HandleEnemyCollision(ICollidable enemy, Collisions.CollisionDirection direction)
 		{
-			TakeDamage();
+			TakeDamage(1);
 
 			switch (direction)
 			{
