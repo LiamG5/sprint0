@@ -27,6 +27,7 @@ namespace sprint0.Classes
         {
             this.game = game;
             this.isInventoryOpen = isInventoryOpen ?? (() => false);
+            this.previousState = Keyboard.GetState();
             InitializeKeyMappings();
         }
 
