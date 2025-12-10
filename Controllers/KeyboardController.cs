@@ -9,6 +9,8 @@ using sprint0.Classes;
 using sprint0.Sprites;
 using sprint0.Commands;
 using sprint0.PlayerStates;
+using System.Linq;
+using sprint0.Cheats;
 
 
 namespace sprint0.Classes
@@ -21,13 +23,14 @@ namespace sprint0.Classes
         private Dictionary<Keys, ICommand> pressOnceCommands;
         private Dictionary<Keys, ICommand> holdCommands;
         private Func<bool> isInventoryOpen;
+        private CheatCodes cheatCodes;
         
-
         public KeyboardController(Game1 game, ISprite linkSprite, Func<bool> isInventoryOpen = null)
         {
             this.game = game;
             this.isInventoryOpen = isInventoryOpen ?? (() => false);
             this.previousState = Keyboard.GetState();
+            cheatCodes = new CheatCodes();
             InitializeKeyMappings();
         }
 
@@ -67,6 +70,7 @@ namespace sprint0.Classes
 
         public void Update()
         {
+            
             KeyboardState currentState = Keyboard.GetState();
             bool inventoryOpen = isInventoryOpen();
 
@@ -78,6 +82,15 @@ namespace sprint0.Classes
                 }
                 previousState = currentState;
                 return;
+            }
+
+             if (!inventoryOpen){
+                Keys[] pressedKeys = currentState.GetPressedKeys();
+                foreach (Keys key in pressedKeys){
+                    if (previousState.IsKeyUp(key)){
+                            cheatCodes.AddKeyPress(key);
+                    }
+                }
             }
 
             if (inventoryOpen)
@@ -115,11 +128,13 @@ namespace sprint0.Classes
                 {
                     Keys key = kvp.Key;
                     ICommand command = kvp.Value;
+
                     
                     if (currentState.IsKeyDown(key) && previousState.IsKeyUp(key))
                     {
-                        command.Execute();
+                        command.Execute();                        
                         
+
                         if (key == Keys.T || key == Keys.Y)
                         {
                             game.tile = game.blockCarousel.GetCurrentBlock();
@@ -159,7 +174,9 @@ namespace sprint0.Classes
                     }
                 }
             }
-
+            if(cheatCodes.CheatCodeCheck != 0)
+            cheatCodes.Update();
+            
             previousState = currentState;
         }
     }

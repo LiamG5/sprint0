@@ -24,6 +24,7 @@ namespace sprint0.Classes
         private static bool map = false;
         private static bool bomb = true;
         private static bool enemiesFrozen = false;
+        private static bool superLink = false;
 
         private static int roomNum = 1;
 
@@ -84,6 +85,16 @@ namespace sprint0.Classes
         {
             return enemiesFrozen;
         }
+
+        public static void SetSuperLink()
+        {
+            superLink = true;
+        }
+        public static bool GetSuperLink()
+        {
+            return superLink;
+        }
+
 
         public static void UnfreezeEnemies()
         {
