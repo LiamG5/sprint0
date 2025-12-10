@@ -11,7 +11,6 @@ namespace sprint0.Classes
 {
 	public class Portal : ISprite, ICollidable
 	{
-		private SpriteBatch spriteBatch;
 		private Texture2D portals;
 		public readonly Rectangle startPortalSrc = new Rectangle(16 * 5, 16 * 22, 16, 16);
 		public readonly Rectangle endPortalSrc = new Rectangle(16 * 5, 16 * 23, 16, 16);
@@ -21,10 +20,9 @@ namespace sprint0.Classes
 
 		private static KeyboardState previousKeyState = Keyboard.GetState();
 
-		public Portal(SpriteBatch spriteBatch, Vector2 position)
+		public Portal(Vector2 position)
 		{
 			this.portals = sprint0.Sprites.Texture2DStorage.enemiesSpriteSheet;
-			this.spriteBatch = spriteBatch;
 			this.position = position;
 		}
 		public void Update(GameTime gameTime)
@@ -77,7 +75,7 @@ namespace sprint0.Classes
 					Portal target = (this == StartPortalInstance) ? EndPortalInstance : StartPortalInstance;
 					if (target == null) return;
 					Vector2 teleportPosition = target.position;
-					teleportPosition.Y += 48;
+					teleportPosition.Y += 45;
 					link.HandleCollisionResponse(teleportPosition);
 					break;
 			}
@@ -92,18 +90,18 @@ namespace sprint0.Classes
 				if (StartPortalInstance == null)
 				{
 					Vector2 startPos = game.link.GetPosition();
-					StartPortalInstance = new Portal(spriteBatch, startPos);
+					StartPortalInstance = new Portal(startPos);
 				}
 				// else if end portal not set -> create end portal at Link's current position
 				else if (EndPortalInstance == null)
 				{
 					Vector2 endPos = game.link.GetPosition();
-					EndPortalInstance = new Portal(spriteBatch, endPos);
+					EndPortalInstance = new Portal(endPos);
 				}
 				else
 				{
 					// both exist: start a new pair by replacing start and clearing end
-					StartPortalInstance = new Portal(spriteBatch, game.link.GetPosition());
+					StartPortalInstance = new Portal(game.link.GetPosition());
 					EndPortalInstance = null;
 				}
 			}
