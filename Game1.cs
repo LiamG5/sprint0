@@ -244,6 +244,7 @@ public class Game1 : Game
         itemCarousel = new ItemCarousel(items, _spriteBatch);
 
         string dungeonPath = Path.Combine(Content.RootDirectory, "Dungeon/Room2.csv");
+        // string dungeonPath = "C:\\Users\\Rei\\Source\\Repos\\sprint0\\Content\\Dungeon\\SecretRoom.csv";
         itemDroper = new ItemDroper();
         itemLoader = new ItemLoader(items, itemDroper);
         enemyLoader = new EnemyLoader(enemies, itemDroper);
@@ -301,6 +302,7 @@ public class Game1 : Game
             { 14, new GoToRoom15Command(this) },
             { 15, new GoToRoom16Command(this) },
             { 16, new GoToRoom17Command(this) },
+            { 17, new GoToSecretRoomCommand(this) },
         };
 
         Classes.Inventory.Reset();
@@ -773,6 +775,7 @@ public class Game1 : Game
             { 14, new GoToRoom15Command(this) },
             { 15, new GoToRoom16Command(this) },
             { 16, new GoToRoom17Command(this) },
+            { 17, new GoToSecretRoomCommand(this) },
         };
 
         if (transitionManager == null)

@@ -115,6 +115,9 @@ namespace sprint0.Sprites
                 case 17:
                     Room17Enemies();
                     break;
+                case 18:
+                    SecretRoomEnemies();
+                    break;
                 default:
                     break;
             }
@@ -267,6 +270,13 @@ namespace sprint0.Sprites
             enemyList.Add(enemies.SpawnRedGoriya(new Vector2(ColStart + ColMult * 7, RowStart + RowMult * 0)));
             enemyList.Add(enemies.SpawnRedGoriya(new Vector2(ColStart + ColMult * 6, RowStart + RowMult * 2)));
             enemyList.Add(enemies.SpawnRedGoriya(new Vector2(ColStart + ColMult * 7, RowStart + RowMult * 4)));
+        }
+
+        private void SecretRoomEnemies()
+        {
+            enemyList.Add(enemies.SpawnKeese(new Vector2(ColStart + ColMult * 5, RowStart + RowMult * 3)));
+            enemyList.Add(enemies.SpawnKeese(new Vector2(ColStart + ColMult * 6, RowStart + RowMult * 3)));
+            enemyList.Add(enemies.SpawnKeese(new Vector2(ColStart + ColMult * 7, RowStart + RowMult * 3)));
         }
 
         
