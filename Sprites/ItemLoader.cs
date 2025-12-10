@@ -128,7 +128,7 @@ namespace sprint0.Sprites
 
         private void Room1Items()
         {
-            
+            itemList.Add(items.BuildRecoveryHeart(new Vector2(420, 240)));
             itemList.Add(items.BuildSmallKey(new Vector2(478, 384)));
         }
 

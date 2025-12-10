@@ -303,10 +303,10 @@ public class Game1 : Game
         hasMap = Classes.Inventory.HasMap();
 
         // Set up room manager and load initial room
-        roomManager.SetCurrentRoom(8);
-        dungeon.SetRoomManager(roomManager, 8);
-        itemLoader.LoadItems(8);
-        enemyLoader.LoadEnemies(8);
+        roomManager.SetCurrentRoom(2);
+        dungeon.SetRoomManager(roomManager, 2);
+        itemLoader.LoadItems(2);
+        enemyLoader.LoadEnemies(2);
 
         collisionUpdater = new CollisionUpdater(dungeon, link);
         collisionUpdater.getList();

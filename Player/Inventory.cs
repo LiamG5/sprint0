@@ -69,6 +69,12 @@ namespace sprint0.Classes
             health = maxHealth;
         }
 
+        public static void GetHeartContainer()
+        {
+            maxHealth += 1;
+            AddHealth(1);
+        }
+
         public static void GetClock()
         {
             enemiesFrozen = true;
