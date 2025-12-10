@@ -136,6 +136,7 @@ namespace sprint0.Classes
                 }
 
                 bool anyMovementKeyPressed = false;
+
                 foreach (var kvp in holdCommands)
                 {
                     Keys key = kvp.Key;
@@ -147,6 +148,7 @@ namespace sprint0.Classes
                         anyMovementKeyPressed = true;
                     }
                 }
+                game.KeyboardMovementActive = anyMovementKeyPressed;
 
                 if (!anyMovementKeyPressed)
                 {

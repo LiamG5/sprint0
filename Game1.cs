@@ -26,6 +26,7 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch;
 
     private List<IController> controllers;
+    public bool KeyboardMovementActive = false;
 
     public ISprite tile;
     public ISprite enemy;
@@ -84,6 +85,7 @@ public class Game1 : Game
 
     private Dictionary<int, ICommand> mapCellCommands;
     private MouseController mouse;
+    private Esp32Controller esp32;
 
     private Texture2D _minimapOverlay;
     private static readonly Color _minimapColor = new Color(255, 0, 0, 96);
@@ -94,6 +96,7 @@ public class Game1 : Game
     public enum GameState { Gameplay, Pause, Inventory, GameOver, Win };
     public GameState currentState { get; set; } = GameState.Gameplay;
     private int roomIndex;
+
 
     public Game1()
     {
@@ -249,6 +252,8 @@ public class Game1 : Game
         controllers = new List<IController>();
         keyboard = new KeyboardController(this, null, () => currentState == GameState.Inventory);
         controllers.Add(keyboard);
+        esp32 = new Esp32Controller(this);
+        controllers.Add(esp32);
 
         mapCellCommands = new Dictionary<int, ICommand>
         {
@@ -685,6 +690,15 @@ public class Game1 : Game
         controllers = new List<IController>();
         keyboard = new KeyboardController(this, null, () => currentState == GameState.Inventory);
         controllers.Add(keyboard);
+        if (esp32 != null)
+        {
+            controllers.Add(esp32);
+        }
+        else
+        {
+            esp32 = new Esp32Controller(this);
+            controllers.Add(esp32);
+        }
 
         mapCellCommands = new Dictionary<int, ICommand>
         {
