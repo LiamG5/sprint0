@@ -18,6 +18,8 @@ namespace sprint0.HUD
         private readonly int cols;
         private readonly int cellWidth;
         private readonly int cellHeight;
+        private readonly int? manualStartRow;
+        private readonly int? manualEndRow;
         private readonly Texture2D pixelTexture;
         private double flashTimer = 0;
         private const double FlashInterval = 0.5;
@@ -46,7 +48,9 @@ namespace sprint0.HUD
             GraphicsDevice graphicsDevice,
             int rows = 6, int cols = 6, int cellSize = 14,
             Func<bool> hasCompass = null,
-            Func<int> getTriforceRoom = null)
+            Func<int> getTriforceRoom = null,
+            int? manualStartRow = null,
+            int? manualEndRow = null)
         {
             this.getCurrentRoom = getCurrentRoom;
             this.hasMap = hasMap;
@@ -58,6 +62,8 @@ namespace sprint0.HUD
             this.cols = cols;
             this.cellWidth = cellSize;
             this.cellHeight = cellSize;
+            this.manualStartRow = manualStartRow;
+            this.manualEndRow = manualEndRow;
 
             pixelTexture = new Texture2D(graphicsDevice, 1, 1);
             pixelTexture.SetData(new[] { Color.White });
@@ -89,6 +95,13 @@ namespace sprint0.HUD
 
         private void GetVisibleRowRange(out int startRow, out int endRow)
         {
+            if (manualStartRow.HasValue && manualEndRow.HasValue)
+            {
+                startRow = manualStartRow.Value;
+                endRow = manualEndRow.Value;
+                return;
+            }
+
             int currentRoom = getCurrentRoom();
             int currentRoomRow = GetRoomRow(currentRoom);
 
