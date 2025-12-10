@@ -449,6 +449,8 @@ public class Game1 : Game
             }
         }
 
+        Portal.HandleInput(Keyboard.GetState(), null, this, _spriteBatch);
+
         if (currentState != previousState)
         {
             if (currentState == GameState.Win)
@@ -512,7 +514,7 @@ public class Game1 : Game
                 }
             }
         }
-
+        Portal.DrawAll(_spriteBatch);
         itemLoader.Draw(spriteBatch);
         HandleRoomSpecifics(spriteBatch);
     }
