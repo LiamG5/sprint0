@@ -95,6 +95,7 @@ public class Game1 : Game
 
     public enum GameState { Gameplay, Pause, Inventory, GameOver, Win };
     public GameState currentState { get; set; } = GameState.Gameplay;
+    private GameState previousState = GameState.Gameplay;
     private int roomIndex;
 
 
@@ -421,6 +422,21 @@ public class Game1 : Game
                 }
             }
         }
+
+        if (currentState != previousState)
+        {
+            if (currentState == GameState.Win)
+            {
+                esp32?.SendWin();
+            }
+            else if (currentState == GameState.GameOver)
+            {
+                esp32?.SendLose();
+            }
+
+            previousState = currentState;
+        }
+        
         base.Update(gameTime);
     }
 
