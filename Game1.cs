@@ -47,6 +47,7 @@ public class Game1 : Game
     private Texture2D blockSheet;
     private SpriteFont font;
     public Link link;
+    public GhostLink ghostLink;
     private KeyboardController keyboard;
     public int state;
     private KeyboardState previousKeyboardState;
@@ -54,6 +55,7 @@ public class Game1 : Game
     private RoomManager roomManager;
     private RoomTransitionManager transitionManager;
     private Song bgm;
+    private Vector2 initialPosition = new Vector2(360, 375);
 
     // HUD
     private HUD.HudManager hud;
@@ -95,7 +97,7 @@ public class Game1 : Game
 
     public enum GameState { Gameplay, Pause, Inventory, GameOver, Win };
     public GameState currentState { get; set; } = GameState.Gameplay;
-    private int roomIndex;
+    private int roomIndex = 2;
 
 
     public Game1()
@@ -108,6 +110,16 @@ public class Game1 : Game
         _graphics.PreferredBackBufferHeight = 620;
         _graphics.IsFullScreen = false;
         _graphics.ApplyChanges();
+        
+        this.Exiting += OnGameExiting;
+    }
+    
+    private void OnGameExiting(object sender, System.EventArgs e)
+    {
+        if (link != null)
+        {
+            link.SaveReplay();
+        }
     }
 
     protected override void Initialize()
@@ -141,7 +153,11 @@ public class Game1 : Game
             GraphicsDevice.Viewport.Height
         );
 
-        link = new Link(_spriteBatch, this);
+        link = new Link(_spriteBatch, this, initialPosition);
+        link.position = initialPosition;
+        link.direction = Link.Direction.Up;
+        ghostLink = new GhostLink();
+
         roomManager = new RoomManager(link, this, transitionManager);
 
         hud = new HUD.HudManager();
@@ -217,7 +233,7 @@ public class Game1 : Game
         enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
         itemCarousel = new ItemCarousel(items, _spriteBatch);
 
-        string dungeonPath = Path.Combine(Content.RootDirectory, "Dungeon/Room8.csv");
+        string dungeonPath = Path.Combine(Content.RootDirectory, "Dungeon/Room2.csv");
         itemDroper = new ItemDroper();
         itemLoader = new ItemLoader(items, itemDroper);
         enemyLoader = new EnemyLoader(enemies, itemDroper);
@@ -290,10 +306,10 @@ public class Game1 : Game
         //levelName = "Level 1";
 
         // Set up room manager and load initial room
-        roomManager.SetCurrentRoom(8);
-        dungeon.SetRoomManager(roomManager, 8);
-        itemLoader.LoadItems(8);
-        enemyLoader.LoadEnemies(8);
+        roomManager.SetCurrentRoom(2);
+        dungeon.SetRoomManager(roomManager, 2);
+        itemLoader.LoadItems(2);
+        enemyLoader.LoadEnemies(2);
 
         collisionUpdater = new CollisionUpdater(dungeon, link);
         collisionUpdater.getList();
@@ -304,7 +320,7 @@ public class Game1 : Game
         currentState = GameState.Gameplay;
 
         System.Console.WriteLine("[LoadContent] completed");
-        roomIndex = 8;
+        roomIndex = 2;
     }
 
     protected override void Update(GameTime gameTime)
@@ -337,6 +353,9 @@ public class Game1 : Game
             if (currentState == GameState.Gameplay)
             {
                 link.Update(gameTime);
+                if (ghostLink != null) {
+                    ghostLink.Update(gameTime, roomIndex);
+                }
                 collisionUpdater.Update();
                 dungeon.Update(gameTime);
 
@@ -434,6 +453,11 @@ public class Game1 : Game
             {
                 e.Draw(spriteBatch, e.GetPosition());
             }
+        }
+
+        if (ghostLink != null)
+        {
+            ghostLink.Draw(spriteBatch, roomIndex);
         }
 
         if (link != null)
@@ -578,6 +602,8 @@ public class Game1 : Game
     public void GoToRoom16() => LoadRoom(16);
     public void GoToRoom17() => LoadRoom(17);
 
+    public int GetCurrentRoomIndex() => roomIndex;
+
     public void AddProjectile(Sprites.Projectile projectile)
     {
         if (dungeon != null)
@@ -675,11 +701,20 @@ public class Game1 : Game
         keys = Classes.Inventory.GetKeys();
         hasMap = Classes.Inventory.HasMap();
 
+        link.SaveReplay();
+        if (ghostLink != null)
+        {
+            ghostLink.Reset();
+        }
+
+
         inventoryItems = new List<ItemFactory.ItemType>();
         selectedInventoryIndex = 0;
         itemInSlotB = null;
 
-        link = new Link(_spriteBatch, this);
+        link = new Link(_spriteBatch, this, initialPosition);
+        link.position = initialPosition;
+        link.direction = Link.Direction.Up;
 
         blockCarousel = new BlockCarousel(blocks, _spriteBatch);
         enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
@@ -739,7 +774,7 @@ public class Game1 : Game
 
         roomManager = new RoomManager(link, this, transitionManager);
 
-        string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
+        string dungeonPath = Path.Combine(Content.RootDirectory, "Dungeon/Room2.csv");
         itemLoader = new ItemLoader(items, itemDroper);
         enemyLoader = new EnemyLoader(enemies, itemDroper);
         if (itemLoader != null)
@@ -757,10 +792,10 @@ public class Game1 : Game
         enemyLoader.SetLink(link);
         dungeon.LoadRectangles();
 
-        roomManager.SetCurrentRoom(8);
-        dungeon.SetRoomManager(roomManager, 8);
-        itemLoader.LoadItems(8);
-        enemyLoader.LoadEnemies(8);
+        roomManager.SetCurrentRoom(2);
+        dungeon.SetRoomManager(roomManager, 2);
+        itemLoader.LoadItems(2);
+        enemyLoader.LoadEnemies(2);
 
         collisionUpdater = new CollisionUpdater(dungeon, link);
         collisionUpdater.getList();
@@ -771,7 +806,7 @@ public class Game1 : Game
         currentState = GameState.Gameplay;
 
         System.Console.WriteLine("[ResetGame] Game reset complete");
-        roomIndex = 1;
+        roomIndex = 2;
     }
 
     private MouseState previousMouseState;
