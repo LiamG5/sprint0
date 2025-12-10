@@ -59,7 +59,7 @@ public class Game1 : Game
 
     // HUD
     private HUD.HudManager hud;
-    private HUD.MinimapHud minimapHud;
+    private HUD.MinimapHud minimapTopHud;
     private SpriteFont hudFont;
 
     // temp HUD data
@@ -167,18 +167,27 @@ public class Game1 : Game
 
         hud.Add(new HUD.LevelLabelHud(() => $"Level {roomManager.GetRoomLevel(roomManager.CurrentRoomId)}", hudFont, HUD.HudConstants.LevelLabelPos));
 
-        minimapHud = new HUD.MinimapHud(
+        const int minimapCellSize = 12;
+        const int minimapCellWidth = 15;
+
+        Vector2 minimapPos = HUD.HudConstants.MinimapPos;
+
+        minimapTopHud = new HUD.MinimapHud(
             () => roomManager.CurrentRoomId,
             () => Classes.Inventory.HasMap(),
             (roomId) => roomManager.GetRoomConnections(roomId),
-            HUD.HudConstants.MinimapPos,
+            minimapPos,
             GraphicsDevice,
             rows: 6,
             cols: 6,
-            cellSize: 16,
+            cellSize: minimapCellSize,
             () => Classes.Inventory.HasCompass(),
-            () => 15);
-        hud.Add(minimapHud);
+            () => 15,
+            manualStartRow: 0,
+            manualEndRow: 5,
+            cellWidth: minimapCellWidth);
+
+        hud.Add(minimapTopHud);
 
         hud.Add(new HUD.InventorySlotsHud(
             () => itemInSlotB,
@@ -822,7 +831,7 @@ public class Game1 : Game
     private void HandleMinimapClicks()
     {
         if (!Classes.Inventory.HasMap()) return;
-        if (minimapHud == null) return;
+        if (minimapTopHud == null) return;
 
         var currentMouse = Mouse.GetState();
         var pos = new Point(currentMouse.X, currentMouse.Y);
@@ -830,7 +839,8 @@ public class Game1 : Game
         if (currentMouse.LeftButton == ButtonState.Pressed &&
             previousMouseState.LeftButton == ButtonState.Released)
         {
-            var roomNum = minimapHud.GetRoomAtPoint(pos);
+            int? roomNum = minimapTopHud.GetRoomAtPoint(pos);
+
             if (roomNum.HasValue && roomNum.Value >= 1 && roomNum.Value <= 17)
             {
                 LoadRoom(roomNum.Value);
