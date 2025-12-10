@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using sprint0.Classes;
 using sprint0.Interfaces;
 using System;
 using Color = Microsoft.Xna.Framework.Color;
@@ -13,6 +14,7 @@ namespace sprint0.Classes
         private LinkSprite linkSprite;
 
         private LinkObjectSprite linkObjSprite;
+        private Link player;
 
 
 
@@ -20,6 +22,11 @@ namespace sprint0.Classes
         {
             this.linkSprite = new LinkSprite();
             this.linkObjSprite = new LinkObjectSprite();
+        }
+
+        public void SetPlayer(Link player)
+        {
+            this.player = player;
         }
            
         public void ChangeColor(Color color)
@@ -252,9 +259,30 @@ namespace sprint0.Classes
         }
         public void LinkUseItem2(float totalTime, float currentTime)
         {
-            linkObjSprite.LinkObjDrawItem2();
-                linkSprite.LinkDrawUseItem1();
-            
+            // Directional bow draw without overlaying bow sprite (body only)
+            if (player != null)
+            {
+                switch (player.direction)
+                {
+                    case Link.Direction.Up:
+                        linkSprite.LinkDrawStandingUp();
+                        break;
+                    case Link.Direction.Down:
+                        linkSprite.LinkDrawStandingDown();
+                        break;
+                    case Link.Direction.Left:
+                        linkSprite.LinkDrawStandingLeft();
+                        break;
+                    case Link.Direction.Right:
+                    default:
+                        linkSprite.LinkDrawStandingRight();
+                        break;
+                }
+            }
+            else
+            {
+                linkSprite.LinkDrawStandingRight();
+            }
         }
         public void LinkUseItem3(float totalTime, float currentTime)
         {
@@ -380,7 +408,6 @@ namespace sprint0.Classes
             linkSprite.UpdateColor(color);
             linkSprite.Draw(spriteBatch, position);
             linkObjSprite.Draw(spriteBatch, position);
-            
         }
     }
 }

@@ -16,12 +16,19 @@ namespace sprint0.Sprites
         private int damage;
         private bool isEnemyProjectile;
         private bool shouldDestroy;
+        private SpriteEffects spriteEffects;
         private const int PROJECTILE_WIDTH = 16;
         private const int PROJECTILE_HEIGHT = 16;
         private float scale = 3.0f;
 
         public Projectile(Texture2D texture, Rectangle sourceRect, Vector2 startPosition, 
                          Vector2 velocity, int damage, bool isEnemyProjectile)
+            : this(texture, sourceRect, startPosition, velocity, damage, isEnemyProjectile, SpriteEffects.None)
+        {
+        }
+
+        public Projectile(Texture2D texture, Rectangle sourceRect, Vector2 startPosition, 
+                         Vector2 velocity, int damage, bool isEnemyProjectile, SpriteEffects spriteEffects)
         {
             this.texture = texture;
             this.sourceRectangle = sourceRect;
@@ -30,6 +37,7 @@ namespace sprint0.Sprites
             this.damage = damage;
             this.isEnemyProjectile = isEnemyProjectile;
             this.shouldDestroy = false;
+            this.spriteEffects = spriteEffects;
         }
 
         public bool IsEnemyProjectile => isEnemyProjectile;
@@ -46,7 +54,7 @@ namespace sprint0.Sprites
             {
                 spriteBatch.Draw(texture, drawPosition, sourceRectangle, 
                                Color.White, 0f, Vector2.Zero, scale, 
-                               SpriteEffects.None, 0f);
+                               spriteEffects, 0f);
             }
         }
 

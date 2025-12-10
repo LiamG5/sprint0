@@ -134,7 +134,7 @@ namespace sprint0.Sprites
 
         private void Room2Items()
         {
-            
+            itemList.Add(items.BuildBow(new Vector2(400, 300)));
         }
 
         private void Room3Items()
