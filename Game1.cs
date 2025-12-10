@@ -252,6 +252,7 @@ public class Game1 : Game
         enemyLoader.SetDungeonLoader(dungeon);
         enemyLoader.SetPlayerPositionProvider(() => link.GetPosition());
         enemyLoader.SetLink(link);
+        itemDroper.SetPlayerPositionProvider(() => link.GetPosition());
 
         dungeon.LoadRectangles();
 
@@ -796,6 +797,7 @@ public class Game1 : Game
         enemyLoader.SetDungeonLoader(dungeon);
         enemyLoader.SetPlayerPositionProvider(() => link.GetPosition());
         enemyLoader.SetLink(link);
+        itemDroper.SetPlayerPositionProvider(() => link.GetPosition());
         dungeon.LoadRectangles();
 
         roomManager.SetCurrentRoom(2);

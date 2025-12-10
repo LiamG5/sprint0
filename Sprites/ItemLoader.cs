@@ -245,11 +245,16 @@ namespace sprint0.Sprites
             }
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {       
         
         if(itemDroper.HasItem())
         itemList.Add(itemDroper.GetItem());
+
+        foreach (IItem item in itemList)
+        {
+            item.Update(gameTime);
+        }
 
         } 
         public List<IItem> GetItems()

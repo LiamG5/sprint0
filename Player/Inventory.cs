@@ -23,6 +23,7 @@ namespace sprint0.Classes
         private static bool compass = false;
         private static bool map = false;
         private static bool bomb = true;
+        private static bool enemiesFrozen = false;
 
         private static int roomNum = 1;
 
@@ -49,6 +50,7 @@ namespace sprint0.Classes
             compass = false;
             map = false;
             bomb = true;
+            enemiesFrozen = false;
         }
 
         // Health methods
@@ -65,6 +67,21 @@ namespace sprint0.Classes
         public static void GetFairy()
         {
             health = maxHealth;
+        }
+
+        public static void GetClock()
+        {
+            enemiesFrozen = true;
+        }
+
+        public static bool AreEnemiesFrozen()
+        {
+            return enemiesFrozen;
+        }
+
+        public static void UnfreezeEnemies()
+        {
+            enemiesFrozen = false;
         }
         public static int GetMaxHealth()
         {
@@ -258,12 +275,10 @@ namespace sprint0.Classes
             health = maxHealth;
         }
 
-        
-
-         
         public static void PingRoomNum(int i)
         {
             roomNum = i;
+            UnfreezeEnemies();
         }
     }
 }

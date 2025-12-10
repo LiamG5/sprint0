@@ -67,6 +67,7 @@ namespace sprint0.Sprites
             {
                 case Link link:
                     Collect();
+                    Inventory.GetClock();
                     break;
             }
         }
