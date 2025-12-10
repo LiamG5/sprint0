@@ -57,8 +57,7 @@ public class Game1 : Game
 
     // HUD
     private HUD.HudManager hud;
-    private HUD.MinimapHud minimapTopHud;
-    private HUD.MinimapHud minimapBottomHud;
+    private HUD.MinimapHud minimapHud;
     private SpriteFont hudFont;
 
     // temp HUD data
@@ -68,7 +67,7 @@ public class Game1 : Game
     private int arrows = 0;
     private int rupees = 0;
     private int keys = 0;
-    private bool hasMap = true; // TODO: Connect to actual map item
+    private bool hasMap = true;
 
     // Inventory system
     private HUD.InventoryMenu inventoryMenu;
@@ -152,42 +151,18 @@ public class Game1 : Game
 
         hud.Add(new HUD.LevelLabelHud(() => $"Level {roomManager.GetRoomLevel(roomManager.CurrentRoomId)}", hudFont, HUD.HudConstants.LevelLabelPos));
 
-        const int minimapCellSize = 16;
-        const int minimapVisibleRows = 3;
-
-        Vector2 minimapTopPos = HUD.HudConstants.MinimapPos;
-        Vector2 minimapBottomPos = HUD.HudConstants.MinimapPos + new Vector2(0, minimapVisibleRows * minimapCellSize + 4);
-
-        minimapTopHud = new HUD.MinimapHud(
+        minimapHud = new HUD.MinimapHud(
             () => roomManager.CurrentRoomId,
             () => Classes.Inventory.HasMap(),
             (roomId) => roomManager.GetRoomConnections(roomId),
-            minimapTopPos,
+            HUD.HudConstants.MinimapPos,
             GraphicsDevice,
             rows: 6,
             cols: 6,
-            cellSize: minimapCellSize,
+            cellSize: 16,
             () => Classes.Inventory.HasCompass(),
-            () => 15,
-            manualStartRow: 0,
-            manualEndRow: 2);
-
-        minimapBottomHud = new HUD.MinimapHud(
-            () => roomManager.CurrentRoomId,
-            () => Classes.Inventory.HasMap(),
-            (roomId) => roomManager.GetRoomConnections(roomId),
-            minimapBottomPos,
-            GraphicsDevice,
-            rows: 6,
-            cols: 6,
-            cellSize: minimapCellSize,
-            () => Classes.Inventory.HasCompass(),
-            () => 15,
-            manualStartRow: 3,
-            manualEndRow: 5);
-
-        hud.Add(minimapTopHud);
-        hud.Add(minimapBottomHud);
+            () => 15);
+        hud.Add(minimapHud);
 
         hud.Add(new HUD.InventorySlotsHud(
             () => itemInSlotB,
@@ -302,10 +277,6 @@ public class Game1 : Game
             { 16, new GoToRoom17Command(this) },
         };
 
-        mouse = new MouseController(mapRect, MapRows, MapCols, mapCellCommands);
-        controllers.Add(mouse);
-
-        // Initialize Inventory state
         Classes.Inventory.Reset();
         hearts = Classes.Inventory.GetHealth();
         maxHearts = Classes.Inventory.GetMaxHealth();
@@ -313,9 +284,7 @@ public class Game1 : Game
         rupees = Classes.Inventory.GetRupees();
         keys = Classes.Inventory.GetKeys();
         hasMap = Classes.Inventory.HasMap();
-        //levelName = "Level 1";
 
-        // Set up room manager and load initial room
         roomManager.SetCurrentRoom(8);
         dungeon.SetRoomManager(roomManager, 8);
         itemLoader.LoadItems(8);
@@ -508,7 +477,6 @@ public class Game1 : Game
         }
 
         itemLoader.Draw(spriteBatch);
-        //enemyLoader.Draw(spriteBatch);
         HandleRoomSpecifics(spriteBatch);
     }
 
@@ -557,7 +525,6 @@ public class Game1 : Game
             }
             else
             {
-                // Normal drawing
                 DrawGameWorld(_spriteBatch);
             }
 
@@ -567,12 +534,12 @@ public class Game1 : Game
             {
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                 _spriteBatch.Draw(blackTexture, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.Black);
-                
+
                 string gameOverText = "Game Over";
                 Vector2 gameOverSize = font.MeasureString(gameOverText);
                 Vector2 gameOverPos = new Vector2((GraphicsDevice.Viewport.Width - gameOverSize.X) / 2, (GraphicsDevice.Viewport.Height - gameOverSize.Y) / 2 - 30);
                 _spriteBatch.DrawString(font, gameOverText, gameOverPos, Color.Red);
-                
+
                 string retryText = "r to retry";
                 Vector2 retrySize = font.MeasureString(retryText);
                 Vector2 retryPos = new Vector2((GraphicsDevice.Viewport.Width - retrySize.X) / 2, gameOverPos.Y + gameOverSize.Y + 20);
@@ -582,13 +549,13 @@ public class Game1 : Game
             else if (currentState == GameState.Win)
             {
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-                
+
                 string winText = "WIN";
                 float winScale = 3.0f;
                 Vector2 winSize = font.MeasureString(winText) * winScale;
                 Vector2 winPos = new Vector2((GraphicsDevice.Viewport.Width - winSize.X) / 2, (GraphicsDevice.Viewport.Height - winSize.Y) / 2 - 150);
                 _spriteBatch.DrawString(font, winText, winPos, Color.Gold, 0f, Vector2.Zero, winScale, SpriteEffects.None, 0f);
-                
+
                 string restartText = "r to restart";
                 float restartScale = 1.5f;
                 Vector2 restartSize = font.MeasureString(restartText) * restartScale;
@@ -762,9 +729,6 @@ public class Game1 : Game
             { 16, new GoToRoom17Command(this) },
         };
 
-        mouse = new MouseController(mapRect, MapRows, MapCols, mapCellCommands);
-        controllers.Add(mouse);
-
         if (transitionManager == null)
         {
             transitionManager = new RoomTransitionManager(
@@ -820,7 +784,7 @@ public class Game1 : Game
     private void HandleMinimapClicks()
     {
         if (!Classes.Inventory.HasMap()) return;
-        if (minimapTopHud == null && minimapBottomHud == null) return;
+        if (minimapHud == null) return;
 
         var currentMouse = Mouse.GetState();
         var pos = new Point(currentMouse.X, currentMouse.Y);
@@ -828,18 +792,7 @@ public class Game1 : Game
         if (currentMouse.LeftButton == ButtonState.Pressed &&
             previousMouseState.LeftButton == ButtonState.Released)
         {
-            int? roomNum = null;
-
-            if (minimapTopHud != null)
-            {
-                roomNum = minimapTopHud.GetRoomAtPoint(pos);
-            }
-
-            if (!roomNum.HasValue && minimapBottomHud != null)
-            {
-                roomNum = minimapBottomHud.GetRoomAtPoint(pos);
-            }
-
+            var roomNum = minimapHud.GetRoomAtPoint(pos);
             if (roomNum.HasValue && roomNum.Value >= 1 && roomNum.Value <= 17)
             {
                 LoadRoom(roomNum.Value);
