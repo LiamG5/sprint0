@@ -20,6 +20,7 @@ namespace sprint0.Classes
         private bool showTriforce;
         private int triforceFrameNum = 0;
         private static Vector2 positionOffset = new Vector2(0,-12);
+        private Link.Direction bowDirection = Link.Direction.Down;
         
         
         public LinkObjectSprite()
@@ -43,8 +44,15 @@ namespace sprint0.Classes
         //heart
          public void LinkObjDrawItem2()
         {
-            item = itemFactory.BuildBoomerang();
+            item = itemFactory.BuildBow();
             show = true;
+        }
+        // bow with direction
+        public void LinkObjDrawBow(Link.Direction direction)
+        {
+            item = itemFactory.BuildBow();
+            show = true;
+            bowDirection = direction;
         }
         //rupee
          public void LinkObjDrawItem3()
@@ -67,7 +75,22 @@ namespace sprint0.Classes
         {
             if (show)
             {
-                Vector2 drawPosition = position + (positionOffset * 3.0f);
+                Vector2 drawPosition = position;
+                switch (bowDirection)
+                {
+                    case Link.Direction.Up:
+                        drawPosition += new Vector2(0, -8);
+                        break;
+                    case Link.Direction.Down:
+                        drawPosition += new Vector2(0, 8);
+                        break;
+                    case Link.Direction.Left:
+                        drawPosition += new Vector2(-8, 0);
+                        break;
+                    case Link.Direction.Right:
+                        drawPosition += new Vector2(8, 0);
+                        break;
+                }
                 item.Draw(spriteBatch, drawPosition);
             }
             if (showTriforce)

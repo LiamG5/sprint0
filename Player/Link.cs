@@ -40,6 +40,7 @@ namespace sprint0.Classes
 			this.spriteBatch = spriteBatch;
 			this.game = game;
 			this.linkAnimation = new LinkAnimation();
+			this.linkAnimation.SetPlayer(this);
 			this.state = new IdleState(this, linkAnimation);
 			this.linkAttackHitbox = new LinkAttackHitbox();
 			
@@ -158,11 +159,19 @@ namespace sprint0.Classes
 			}
 		}
 		
-		public void FireSwordBeam()
-		{
-			var swordBeam = sprint0.Sprites.Projectiles.ProjectileSwordBeam.Create(position, direction);
-			game.AddProjectile(swordBeam);
-		}
+	public void FireSwordBeam()
+	{
+		var swordBeam = sprint0.Sprites.Projectiles.ProjectileSwordBeam.Create(position, direction);
+		game.AddProjectile(swordBeam);
+	}
+
+	private void FireArrow()
+	{
+		Vector2 startPosition = position + new Vector2(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2);
+		var arrow = sprint0.Sprites.Projectiles.ProjectileArrow.Create(startPosition, direction);
+		game.AddProjectile(arrow);
+		sprint0.Sounds.SoundStorage.LOZ_Arrow_Boomerang.Play();
+	}
 
 		public void UseItem1()
 		{
@@ -186,6 +195,16 @@ namespace sprint0.Classes
 					if (Inventory.UseBomb())
 					{
 						DropBomb();
+						return;
+					}
+				}
+				else if (itemInSlotB.Value == sprint0.Sprites.ItemFactory.ItemType.Bow
+				      || itemInSlotB.Value == sprint0.Sprites.ItemFactory.ItemType.SilverArrow)
+				{
+					if (Inventory.HasBow() && Inventory.SpendRupees(1))
+					{
+						FireArrow();
+						ChangeState(new ItemState(this, linkAnimation, 2));
 						return;
 					}
 				}
