@@ -36,13 +36,13 @@ namespace sprint0.Collisions
             allCollidables.AddRange(dungeonLoader.GetEnemies());
             allCollidables.AddRange(dungeonLoader.GetItems());
 
-            if (Portal.StartPortalInstance != null)
+            if (sprint0.Classes.Portal.StartPortalInstance != null)
             {
-                allCollidables.Add(Portal.StartPortalInstance);
+                allCollidables.Add(sprint0.Classes.Portal.StartPortalInstance);
             }
-            if (Portal.EndPortalInstance != null)
+            if (sprint0.Classes.Portal.EndPortalInstance != null)
             {
-                allCollidables.Add(Portal.EndPortalInstance);
+                allCollidables.Add(sprint0.Classes.Portal.EndPortalInstance);
             }
 
         }
@@ -64,13 +64,13 @@ namespace sprint0.Collisions
             allCollidables.AddRange(dungeonLoader.GetItems());
             allCollidables.AddRange(dungeonLoader.GetTransitionZones());
 
-            if (Portal.StartPortalInstance != null)
+            if (sprint0.Classes.Portal.StartPortalInstance != null)
             {
-                allCollidables.Add(Portal.StartPortalInstance);
+                allCollidables.Add(sprint0.Classes.Portal.StartPortalInstance);
             }
-            if (Portal.EndPortalInstance != null)
+            if (sprint0.Classes.Portal.EndPortalInstance != null)
             {
-                allCollidables.Add(Portal.EndPortalInstance);
+                allCollidables.Add(sprint0.Classes.Portal.EndPortalInstance);
             }
 
             for (int i = 0; i < allCollidables.Count; i++)
