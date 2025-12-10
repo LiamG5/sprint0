@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Sprites;
+using System.IO;
+using System.Collections.Generic;
 
 
 namespace sprint0.Classes
@@ -20,18 +22,20 @@ namespace sprint0.Classes
 		private LinkAnimation linkAnimation = new LinkAnimation();
 
 		private GameTime time;
+		
+		private System.Collections.Generic.List<string> replayData;
 	
 
 		public enum Direction { Up, Down, Left, Right };
-		public Direction direction { get; private set; } = Direction.Right;
+		public Direction direction { get; set; } = Direction.Up;
 
-		public Vector2 position { get; set; } = new Vector2(400, 200);
+		public Vector2 position { get; set; } = new Vector2(384, 440);
 		public Vector2 velocity { get; set; } = new Vector2(0, 0);
 
 		private const int PLAYER_WIDTH = 44;
 		private const int PLAYER_HEIGHT = 44;
 		public LinkAttackHitbox linkAttackHitbox;
-		public Link(SpriteBatch spriteBatch, Game1 game)
+		public Link(SpriteBatch spriteBatch, Game1 game, Vector2 position)
 		{
 			this.spriteBatch = spriteBatch;
 			this.game = game;
@@ -39,6 +43,7 @@ namespace sprint0.Classes
 			this.state = new IdleState(this, linkAnimation);
 			this.linkAttackHitbox = new LinkAttackHitbox();
 			
+			replayData = new List<string>();
 		}
 
 		public void Update(GameTime gameTime)
@@ -47,6 +52,26 @@ namespace sprint0.Classes
 			state.UseState();
 			position += velocity;
 			linkAnimation.Update(gameTime);
+			
+			try
+			{
+				int roomNumber = game.GetCurrentRoomIndex();
+				string stateName = state.GetType().Name;
+				replayData.Add($"{position.X},{position.Y},{(int)direction},{roomNumber},{stateName}");
+
+			}
+			catch (System.Exception ex) {}
+		}
+		
+		
+		public void SaveReplay()
+		{
+			try
+			{
+				System.IO.File.WriteAllLines("link_replay.txt", replayData);
+				replayData.Clear();
+			}
+			catch (System.Exception ex) {}
 		}
 
 		public void Draw(SpriteBatch spriteBatch)
@@ -269,10 +294,10 @@ namespace sprint0.Classes
 			return position;
 		}
 		
-		public void HandleCollisionResponse(Vector2 newPosition)
-		{
-			position = newPosition;
-		}
+	public void HandleCollisionResponse(Vector2 newPosition)
+	{
+		position = newPosition;
+	}
 	
 		public void OnCollision(ICollidable other, Collisions.CollisionDirection direction)
 		{

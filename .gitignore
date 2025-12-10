@@ -12,3 +12,4 @@ Content/bin/
 Content/obj/
 *.mgcontent
 *.mgstats
+link_replay.txt

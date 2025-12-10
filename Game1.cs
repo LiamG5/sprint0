@@ -47,6 +47,7 @@ public class Game1 : Game
     private Texture2D blockSheet;
     private SpriteFont font;
     public Link link;
+    public GhostLink ghostLink;
     private KeyboardController keyboard;
     public int state;
     private KeyboardState previousKeyboardState;
@@ -54,6 +55,7 @@ public class Game1 : Game
     private RoomManager roomManager;
     private RoomTransitionManager transitionManager;
     private Song bgm;
+    private Vector2 initialPosition = new Vector2(360, 375);
 
     // HUD
     private HUD.HudManager hud;
@@ -67,7 +69,7 @@ public class Game1 : Game
     private int arrows = 0;
     private int rupees = 0;
     private int keys = 0;
-    private bool hasMap = true; // TODO: Connect to actual map item
+    private bool hasMap = true;
 
     // Inventory system
     private HUD.InventoryMenu inventoryMenu;
@@ -96,7 +98,7 @@ public class Game1 : Game
     public enum GameState { Gameplay, Pause, Inventory, GameOver, Win };
     public GameState currentState { get; set; } = GameState.Gameplay;
     private GameState previousState = GameState.Gameplay;
-    private int roomIndex;
+    private int roomIndex = 2;
 
 
     public Game1()
@@ -109,6 +111,16 @@ public class Game1 : Game
         _graphics.PreferredBackBufferHeight = 620;
         _graphics.IsFullScreen = false;
         _graphics.ApplyChanges();
+        
+        this.Exiting += OnGameExiting;
+    }
+    
+    private void OnGameExiting(object sender, System.EventArgs e)
+    {
+        if (link != null)
+        {
+            link.SaveReplay();
+        }
     }
 
     protected override void Initialize()
@@ -142,7 +154,11 @@ public class Game1 : Game
             GraphicsDevice.Viewport.Height
         );
 
-        link = new Link(_spriteBatch, this);
+        link = new Link(_spriteBatch, this, initialPosition);
+        link.position = initialPosition;
+        link.direction = Link.Direction.Up;
+        ghostLink = new GhostLink();
+
         roomManager = new RoomManager(link, this, transitionManager);
 
         hud = new HUD.HudManager();
@@ -227,7 +243,7 @@ public class Game1 : Game
         enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
         itemCarousel = new ItemCarousel(items, _spriteBatch);
 
-        string dungeonPath = Path.Combine(Content.RootDirectory, "Dungeon/Room8.csv");
+        string dungeonPath = Path.Combine(Content.RootDirectory, "Dungeon/Room2.csv");
         itemDroper = new ItemDroper();
         itemLoader = new ItemLoader(items, itemDroper);
         enemyLoader = new EnemyLoader(enemies, itemDroper);
@@ -286,10 +302,6 @@ public class Game1 : Game
             { 16, new GoToRoom17Command(this) },
         };
 
-        mouse = new MouseController(mapRect, MapRows, MapCols, mapCellCommands);
-        controllers.Add(mouse);
-
-        // Initialize Inventory state
         Classes.Inventory.Reset();
         hearts = Classes.Inventory.GetHealth();
         maxHearts = Classes.Inventory.GetMaxHealth();
@@ -297,7 +309,6 @@ public class Game1 : Game
         rupees = Classes.Inventory.GetRupees();
         keys = Classes.Inventory.GetKeys();
         hasMap = Classes.Inventory.HasMap();
-        //levelName = "Level 1";
 
         // Set up room manager and load initial room
         roomManager.SetCurrentRoom(8);
@@ -314,7 +325,7 @@ public class Game1 : Game
         currentState = GameState.Gameplay;
 
         System.Console.WriteLine("[LoadContent] completed");
-        roomIndex = 8;
+        roomIndex = 2;
     }
 
     protected override void Update(GameTime gameTime)
@@ -347,6 +358,9 @@ public class Game1 : Game
             if (currentState == GameState.Gameplay)
             {
                 link.Update(gameTime);
+                if (ghostLink != null) {
+                    ghostLink.Update(gameTime, roomIndex);
+                }
                 collisionUpdater.Update();
                 dungeon.Update(gameTime);
 
@@ -461,6 +475,11 @@ public class Game1 : Game
             }
         }
 
+        if (ghostLink != null)
+        {
+            ghostLink.Draw(spriteBatch, roomIndex);
+        }
+
         if (link != null)
         {
             link.Draw(spriteBatch);
@@ -492,7 +511,6 @@ public class Game1 : Game
         }
 
         itemLoader.Draw(spriteBatch);
-        //enemyLoader.Draw(spriteBatch);
         HandleRoomSpecifics(spriteBatch);
     }
 
@@ -541,7 +559,6 @@ public class Game1 : Game
             }
             else
             {
-                // Normal drawing
                 DrawGameWorld(_spriteBatch);
             }
 
@@ -551,12 +568,12 @@ public class Game1 : Game
             {
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                 _spriteBatch.Draw(blackTexture, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.Black);
-                
+
                 string gameOverText = "Game Over";
                 Vector2 gameOverSize = font.MeasureString(gameOverText);
                 Vector2 gameOverPos = new Vector2((GraphicsDevice.Viewport.Width - gameOverSize.X) / 2, (GraphicsDevice.Viewport.Height - gameOverSize.Y) / 2 - 30);
                 _spriteBatch.DrawString(font, gameOverText, gameOverPos, Color.Red);
-                
+
                 string retryText = "r to retry";
                 Vector2 retrySize = font.MeasureString(retryText);
                 Vector2 retryPos = new Vector2((GraphicsDevice.Viewport.Width - retrySize.X) / 2, gameOverPos.Y + gameOverSize.Y + 20);
@@ -566,13 +583,13 @@ public class Game1 : Game
             else if (currentState == GameState.Win)
             {
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-                
+
                 string winText = "WIN";
                 float winScale = 3.0f;
                 Vector2 winSize = font.MeasureString(winText) * winScale;
                 Vector2 winPos = new Vector2((GraphicsDevice.Viewport.Width - winSize.X) / 2, (GraphicsDevice.Viewport.Height - winSize.Y) / 2 - 150);
                 _spriteBatch.DrawString(font, winText, winPos, Color.Gold, 0f, Vector2.Zero, winScale, SpriteEffects.None, 0f);
-                
+
                 string restartText = "r to restart";
                 float restartScale = 1.5f;
                 Vector2 restartSize = font.MeasureString(restartText) * restartScale;
@@ -602,6 +619,8 @@ public class Game1 : Game
     public void GoToRoom15() => LoadRoom(15);
     public void GoToRoom16() => LoadRoom(16);
     public void GoToRoom17() => LoadRoom(17);
+
+    public int GetCurrentRoomIndex() => roomIndex;
 
     public void AddProjectile(Sprites.Projectile projectile)
     {
@@ -700,11 +719,20 @@ public class Game1 : Game
         keys = Classes.Inventory.GetKeys();
         hasMap = Classes.Inventory.HasMap();
 
+        link.SaveReplay();
+        if (ghostLink != null)
+        {
+            ghostLink.Reset();
+        }
+
+
         inventoryItems = new List<ItemFactory.ItemType>();
         selectedInventoryIndex = 0;
         itemInSlotB = null;
 
-        link = new Link(_spriteBatch, this);
+        link = new Link(_spriteBatch, this, initialPosition);
+        link.position = initialPosition;
+        link.direction = Link.Direction.Up;
 
         blockCarousel = new BlockCarousel(blocks, _spriteBatch);
         enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
@@ -746,9 +774,6 @@ public class Game1 : Game
             { 16, new GoToRoom17Command(this) },
         };
 
-        mouse = new MouseController(mapRect, MapRows, MapCols, mapCellCommands);
-        controllers.Add(mouse);
-
         if (transitionManager == null)
         {
             transitionManager = new RoomTransitionManager(
@@ -764,7 +789,7 @@ public class Game1 : Game
 
         roomManager = new RoomManager(link, this, transitionManager);
 
-        string dungeonPath = Path.Combine(Content.RootDirectory, "dungeon.csv");
+        string dungeonPath = Path.Combine(Content.RootDirectory, "Dungeon/Room2.csv");
         itemLoader = new ItemLoader(items, itemDroper);
         enemyLoader = new EnemyLoader(enemies, itemDroper);
         if (itemLoader != null)
@@ -782,10 +807,10 @@ public class Game1 : Game
         enemyLoader.SetLink(link);
         dungeon.LoadRectangles();
 
-        roomManager.SetCurrentRoom(8);
-        dungeon.SetRoomManager(roomManager, 8);
-        itemLoader.LoadItems(8);
-        enemyLoader.LoadEnemies(8);
+        roomManager.SetCurrentRoom(2);
+        dungeon.SetRoomManager(roomManager, 2);
+        itemLoader.LoadItems(2);
+        enemyLoader.LoadEnemies(2);
 
         collisionUpdater = new CollisionUpdater(dungeon, link);
         collisionUpdater.getList();
@@ -796,7 +821,7 @@ public class Game1 : Game
         currentState = GameState.Gameplay;
 
         System.Console.WriteLine("[ResetGame] Game reset complete");
-        roomIndex = 1;
+        roomIndex = 2;
     }
 
     private MouseState previousMouseState;
