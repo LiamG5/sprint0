@@ -280,7 +280,7 @@ namespace sprint0.Sprites
                     sprite.Update(gameTime);
                 }
             }
-            itemLoader.Update();
+            itemLoader.Update(gameTime);
             enemyLoader.Update();
             foreach (var boomerang in boomerangProjectiles)
             {

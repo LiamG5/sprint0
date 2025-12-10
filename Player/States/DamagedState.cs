@@ -53,7 +53,9 @@ namespace sprint0.PlayerStates
             }
         }
 
-        public void Exit() { }
+        public void Exit() { 
+            linkAnimation.ChangeColor(Color.White);
+        }
     }
 
 }

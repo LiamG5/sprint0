@@ -10,19 +10,21 @@ namespace sprint0.Sprites
 {
     public class ItemRecoveryHeart : IItem {
 
-        private Texture2D itemSS;
         private Vector2 position;
         private bool isCollected = false;
-        private static int ItemRow = 1;
-        private static int ItemCol = 6;
-        private  Rectangle block = new Rectangle(40*ItemCol, 40*ItemRow, 15, 16);
+        private ItemRecoveryHeartRed heartRed;
+        private ItemRecoveryHeartBlue heartBlue;
+        private bool isRedFrame = true;
+        private float colorTimer = 0f;
+        private const float COLOR_SWITCH_INTERVAL = 0.3f;
         private const int ITEM_WIDTH = 45;
         private const int ITEM_HEIGHT = 48;
 
         public ItemRecoveryHeart(Texture2D sheet, Vector2 startPosition)
         {
-            itemSS = sheet;
             position = startPosition;
+            heartRed = new ItemRecoveryHeartRed(sheet, startPosition);
+            heartBlue = new ItemRecoveryHeartBlue(sheet, startPosition);
         }
 
         public ItemRecoveryHeart(Texture2D sheet) : this(sheet, new Vector2(200, 100))
@@ -31,12 +33,30 @@ namespace sprint0.Sprites
 
         public void Update(GameTime gameTime)
         {
-            
+            if (!isCollected)
+            {
+                colorTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (colorTimer >= COLOR_SWITCH_INTERVAL)
+                {
+                    isRedFrame = !isRedFrame;
+                    colorTimer = 0f;
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 drawPosition)
         {
-            spriteBatch.Draw(itemSS, drawPosition, block, Color.White, 0f, Vector2.Zero, 2.0f, SpriteEffects.None, 0f);
+            if (!isCollected)
+            {
+                if (isRedFrame)
+                {
+                    heartRed.Draw(spriteBatch, drawPosition, 1.0f);
+                }
+                else
+                {
+                    heartBlue.Draw(spriteBatch, drawPosition + new Vector2(-8, -8), 2.0f);
+                }
+            }
         }
 
         public Rectangle GetBounds()
@@ -78,6 +98,8 @@ namespace sprint0.Sprites
         public void Collect()
         {
             isCollected = true;
+            heartRed.Collect();
+            heartBlue.Collect();
         }
     }
 }

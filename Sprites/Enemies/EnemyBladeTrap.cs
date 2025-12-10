@@ -94,6 +94,11 @@ namespace sprint0.Sprites
 
         public void Update(GameTime gameTime)
         {
+            if (sprint0.Classes.Inventory.AreEnemiesFrozen())
+            {
+                return;
+            }
+
             switch (currentState)
             {
                 case TrapState.Idle:
