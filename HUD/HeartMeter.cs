@@ -28,8 +28,8 @@ namespace sprint0.HUD
             var itemSpriteSheet = Texture2DStorage.GetItemSpriteSheet();
             if (itemSpriteSheet != null)
             {
-                fullHeartItem = new ItemRecoveryHeart(itemSpriteSheet);
-                emptyHeartItem = new ItemEmptyHeart(itemSpriteSheet);
+                fullHeartItem = new ItemRecoveryHeartRed(itemSpriteSheet);
+                emptyHeartItem = new ItemRecoveryHeartBlue(itemSpriteSheet);
             }
         }
 

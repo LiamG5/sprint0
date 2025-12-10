@@ -17,13 +17,18 @@ namespace sprint0.Sprites
         private bool spawnItem = false;
 
         private Vector2 position;
-        
+        private Func<Vector2> playerPositionProvider;
 
 
         public ItemDroper()
         {
             this.items = ItemFactory.Instance;
             this.item =  null;
+        }
+
+        public void SetPlayerPositionProvider(Func<Vector2> provider)
+        {
+            this.playerPositionProvider = provider;
         }
 
        
@@ -37,7 +42,7 @@ namespace sprint0.Sprites
             // random item
             if(itemType == 0)
             {
-                itemType = rand.Next(0, 5); 
+                itemType = rand.Next(0, 6); 
                 spawnItem = true;
             }
             else
@@ -52,7 +57,7 @@ namespace sprint0.Sprites
                     item = items.BuildRupee(position);
                     break;
                 case 1:
-                    item = items.BuildFairy(position);
+                    item = items.BuildFairy(position, playerPositionProvider);
                     break;
                 case 2:
                     item = items.BuildBomb(position);
@@ -62,6 +67,9 @@ namespace sprint0.Sprites
                     break;
                 case 4:
                     item = items.BuildRecoveryHeart(position);
+                    break;
+                case 5:
+                    item = items.BuildClock(position);
                     break;
 
             }
