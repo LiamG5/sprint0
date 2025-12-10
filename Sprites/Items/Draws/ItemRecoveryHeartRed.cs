@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Interfaces;
 using sprint0.Classes;
@@ -8,24 +8,24 @@ using Microsoft.Xna.Framework.Content;
 
 namespace sprint0.Sprites
 {
-    public class ItemHeartContainer : IItem {
+    public class ItemRecoveryHeartRed : IItem {
 
         private Texture2D itemSS;
         private Vector2 position;
         private bool isCollected = false;
         private static int ItemRow = 1;
         private static int ItemCol = 6;
-        private Rectangle block = new Rectangle(40*ItemCol, 40*ItemRow, 15, 16);
+        private Rectangle block = new Rectangle(40 * ItemCol, 40 * ItemRow, 15, 16);
         private const int ITEM_WIDTH = 45;
         private const int ITEM_HEIGHT = 48;
 
-        public ItemHeartContainer(Texture2D sheet, Vector2 startPosition)
+        public ItemRecoveryHeartRed(Texture2D sheet, Vector2 startPosition)
         {
             itemSS = sheet;
             position = startPosition;
         }
 
-        public ItemHeartContainer(Texture2D sheet) : this(sheet, new Vector2(200, 100))
+        public ItemRecoveryHeartRed(Texture2D sheet) : this(sheet, new Vector2(200, 100))
         {
         }
 
@@ -38,7 +38,15 @@ namespace sprint0.Sprites
         {
             if (!isCollected)
             {
-                spriteBatch.Draw(itemSS, drawPosition, block, Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(itemSS, drawPosition, block, Color.White, 0f, Vector2.Zero, 2.0f, SpriteEffects.None, 0f);
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Vector2 drawPosition, float scale)
+        {
+            if (!isCollected)
+            {
+                spriteBatch.Draw(itemSS, drawPosition, block, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
             }
         }
 
@@ -67,8 +75,8 @@ namespace sprint0.Sprites
             switch (other)
             {
                 case Link link:
+                    Inventory.AddHealth(2);
                     Collect();
-                    Inventory.GetHeartContainer();
                     break;
             }
         }
@@ -84,3 +92,4 @@ namespace sprint0.Sprites
         }
     }
 }
+

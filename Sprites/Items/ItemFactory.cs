@@ -463,5 +463,11 @@ namespace sprint0.Sprites
             currItem = ItemType.Fairy;
             return new ItemFairy(itemSpritesheet, position);
         }
+
+        public IItem BuildFairy(Vector2 position, Func<Vector2> targetProvider)
+        {
+            currItem = ItemType.Fairy;
+            return new ItemFairy(itemSpritesheet, position, targetProvider);
+        }
     }
 }

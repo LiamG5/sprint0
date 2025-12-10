@@ -26,14 +26,14 @@ namespace sprint0.Managers
             this.link = link;
             this.game = game;
             this.transitionManager = transitionManager;
-            this.currentRoomId = 8;
+            this.currentRoomId = 2;
             this.visitedRooms = new HashSet<int>();
             this.roomTypes = new Dictionary<int, RoomType>();
             this.roomLevels = new Dictionary<int, int>();
             SetupRoomConnections();
             SetupRoomTypes();
             SetupRoomLevels();
-            MarkRoomVisited(8);
+            MarkRoomVisited(2);
         }
         
         public RoomManager(Link link, Game1 game)
@@ -41,14 +41,14 @@ namespace sprint0.Managers
             this.link = link;
             this.game = game;
             this.transitionManager = null;
-            this.currentRoomId = 8;
+            this.currentRoomId = 2;
             this.visitedRooms = new HashSet<int>();
             this.roomTypes = new Dictionary<int, RoomType>();
             this.roomLevels = new Dictionary<int, int>();
             SetupRoomConnections();
             SetupRoomTypes();
             SetupRoomLevels();
-            MarkRoomVisited(8);
+            MarkRoomVisited(2);
         }
 
         private void SetupRoomConnections()

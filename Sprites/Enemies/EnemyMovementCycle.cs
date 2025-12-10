@@ -60,6 +60,11 @@ namespace sprint0.Sprites.Enemies
 
         public Vector2 Move()
         {
+            if (sprint0.Classes.Inventory.AreEnemiesFrozen())
+            {
+                return position;
+            }
+
             if (targetProvider != null)
             {
                 // --- Chase AI: move toward target in cardinal directions ---

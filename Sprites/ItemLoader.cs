@@ -128,7 +128,7 @@ namespace sprint0.Sprites
 
         private void Room1Items()
         {
-            
+            itemList.Add(items.BuildRecoveryHeart(new Vector2(420, 240)));
             itemList.Add(items.BuildSmallKey(new Vector2(478, 384)));
         }
 
@@ -245,11 +245,16 @@ namespace sprint0.Sprites
             }
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {       
         
         if(itemDroper.HasItem())
         itemList.Add(itemDroper.GetItem());
+
+        foreach (IItem item in itemList)
+        {
+            item.Update(gameTime);
+        }
 
         } 
         public List<IItem> GetItems()
