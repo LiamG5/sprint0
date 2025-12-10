@@ -187,7 +187,7 @@ namespace sprint0.Sprites
                     break;
 
                 case LinkAttackHitbox hitbox when hitbox.BlocksMovement():
-                    TakeKnockback(direction);
+                    TakeKnockback(hitbox.GetKnockbackDirection());
                     break;
 
                 case Projectile projectile when !projectile.IsEnemyProjectile:

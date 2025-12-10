@@ -188,7 +188,7 @@ namespace sprint0.Sprites
                     break;
 
                 case LinkAttackHitbox hitbox when hitbox.BlocksMovement():
-                    TakeKnockback(direction);
+                    TakeKnockback(hitbox.GetKnockbackDirection());
                     break;
 
                 case Projectile projectile when !projectile.IsEnemyProjectile:
@@ -219,7 +219,7 @@ namespace sprint0.Sprites
                 knockbackVelocity = Vector2.Zero;
                 var collisionResponse = new CollisionResponse();
                 Vector2 resolvedPosition = collisionResponse.ResolveCollisionDirection(
-                    this.GetBounds(), block.GetBounds(), direction);
+                this.GetBounds(), block.GetBounds(), direction);
                 movement.SetPosition(resolvedPosition);
             }
             else

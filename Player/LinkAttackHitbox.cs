@@ -14,27 +14,53 @@ namespace sprint0.Classes
 		public Vector2 position { get; set; } = new Vector2(400, 200);
         public bool active = false;
         private int damage = 1;
+        private Link.Direction direction;
 
         public LinkAttackHitbox()
 		{
-		
 		}
-        public void AttackUp(Vector2 position)
+
+        public CollisionDirection GetKnockbackDirection()
         {
-            this.position = new Vector2((int)position.X, (int)position.Y - 48);
-        }        
-        public void AttackDown(Vector2 position)
-        {
-            this.position = new Vector2((int)position.X, (int)position.Y + 48);
+            switch (this.direction)
+            {
+                case Link.Direction.Up:
+                    return CollisionDirection.Down;
+                    break;
+                case Link.Direction.Down:
+                    return CollisionDirection.Up;
+                    break;
+                case Link.Direction.Left:
+                    return CollisionDirection.Right;
+                    break;
+                case Link.Direction.Right:
+                    return CollisionDirection.Left;
+                    break;
+                default:
+                    return CollisionDirection.None;
+                    break;
+            }
         }
-        public void AttackRight(Vector2 position)
+
+        public void Attack(Link.Direction direction, Vector2 linkPosition)
         {
-            this.position = new Vector2((int)position.X + 48, (int)position.Y);
+            this.direction = direction;
+            switch (direction)
+            {
+                case Link.Direction.Up:
+                    this.position = new Vector2((int)linkPosition.X, (int)linkPosition.Y - 48);
+                    break;
+                case Link.Direction.Down:
+                    this.position = new Vector2((int)linkPosition.X, (int)linkPosition.Y + 48);
+                    break;
+                case Link.Direction.Left:
+                    this.position = new Vector2((int)linkPosition.X - 48, (int)linkPosition.Y);
+                    break;
+                case Link.Direction.Right:
+                    this.position = new Vector2((int)linkPosition.X + 48, (int)linkPosition.Y);
+                    break;
+            }
         }
-        public void AttackLeft(Vector2 position)
-        {         
-            this.position = new Vector2((int)position.X - 48, (int)position.Y);
-        }     
         public Rectangle GetBounds()
         {
             return new Rectangle((int)position.X, (int)position.Y, 48, 48);
