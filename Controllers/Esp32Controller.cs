@@ -16,6 +16,11 @@ namespace sprint0.Classes
         private bool prevItem1;
         private bool prevItem2;
 
+        private bool prevUp;
+        private bool prevDown;
+        private bool prevLeft;
+        private bool prevRight;
+
         public bool IsConnected
         {
             get { return port != null && port.IsOpen; }
@@ -79,16 +84,42 @@ namespace sprint0.Classes
                 prevInventory = inventory;
                 prevItem1 = item1;
                 prevItem2 = item2;
+
+                prevUp = up;
+                prevDown = down;
+                prevLeft = left;
+                prevRight = right;
                 return;
             }
 
             if (inventoryOpen)
             {
-                if (inventory && !prevInventory)
+                if (up && !prevUp)
                 {
-                    new OpenInventoryCommand(game).Execute();
+                    game.NavigateInventory(InventoryNavigateCommand.Direction.Up);
+                }
+                if (down && !prevDown)
+                {
+                    game.NavigateInventory(InventoryNavigateCommand.Direction.Down);
+                }
+                if (left && !prevLeft)
+                {
+                    game.NavigateInventory(InventoryNavigateCommand.Direction.Left);
+                }
+                if (right && !prevRight)
+                {
+                    game.NavigateInventory(InventoryNavigateCommand.Direction.Right);
                 }
 
+                if (inventory && !prevInventory)
+                {
+                    game.currentState = Game1.GameState.Gameplay;
+                }
+
+                prevUp = up;
+                prevDown = down;
+                prevLeft = left;
+                prevRight = right;
                 prevInventory = inventory;
                 prevItem1 = item1;
                 prevItem2 = item2;
@@ -136,7 +167,14 @@ namespace sprint0.Classes
             prevInventory = inventory;
             prevItem1 = item1;
             prevItem2 = item2;
+
+            prevUp = up;
+            prevDown = down;
+            prevLeft = left;
+            prevRight = right;
+            return;
         }
+
 
         public void SendWin()
         {
