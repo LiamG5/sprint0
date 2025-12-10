@@ -43,7 +43,6 @@ namespace sprint0.Sprites
 	{
 		return linkSpriteSheet;
 	}
-
 	public static Texture2D GetBlockSpriteSheet()
 	{
 		return blockSpriteSheet;

@@ -14,7 +14,7 @@ namespace sprint0.Sprites
         private String path;
         private int storageIdx = 0;
         private BlockFactory blocks = BlockFactory.Instance;
-
+        private ItemDroper itemDroper;
         private List<Rectangle> rectangles;
         private List<IBlock> blockObjects;
         private List<IEnemy> enemies;
@@ -51,6 +51,7 @@ namespace sprint0.Sprites
             this.boarders = new List<ICollidable>();
             this.transitionZones = new List<TransitionZone>();
             this.roomId = 8;
+            this.itemDroper = new ItemDroper();
             
         }
 
@@ -201,6 +202,7 @@ namespace sprint0.Sprites
                 }
                 items = itemLoader.GetItems();
                 enemies = enemyLoader.GetEnemies();
+
             }
             
             // Add wall borders (these are the outer walls that always exist)
@@ -278,6 +280,8 @@ namespace sprint0.Sprites
                     sprite.Update(gameTime);
                 }
             }
+            itemLoader.Update();
+            enemyLoader.Update();
             foreach (var boomerang in boomerangProjectiles)
             {
                 boomerang.Update(gameTime);
@@ -329,7 +333,7 @@ namespace sprint0.Sprites
                 chiseledTile.Draw(sprite, chiseledTile.GetPosition());
             }
 
-            
+
         }
         
         public List<Rectangle> GetBlockList()

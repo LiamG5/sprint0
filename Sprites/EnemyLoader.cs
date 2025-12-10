@@ -14,7 +14,7 @@ namespace sprint0.Sprites
         private int roomId;
         public Texture2D border;
         private List<IEnemy> enemyList;
-        
+        private ItemDroper itemDroper;
         private Dictionary<int, List<IEnemy>> LoadedEnemies;
         private int RowStart = 96;
         private int ColStart = 96;
@@ -26,15 +26,18 @@ namespace sprint0.Sprites
         // Store references for boss spawning
         private DungeonLoader dungeonLoader;
         private Func<Vector2> playerPositionProvider;
+        private Link link;
 
     
-        public EnemyLoader(EnemySpriteFactory enemies)
+        public EnemyLoader(EnemySpriteFactory enemies, ItemDroper itemDroper)
         {
             roomId = 1;
             this.enemies = enemies;
             this.enemyList = new List<IEnemy>();
             this.LoadedEnemies = new Dictionary<int, List<IEnemy>>();
-            Room1Enemies();
+            this.itemDroper = itemDroper;
+            
+
         }
 
         public void LoadEnemies(int roomId)
@@ -253,10 +256,10 @@ namespace sprint0.Sprites
 
         private void Room16Enemies()
         {
-            enemyList.Add(enemies.SpawnBladeTrap(new Vector2(ColStart + ColMult * 0, RowStart + RowMult * 0)));
-            enemyList.Add(enemies.SpawnBladeTrap(new Vector2(ColStart + ColMult * 11, RowStart + RowMult * 0)));
-            enemyList.Add(enemies.SpawnBladeTrap(new Vector2(ColStart + ColMult * 0, RowStart + RowMult * 6)));
-            enemyList.Add(enemies.SpawnBladeTrap(new Vector2(ColStart + ColMult * 11, RowStart + RowMult * 6)));
+            enemyList.Add(enemies.SpawnBladeTrap(new Vector2(ColStart + ColMult * 0, RowStart + RowMult * 0), link));
+            enemyList.Add(enemies.SpawnBladeTrap(new Vector2(ColStart + ColMult * 11, RowStart + RowMult * 0), link));
+            enemyList.Add(enemies.SpawnBladeTrap(new Vector2(ColStart + ColMult * 0, RowStart + RowMult * 6), link));
+            enemyList.Add(enemies.SpawnBladeTrap(new Vector2(ColStart + ColMult * 11, RowStart + RowMult * 6), link));
         }
 
         private void Room17Enemies()
@@ -266,21 +269,16 @@ namespace sprint0.Sprites
             enemyList.Add(enemies.SpawnRedGoriya(new Vector2(ColStart + ColMult * 7, RowStart + RowMult * 4)));
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        
+        public void Update()
         {
-            foreach (IEnemy enemy in enemyList)
-            {
-                enemy.Draw(spriteBatch, enemy.GetPosition());
-            }
-        }
-        public void Update(GameTime gameTime)
-        {
-           foreach (IEnemy enemy in enemyList)
-            {
-                enemy.Update(gameTime);
-
-            }
-
+        for (int i = enemyList.Count - 1; i >= 0; i--){
+                if (enemyList[i].IsDead())
+                {
+                itemDroper.LoadItem(enemyList[i].GetPosition());
+                enemyList.RemoveAt(i);
+                }
+            }   
         } 
         
 
@@ -299,6 +297,11 @@ namespace sprint0.Sprites
         public void SetPlayerPositionProvider(Func<Vector2> provider)
         {
             this.playerPositionProvider = provider;
+        }
+
+        public void SetLink(Link link)
+        {
+            this.link = link;
         }
     }
 }

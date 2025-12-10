@@ -20,6 +20,17 @@ namespace sprint0.Sprites
         private const int ENEMY_WIDTH = 48;  // 16 * 3.0f scale
         private const int ENEMY_HEIGHT = 48;
 
+        int health = 2;
+
+        private enum EnemyState { Normal, Knockback, Invulnerable }
+        private EnemyState currentState = EnemyState.Normal;
+        private float knockbackTimer = 0f;
+        private float invulnerabilityTimer = 0f;
+        private const float KNOCKBACK_DURATION = 250f;
+        private const float INVULNERABILITY_DURATION = 500f;
+        private Vector2 knockbackVelocity = Vector2.Zero;
+        private const float KNOCKBACK_SPEED = 5f;
+
         // NEW: constructor with target provider (for chasing player)
         public EnemyGel(Texture2D sheet, Vector2 startPosition, Func<Vector2> targetProvider)
         {
@@ -41,22 +52,107 @@ namespace sprint0.Sprites
 
         public void Update(GameTime gameTime)
         {
-            movement.Move();
-            animation.Update(gameTime);
+            if (isDead) return;
+
+            float elapsedMs = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            switch (currentState)
+            {
+                case EnemyState.Knockback:
+                    Vector2 currentPos = movement.GetPosition();
+                    float knockbackDistance = KNOCKBACK_SPEED * (elapsedMs / 16.67f);
+                    Vector2 knockbackDirection = knockbackVelocity;
+                    if (knockbackDirection.LengthSquared() > 0)
+                    {
+                        knockbackDirection.Normalize();
+                        currentPos += knockbackDirection * knockbackDistance;
+                    }
+                    movement.SetPosition(currentPos);
+                    knockbackTimer += elapsedMs;
+                    if (knockbackTimer >= KNOCKBACK_DURATION)
+                    {
+                        knockbackTimer = 0f;
+                        knockbackVelocity = Vector2.Zero;
+                        currentState = EnemyState.Invulnerable;
+                        invulnerabilityTimer = 0f;
+                    }
+                    animation.Update(gameTime);
+                    break;
+
+                case EnemyState.Invulnerable:
+                    movement.Move();
+                    animation.Update(gameTime);
+                    invulnerabilityTimer += elapsedMs;
+                    if (invulnerabilityTimer >= INVULNERABILITY_DURATION)
+                    {
+                        invulnerabilityTimer = 0f;
+                        currentState = EnemyState.Normal;
+                    }
+                    break;
+
+                case EnemyState.Normal:
+                default:
+                    movement.Move();
+                    animation.Update(gameTime);
+                    break;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 drawPosition)
         {
             if (!isDead)
             {
-                spriteBatch.Draw(enemySS, movement.GetPosition(), animation.GetFrame(), Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+                Color drawColor = Color.White;
+                if (currentState == EnemyState.Invulnerable || currentState == EnemyState.Knockback)
+                {
+                    int flashFrame = (int)(invulnerabilityTimer / 50f) % 2;
+                    drawColor = flashFrame == 0 ? Color.Red : Color.White;
+                }
+                spriteBatch.Draw(enemySS, movement.GetPosition(), animation.GetFrame(), drawColor, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
             }
         }
 
-        public void TakeDamage()
+        public void TakeDamage(int damage)
         {
-            isDead = true;
-            sprint0.Sounds.SoundStorage.LOZ_Enemy_Die.Play();
+            if (!(currentState == EnemyState.Invulnerable || currentState == EnemyState.Knockback))
+            {
+                sprint0.Sounds.SoundStorage.LOZ_Enemy_Hit.Play();
+                health -= damage;
+
+                if (health <= 0)
+                {
+                    isDead = true;
+                    sprint0.Sounds.SoundStorage.LOZ_Enemy_Die.Play();
+                }
+            }
+        }
+
+        public void TakeKnockback(CollisionDirection direction)
+        {
+            if (currentState == EnemyState.Normal && !isDead)
+            {
+                switch (direction)
+                {
+                    case CollisionDirection.Left:
+                        knockbackVelocity = new Vector2(KNOCKBACK_SPEED, 0f);
+                        break;
+                    case CollisionDirection.Right:
+                        knockbackVelocity = new Vector2(-KNOCKBACK_SPEED, 0f);
+                        break;
+                    case CollisionDirection.Up:
+                        knockbackVelocity = new Vector2(0f, KNOCKBACK_SPEED);
+                        break;
+                    case CollisionDirection.Down:
+                        knockbackVelocity = new Vector2(0f, -KNOCKBACK_SPEED);
+                        break;
+                    default:
+                        knockbackVelocity = new Vector2(KNOCKBACK_SPEED, 0f);
+                        break;
+                }
+
+                currentState = EnemyState.Knockback;
+                knockbackTimer = 0f;
+            }
         }
 
         public bool IsDead()
@@ -91,23 +187,44 @@ namespace sprint0.Sprites
                 case Link link:
                     break;
 
+                case LinkAttackHitbox hitbox when hitbox.BlocksMovement():
+                    TakeKnockback(direction);
+                    break;
+
+                case Projectile projectile when !projectile.IsEnemyProjectile:
+                    TakeKnockback(direction);
+                    break;
+
                 case DungeonLongWall wall when wall.BlocksMovement():
-                    movement.ChangeDirectionCol();
+                    HandleBlockCollision(wall, direction);
                     break;
 
                 case DungeonTallWall wall when wall.BlocksMovement():
-                    movement.ChangeDirectionCol();
+                    HandleBlockCollision(wall, direction);
                     break;
-                case TransitionZone:
-                    movement.ChangeDirectionCol();
+                case TransitionZone zone:
+                    HandleBlockCollision(zone, direction);
                     break;
 
                 case IBlock block when block.BlocksMovement():
-                    movement.ChangeDirectionCol();
+                    HandleBlockCollision(block, direction);
                     break;
-                case IAttack attack when attack.BlocksMovement():
-                    TakeDamage();
-                    break;
+            }
+        }
+
+        private void HandleBlockCollision(ICollidable block, CollisionDirection direction)
+        {
+            if (currentState == EnemyState.Knockback)
+            {
+                knockbackVelocity = Vector2.Zero;
+                var collisionResponse = new CollisionResponse();
+                Vector2 resolvedPosition = collisionResponse.ResolveCollisionDirection(
+                    this.GetBounds(), block.GetBounds(), direction);
+                movement.SetPosition(resolvedPosition);
+            }
+            else
+            {
+                movement.ChangeDirectionCol();
             }
         }
     }

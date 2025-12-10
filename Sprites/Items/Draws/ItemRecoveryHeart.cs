@@ -15,7 +15,7 @@ namespace sprint0.Sprites
         private bool isCollected = false;
         private static int ItemRow = 1;
         private static int ItemCol = 6;
-        private static Rectangle block = new Rectangle(40*ItemCol, 40*ItemRow, 15, 16);
+        private  Rectangle block = new Rectangle(40*ItemCol, 40*ItemRow, 15, 16);
         private const int ITEM_WIDTH = 45;
         private const int ITEM_HEIGHT = 48;
 
@@ -64,6 +64,7 @@ namespace sprint0.Sprites
             switch (other)
             {
                 case Link link:
+                    Inventory.AddHealth(2);
                     Collect();
                     break;
             }

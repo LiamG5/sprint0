@@ -19,6 +19,6 @@ namespace sprint0.Interfaces
 		void UseItem2();
 		void UseItem3();
 
-		void TakeDamage();
+		void TakeDamage(int damage);
 	}
 }

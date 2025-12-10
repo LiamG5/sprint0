@@ -5,6 +5,7 @@ using sprint0.Interfaces;
 using sprint0.Managers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace sprint0.Sprites
 {
@@ -15,16 +16,17 @@ namespace sprint0.Sprites
         public List<IItem> itemList;
         private Dictionary<int, List<IItem>> LoadedItems;
         private int roomId = 1;
-        
+        private ItemDroper itemDroper;
 
 
 
-        public ItemLoader(ItemFactory items)
+        public ItemLoader(ItemFactory items , ItemDroper itemDroper)
         {
             this.items = items;
             this.itemList = new List<IItem>();
             this.LoadedItems = new Dictionary<int, List<IItem>>();
-            Room1Items();
+            this.itemDroper = itemDroper;
+            
         }
 
         public void LoadItems(int roomId)
@@ -229,6 +231,12 @@ namespace sprint0.Sprites
             
         }
 
+        public void Dropkey()
+        {
+            
+            
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach (IItem item in itemList)
@@ -237,17 +245,18 @@ namespace sprint0.Sprites
             }
         }
 
-        public void Update(GameTime gameTime)
-        {
-           foreach (IItem item in itemList)
-            {
-                item.Update(gameTime);
-            }
+        public void Update()
+        {       
+        
+        if(itemDroper.HasItem())
+        itemList.Add(itemDroper.GetItem());
+
         } 
         public List<IItem> GetItems()
         {
             return itemList;
         }
+                
 
         public void Reset()
         {

@@ -88,7 +88,7 @@ namespace sprint0.Sprites
                     if (hasExploded)
                     {
                         sprint0.Sounds.SoundStorage.LOZ_Enemy_Hit.Play();
-                        enemy.TakeDamage();
+                        enemy.TakeDamage(2);
                     }
                     break;
 

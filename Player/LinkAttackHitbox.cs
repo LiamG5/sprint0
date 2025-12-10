@@ -13,6 +13,8 @@ namespace sprint0.Classes
 	{
 		public Vector2 position { get; set; } = new Vector2(400, 200);
         public bool active = false;
+        private int damage = 1;
+
         public LinkAttackHitbox()
 		{
 		
@@ -20,23 +22,20 @@ namespace sprint0.Classes
         public void AttackUp(Vector2 position)
         {
             this.position = new Vector2((int)position.X, (int)position.Y - 48);
-        }        public void AttackDown(Vector2 position)
+        }        
+        public void AttackDown(Vector2 position)
         {
-            
             this.position = new Vector2((int)position.X, (int)position.Y + 48);
         }
         public void AttackRight(Vector2 position)
         {
-            
             this.position = new Vector2((int)position.X + 48, (int)position.Y);
         }
         public void AttackLeft(Vector2 position)
-        {
-            
+        {         
             this.position = new Vector2((int)position.X - 48, (int)position.Y);
-        }
-        
-         public Rectangle GetBounds()
+        }     
+        public Rectangle GetBounds()
         {
             return new Rectangle((int)position.X, (int)position.Y, 48, 48);
         }
@@ -44,7 +43,6 @@ namespace sprint0.Classes
         {
             return active;
         }
-        
         public bool BlocksProjectiles()
         {
             return active;
@@ -55,7 +53,14 @@ namespace sprint0.Classes
         }
         public void OnCollision(ICollidable other, CollisionDirection direction)
         {
-            
+            if (active) {
+                switch (other)
+                {
+                    case IEnemy enemy:
+                        enemy.TakeDamage(damage);
+                        break;
+                }
+            }
         }
     }
 }

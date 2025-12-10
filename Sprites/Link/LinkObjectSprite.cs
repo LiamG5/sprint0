@@ -17,6 +17,8 @@ namespace sprint0.Classes
         private ItemFactory itemFactory;
         private ISprite item;
         private Boolean show;
+        private bool showTriforce;
+        private int triforceFrameNum = 0;
         private static Vector2 positionOffset = new Vector2(0,-12);
         
         
@@ -27,6 +29,7 @@ namespace sprint0.Classes
             this.nextRectangle = sourceRectangle;
             this.itemFactory = ItemFactory.Instance;
             show = false;
+            showTriforce = false;
             item = itemFactory.BuildSword();
             
         }
@@ -49,6 +52,11 @@ namespace sprint0.Classes
             item = itemFactory.BuildCompass();
             show = true;
         }
+
+        public void LinkObjDrawTriforce()
+        {
+            showTriforce = true;
+        }
         
         public void Update(GameTime gameTime)
         {
@@ -62,7 +70,30 @@ namespace sprint0.Classes
                 Vector2 drawPosition = position + (positionOffset * 3.0f);
                 item.Draw(spriteBatch, drawPosition);
             }
+            if (showTriforce)
+            {
+                Vector2 drawPosition = position + (positionOffset * 3.0f);
+                Rectangle triforceRect;
+                
+                triforceFrameNum++;
+                if (triforceFrameNum < 6)
+                {
+                    triforceRect = new Rectangle(320, 120, 16, 16);
+                }
+                else if (triforceFrameNum < 12)
+                {
+                    triforceRect = new Rectangle(340, 120, 16, 16);
+                }
+                else
+                {
+                    triforceRect = new Rectangle(320, 120, 16, 16);
+                    triforceFrameNum = 0;
+                }
+                
+                spriteBatch.Draw(spriteSheet, drawPosition, triforceRect, Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
+            }
             show = false;
+            showTriforce = false;
         }
     }
 }

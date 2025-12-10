@@ -47,8 +47,8 @@ namespace sprint0.PlayerStates
 
         public void UseState()
         {
-            float startActive = duration * 0.2f;
-            float endActive   = duration * 0.8f;
+            float startActive = duration * 0.4f;
+            float endActive   = duration * 0.7f;
 
             if (currentTime >= startActive && currentTime <= endActive)
             {
