@@ -11,8 +11,8 @@ namespace sprint0.HUD
         public static readonly Vector2 TopLeft = new Vector2(HudPadding, HudPadding);
 
         // Minimap and Lable
-        public static readonly Vector2 LevelLabelPos = TopLeft + new Vector2(0, -8);
-        public static readonly Vector2 MinimapPos = TopLeft + new Vector2(0, 24);
+        public static readonly Vector2 LevelLabelPos = TopLeft + new Vector2(0, -16);
+        public static readonly Vector2 MinimapPos = TopLeft + new Vector2(0, 12);
         
         // Counters and Slots
         public static readonly Vector2 CountersPos = TopLeft + new Vector2(180, -12);

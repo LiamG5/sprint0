@@ -58,7 +58,6 @@ public class Game1 : Game
     // HUD
     private HUD.HudManager hud;
     private HUD.MinimapHud minimapTopHud;
-    private HUD.MinimapHud minimapBottomHud;
     private SpriteFont hudFont;
 
     // temp HUD data
@@ -152,17 +151,16 @@ public class Game1 : Game
 
         hud.Add(new HUD.LevelLabelHud(() => $"Level {roomManager.GetRoomLevel(roomManager.CurrentRoomId)}", hudFont, HUD.HudConstants.LevelLabelPos));
 
-        const int minimapCellSize = 16;
-        const int minimapVisibleRows = 3;
+        const int minimapCellSize = 12;
+        const int minimapCellWidth = 15;
 
-        Vector2 minimapTopPos = HUD.HudConstants.MinimapPos;
-        Vector2 minimapBottomPos = HUD.HudConstants.MinimapPos + new Vector2(0, minimapVisibleRows * minimapCellSize + 4);
+        Vector2 minimapPos = HUD.HudConstants.MinimapPos;
 
         minimapTopHud = new HUD.MinimapHud(
             () => roomManager.CurrentRoomId,
             () => Classes.Inventory.HasMap(),
             (roomId) => roomManager.GetRoomConnections(roomId),
-            minimapTopPos,
+            minimapPos,
             GraphicsDevice,
             rows: 6,
             cols: 6,
@@ -170,24 +168,10 @@ public class Game1 : Game
             () => Classes.Inventory.HasCompass(),
             () => 15,
             manualStartRow: 0,
-            manualEndRow: 2);
-
-        minimapBottomHud = new HUD.MinimapHud(
-            () => roomManager.CurrentRoomId,
-            () => Classes.Inventory.HasMap(),
-            (roomId) => roomManager.GetRoomConnections(roomId),
-            minimapBottomPos,
-            GraphicsDevice,
-            rows: 6,
-            cols: 6,
-            cellSize: minimapCellSize,
-            () => Classes.Inventory.HasCompass(),
-            () => 15,
-            manualStartRow: 3,
-            manualEndRow: 5);
+            manualEndRow: 5,
+            cellWidth: minimapCellWidth);
 
         hud.Add(minimapTopHud);
-        hud.Add(minimapBottomHud);
 
         hud.Add(new HUD.InventorySlotsHud(
             () => itemInSlotB,
@@ -820,7 +804,7 @@ public class Game1 : Game
     private void HandleMinimapClicks()
     {
         if (!Classes.Inventory.HasMap()) return;
-        if (minimapTopHud == null && minimapBottomHud == null) return;
+        if (minimapTopHud == null) return;
 
         var currentMouse = Mouse.GetState();
         var pos = new Point(currentMouse.X, currentMouse.Y);
@@ -828,17 +812,7 @@ public class Game1 : Game
         if (currentMouse.LeftButton == ButtonState.Pressed &&
             previousMouseState.LeftButton == ButtonState.Released)
         {
-            int? roomNum = null;
-
-            if (minimapTopHud != null)
-            {
-                roomNum = minimapTopHud.GetRoomAtPoint(pos);
-            }
-
-            if (!roomNum.HasValue && minimapBottomHud != null)
-            {
-                roomNum = minimapBottomHud.GetRoomAtPoint(pos);
-            }
+            int? roomNum = minimapTopHud.GetRoomAtPoint(pos);
 
             if (roomNum.HasValue && roomNum.Value >= 1 && roomNum.Value <= 17)
             {

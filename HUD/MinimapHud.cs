@@ -24,9 +24,9 @@ namespace sprint0.HUD
         private double flashTimer = 0;
         private const double FlashInterval = 0.5;
         
-        private const int RoomWidth = 12;
-        private const int RoomHeight = 8;
-        private const int RoomSpacing = 2;
+        private const int RoomWidth = 11;
+        private const int RoomHeight = 5;
+        private const int RoomSpacing = 1;
 
         private const int VisibleRows = 3;
 
@@ -50,7 +50,9 @@ namespace sprint0.HUD
             Func<bool> hasCompass = null,
             Func<int> getTriforceRoom = null,
             int? manualStartRow = null,
-            int? manualEndRow = null)
+            int? manualEndRow = null,
+            int? cellWidth = null,
+            int? cellHeight = null)
         {
             this.getCurrentRoom = getCurrentRoom;
             this.hasMap = hasMap;
@@ -60,8 +62,8 @@ namespace sprint0.HUD
             this.pos = position;
             this.rows = rows;
             this.cols = cols;
-            this.cellWidth = cellSize;
-            this.cellHeight = cellSize;
+            this.cellWidth = cellWidth ?? cellSize;
+            this.cellHeight = cellHeight ?? cellSize;
             this.manualStartRow = manualStartRow;
             this.manualEndRow = manualEndRow;
 
@@ -150,14 +152,11 @@ namespace sprint0.HUD
                 pos.Y + visibleRowIndex * cellHeight
             );
 
-            int rectWidth = Math.Max(1, RoomWidth - RoomSpacing);
-            int rectHeight = Math.Max(1, RoomHeight - RoomSpacing);
-
             return new Rectangle(
                 (int)cellPos.X + (cellWidth - RoomWidth) / 2,
                 (int)cellPos.Y + (cellHeight - RoomHeight) / 2,
-                rectWidth,
-                rectHeight
+                RoomWidth,
+                RoomHeight
             );
         }
 
@@ -221,14 +220,11 @@ namespace sprint0.HUD
                         pos.Y + visibleRowIndex * cellHeight
                     );
 
-                    int rectWidth = Math.Max(1, RoomWidth - RoomSpacing);
-                    int rectHeight = Math.Max(1, RoomHeight - RoomSpacing);
-
                     var roomRect = new Rectangle(
                         (int)cellPos.X + (cellWidth - RoomWidth) / 2,
                         (int)cellPos.Y + (cellHeight - RoomHeight) / 2,
-                        rectWidth,
-                        rectHeight
+                        RoomWidth,
+                        RoomHeight
                     );
 
                     Color roomColor;
