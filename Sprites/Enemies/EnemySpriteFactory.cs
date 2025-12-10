@@ -15,7 +15,7 @@ namespace sprint0.Sprites
     { 
         public enum EnemyType
         {
-            BladeTrap, Gel, RedGoriya, Keese, Stalfos, Wallmaster, Aquamentus
+            BladeTrap, Gel, RedGoriya, Keese, Stalfos, Wallmaster, Aquamentus, Flame
         }
 
         private EnemyType currEnemy = EnemyType.BladeTrap;
@@ -106,10 +106,23 @@ namespace sprint0.Sprites
             return new EnemyWallmaster(enemySpritesheet, position);
         }
 
+        public IEnemy SpawnFlame()
+        {
+            currEnemy = EnemyType.Flame;
+            return new EnemyFlame(enemySpritesheet);
+        }
+        public IEnemy SpawnFlame(Vector2 position)
+        {
+            currEnemy = EnemyType.Flame;
+            return new EnemyFlame(enemySpritesheet, position);
+        }
+
         public IEnemy SpawnAquamentus(Vector2 position, DungeonLoader dungeonLoader = null, Func<Vector2> playerPositionProvider = null)
         {
             currEnemy = EnemyType.Aquamentus;
             return new EnemyAquamentus(bossSpritesheet, position, dungeonLoader, playerPositionProvider);
         }
+
+
     }
 }
