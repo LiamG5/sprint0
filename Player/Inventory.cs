@@ -62,7 +62,10 @@ namespace sprint0.Classes
             health = value;
         }
 
-        
+        public static void GetFairy()
+        {
+            health = maxHealth;
+        }
         public static int GetMaxHealth()
         {
             return maxHealth;

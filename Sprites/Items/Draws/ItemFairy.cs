@@ -83,7 +83,7 @@ namespace sprint0.Sprites
             switch (other)
             {
                 case Link link:
-                    Inventory.GetMaxHealth();
+                    Inventory.GetFairy();
                     Collect();
                     break;
             }
