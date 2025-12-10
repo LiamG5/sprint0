@@ -184,19 +184,20 @@ namespace sprint0.Classes
 		
 	private void UpdateAttackAnimation()
 	{
+		float attackDuration = 500f;
 		switch (direction)
 		{
 			case Link.Direction.Up:
-				linkAnimation.LinkAttackingUp(animationDuration, animationTime);
+				linkAnimation.LinkAttackingUp(attackDuration, animationTime);
 				break;
 			case Link.Direction.Down:
-				linkAnimation.LinkAttackingDown(animationDuration, animationTime);
+				linkAnimation.LinkAttackingDown(attackDuration, animationTime);
 				break;
 			case Link.Direction.Left:
-				linkAnimation.LinkAttackingLeft(animationDuration, animationTime);
+				linkAnimation.LinkAttackingLeft(attackDuration, animationTime);
 				break;
 			case Link.Direction.Right:
-				linkAnimation.LinkAttackingRight(animationDuration, animationTime);
+				linkAnimation.LinkAttackingRight(attackDuration, animationTime);
 				break;
 		}
 	}
@@ -252,7 +253,21 @@ namespace sprint0.Classes
 	
 	private void UpdateItemAnimation()
 	{
-		linkAnimation.LinkHoldingItem();
+		switch (direction)
+		{
+			case Link.Direction.Up:
+				linkAnimation.LinkStandingUp();
+				break;
+			case Link.Direction.Down:
+				linkAnimation.LinkStandingDown();
+				break;
+			case Link.Direction.Left:
+				linkAnimation.LinkStandingLeft();
+				break;
+			case Link.Direction.Right:
+				linkAnimation.LinkStandingRight();
+				break;
+		}
 	}
 		
 		public void Draw(SpriteBatch spriteBatch, int currentGameRoom)
