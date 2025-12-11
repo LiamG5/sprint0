@@ -7,6 +7,8 @@ using sprint0.Classes;
 using sprint0.Commands;
 using sprint0.Interfaces;
 using sprint0.PlayerStates;
+using System.Linq;
+using sprint0.Cheats;
 
 namespace sprint0.Classes
 {
@@ -58,6 +60,7 @@ namespace sprint0.Classes
 
         public override void Update()
         {
+            
             KeyboardState currentState = Keyboard.GetState();
             
             base.Update();

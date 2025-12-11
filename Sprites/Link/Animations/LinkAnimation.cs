@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using sprint0.Classes;
 using sprint0.Interfaces;
 using System;
+using System.Collections.Generic;
 using Color = Microsoft.Xna.Framework.Color;
 
 
@@ -11,10 +12,14 @@ namespace sprint0.Classes
     public class LinkAnimation : ISprite
     {
         private Color color = Color.White;
-        private LinkSprite linkSprite;
 
+        private int superColorsIndex = 0;
+        private LinkSprite linkSprite;
+        private List<Color> superColors;
         private LinkObjectSprite linkObjSprite;
         private Link player;
+
+        private float superLinkStartTime;
 
 
 
@@ -22,6 +27,26 @@ namespace sprint0.Classes
         {
             this.linkSprite = new LinkSprite();
             this.linkObjSprite = new LinkObjectSprite();
+            this.superColors = new List<Color>();
+            this.superLinkStartTime = 0f;
+            AddSuperColors();
+        }
+        private void AddSuperColors()
+        {
+            superColors.Add(Color.Red);
+            superColors.Add(Color.Blue);
+            superColors.Add(Color.Green);
+            superColors.Add(Color.Yellow);
+            superColors.Add(Color.Purple);
+            superColors.Add(Color.Orange);
+            superColors.Add(Color.Cyan);
+            superColors.Add(Color.Magenta);
+            superColors.Add(Color.Lime);
+            superColors.Add(Color.Pink);
+            superColors.Add(Color.Silver);
+            superColors.Add(Color.Teal);
+            superColors.Add(Color.Gray);
+            
         }
 
         public void SetPlayer(Link player)
@@ -396,11 +421,47 @@ namespace sprint0.Classes
                 linkSprite.LinkDrawStandingRight();
             }
         }
+        private void SuperLink(GameTime gameTime)
+        {
+            if(superLinkStartTime == 0f)
+            {
+                superLinkStartTime = (float)gameTime.TotalGameTime.TotalSeconds;
+                superColorsIndex = 0;
+            }
+            if (superColorsIndex >= superColors.Count)
+            {
+                superColorsIndex = 0;
+            }
+            color = superColors[superColorsIndex];
+            superColorsIndex++;   
+
+            float currentTime = (float)gameTime.TotalGameTime.TotalSeconds;
+        if (superLinkStartTime + 30f < currentTime)
+        {
+        // End SuperLink
+        Inventory.SetSuperLink(false);
+        color = Color.White;
+        superLinkStartTime = 0f;
+        superColorsIndex = 0;
+         }
+
+        }
 
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime )
         {
             linkSprite.Update(gameTime);
+            if (Inventory.GetSuperLink())
+            {
+                SuperLink(gameTime);
+            }else{
+                if (superLinkStartTime != 0f)
+        {
+            superLinkStartTime = 0f;
+            superColorsIndex = 0;
+            color = Color.White;
+        }
+        }
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position)

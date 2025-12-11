@@ -43,7 +43,8 @@ namespace sprint0.Sounds
         public static SoundEffect LOZ_Sword_Slash;
         public static SoundEffect LOZ_Text;
         public static SoundEffect LOZ_Text_Slow;
-
+        public static SoundEffect LOZ_SuperLink;
+        public static SoundEffect COD_Laugh;
         public static Song dungeon;
 
         private static float sfxVolume = 0.5f; // Master volume for sfx
@@ -80,6 +81,8 @@ namespace sprint0.Sounds
             LOZ_Sword_Slash = Content.Load<SoundEffect>(@"sounds/LOZ_Sword_Slash");
             LOZ_Text = Content.Load<SoundEffect>(@"sounds/LOZ_Text");
             LOZ_Text_Slow = Content.Load<SoundEffect>(@"sounds/LOZ_Text_Slow");
+            LOZ_SuperLink = Content.Load<SoundEffect>(@"sounds/SuperLink");
+            COD_Laugh = Content.Load<SoundEffect>(@"sounds/Cod_Laugh");
 
             dungeon = Content.Load<Song>(@"music/dungeon");
         }
@@ -237,6 +240,15 @@ namespace sprint0.Sounds
         public static void PlayLOZTextSlow()
         {
             LOZ_Text_Slow.Play(sfxVolume, 0f, 0f);
+        }
+        public static void PlaySuperLink()
+        {
+            LOZ_SuperLink.Play(sfxVolume, 0f, 0f);
+        }
+
+        public static void PlayLaugh()
+        {
+            COD_Laugh.Play(sfxVolume, 0f, 0f);
         }
 
     }
