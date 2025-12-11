@@ -13,14 +13,16 @@ namespace sprint0.Collisions
     {
         private readonly CollisionDetection collisionDetection;
         private DungeonLoader dungeonLoader;
+        private ItemLoader itemLoader;
         private Link link;
         private List<ICollidable> allCollidables;
 
-        public CollisionUpdater(DungeonLoader dungeonLoader, Link link)
+        public CollisionUpdater(DungeonLoader dungeonLoader, Link link, ItemLoader itemLoader = null)
         {
             collisionDetection = new CollisionDetection();
             this.link = link;
             this.dungeonLoader = dungeonLoader;
+            this.itemLoader = itemLoader;
             allCollidables = new List<ICollidable>();
         }
 
@@ -35,6 +37,11 @@ namespace sprint0.Collisions
             allCollidables.AddRange(dungeonLoader.GetBombProjectiles());
             allCollidables.AddRange(dungeonLoader.GetEnemies());
             allCollidables.AddRange(dungeonLoader.GetItems());
+            
+            if (itemLoader != null)
+            {
+                allCollidables.AddRange(itemLoader.GetItems());
+            }
 
             if (sprint0.Classes.Portal.StartPortalInstance != null)
             {
@@ -63,6 +70,11 @@ namespace sprint0.Collisions
             allCollidables.AddRange(dungeonLoader.GetEnemies());
             allCollidables.AddRange(dungeonLoader.GetItems());
             allCollidables.AddRange(dungeonLoader.GetTransitionZones());
+            
+            if (itemLoader != null)
+            {
+                allCollidables.AddRange(itemLoader.GetItems());
+            }
 
             if (sprint0.Classes.Portal.StartPortalInstance != null)
             {

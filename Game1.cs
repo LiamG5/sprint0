@@ -318,7 +318,7 @@ public class Game1 : Game
         itemLoader.LoadItems(2);
         enemyLoader.LoadEnemies(2);
 
-        collisionUpdater = new CollisionUpdater(dungeon, link);
+        collisionUpdater = new CollisionUpdater(dungeon, link, itemLoader);
         collisionUpdater.getList();
 
         previousKeyboardState = Keyboard.GetState();
@@ -365,12 +365,6 @@ public class Game1 : Game
                     ghostLink.Update(gameTime, roomIndex);
                 }
                 collisionUpdater.Update();
-                dungeon.Update(gameTime);
-
-                if (Classes.Inventory.IsDead())
-                {
-                    new Commands.GameOverCommand(this).Execute();
-                }
 
                 if (dungeon != null)
                 {
@@ -382,6 +376,26 @@ public class Game1 : Game
                             break;
                         }
                     }
+                }
+
+                if (itemLoader != null)
+                {
+                    var items = itemLoader.GetItems();
+                    foreach (var item in items)
+                    {
+                        if (item is Sprites.ItemTriforceFragment triforce && triforce.IsCollected())
+                        {
+                            new Commands.WinCommand(this).Execute();
+                            break;
+                        }
+                    }
+                }
+
+                dungeon.Update(gameTime);
+
+                if (Classes.Inventory.IsDead())
+                {
+                    new Commands.GameOverCommand(this).Execute();
                 }
 
                 foreach (var controller in controllers)
@@ -734,7 +748,7 @@ public class Game1 : Game
             dungeon.SetRoomManager(roomManager, roomIndex);
         }
 
-        collisionUpdater = new CollisionUpdater(dungeon, link);
+        collisionUpdater = new CollisionUpdater(dungeon, link, itemLoader);
         System.Console.WriteLine($"[LoadRoom] Loaded Room {roomIndex}");
         this.roomIndex = roomIndex;
     }
@@ -847,7 +861,7 @@ public class Game1 : Game
         itemLoader.LoadItems(2);
         enemyLoader.LoadEnemies(2);
 
-        collisionUpdater = new CollisionUpdater(dungeon, link);
+        collisionUpdater = new CollisionUpdater(dungeon, link, itemLoader);
         collisionUpdater.getList();
 
         previousKeyboardState = Keyboard.GetState();

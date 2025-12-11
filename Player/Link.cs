@@ -176,6 +176,22 @@ namespace sprint0.Classes
 		{
 			ChangeState(new ItemState(this, linkAnimation, 3));
 		}
+
+	public void UseItemInSlot(int itemSlot)
+	{
+		switch (itemSlot)
+		{
+			case 1:
+				UseItem1();
+				break;
+			case 2:
+				UseItem2();
+				break;
+			case 3:
+				UseItem3();
+				break;
+		}
+	}
 	public void TakeDamage(int damage)
 	{
 		if (!invulnerabilityHandler.IsInvulnerable) {
