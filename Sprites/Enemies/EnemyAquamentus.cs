@@ -389,7 +389,7 @@ namespace sprint0.Sprites
                     TakeKnockback(hitbox.GetKnockbackDirection());
                     break;
 
-                case Projectile projectile when !projectile.IsEnemyProjectile:
+                case Projectile projectile when !projectile.IsEnemyProjectile && projectile.damage != 0:
                     TakeKnockback(direction);
                     break;
                     

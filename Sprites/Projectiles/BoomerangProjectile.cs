@@ -6,18 +6,8 @@ using sprint0.Classes;
 
 namespace sprint0.Sprites
 {
-    public class BoomerangProjectile : ISprite, ICollidable
+    public class BoomerangProjectile : Projectile
     {
-        private Vector2 position;
-        private Vector2 velocity;
-        private Texture2D texture;
-        private Rectangle sourceRectangle;
-        private int damage;
-        private bool shouldDestroy;
-        private const int PROJECTILE_WIDTH = 16;
-        private const int PROJECTILE_HEIGHT = 16;
-        private float scale = 3.0f;
-        
         private Vector2 startPosition;
         private Link link;
         private float maxDistance = 200f;
@@ -28,20 +18,13 @@ namespace sprint0.Sprites
 
         public BoomerangProjectile(Texture2D texture, Rectangle sourceRect, Vector2 startPosition, 
                                    Vector2 initialVelocity, Link link)
+            : base(texture, sourceRect, startPosition, initialVelocity, 1, false, SpriteEffects.None, PROJECTILE_WIDTH, PROJECTILE_HEIGHT)
         {
-            this.texture = texture;
-            this.sourceRectangle = sourceRect;
-            this.position = startPosition;
-            this.velocity = initialVelocity;
-            this.damage = 1;
-            this.shouldDestroy = false;
             this.startPosition = startPosition;
             this.link = link;
         }
 
-        public bool ShouldDestroy => shouldDestroy;
-
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             if (link == null)
             {
@@ -74,11 +57,12 @@ namespace sprint0.Sprites
                 velocity = returnDirection * 6f;
             }
 
-            position += velocity;
+            // Use base Update for position movement
+            base.Update(gameTime);
             rotation += rotationSpeed;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 drawPosition)
+        public override void Draw(SpriteBatch spriteBatch, Vector2 drawPosition)
         {
             if (!shouldDestroy && texture != null && sourceRectangle.Width > 0 && sourceRectangle.Height > 0)
             {
@@ -89,8 +73,9 @@ namespace sprint0.Sprites
             }
         }
 
-        public Rectangle GetBounds()
+        public override Rectangle GetBounds()
         {
+            // Boomerang uses simpler bounds calculation (no offset)
             return new Rectangle(
                 (int)position.X, 
                 (int)position.Y, 
@@ -99,22 +84,7 @@ namespace sprint0.Sprites
             );
         }
 
-        public bool BlocksMovement()
-        {
-            return false;
-        }
-        
-        public bool BlocksProjectiles()
-        {
-            return false;
-        }
-
-        public Vector2 GetPosition()
-        {
-            return position;
-        }
-
-        public void OnCollision(ICollidable other, CollisionDirection direction)
+        public override void OnCollision(ICollidable other, CollisionDirection direction)
         {
             switch (other)
             {
@@ -148,11 +118,6 @@ namespace sprint0.Sprites
                     }
                     break;
             }
-        }
-
-        public void Destroy()
-        {
-            shouldDestroy = true;
         }
     }
 }

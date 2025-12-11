@@ -6,17 +6,10 @@ using sprint0.Classes;
 
 namespace sprint0.Sprites
 {
-    public class BombProjectile : ISprite, ICollidable
+    public class BombProjectile : Projectile
     {
-        private Vector2 position;
-        private Texture2D texture;
         private Texture2D explosionTexture;
-        private Rectangle sourceRectangle;
         private Rectangle explosionRectangle;
-        private bool shouldDestroy;
-        private const int BOMB_WIDTH = 16;
-        private const int BOMB_HEIGHT = 16;
-        private float scale = 3.0f;
         
         private const int TILE_SIZE = 16;
         private const int EXPLOSION_ROW = 23;
@@ -29,13 +22,10 @@ namespace sprint0.Sprites
         private bool hasDamagedLink = false;
 
         public BombProjectile(Texture2D texture, Rectangle sourceRect, Vector2 startPosition)
+            : base(texture, sourceRect, startPosition, Vector2.Zero, 0, false, SpriteEffects.None, PROJECTILE_WIDTH, PROJECTILE_HEIGHT)
         {
-            this.texture = texture;
-            this.sourceRectangle = sourceRect;
-            this.position = startPosition;
-            this.shouldDestroy = false;
-            this.explosionTexture = Texture2DStorage.GetEnemiesSpriteSheet();
-            this.explosionRectangle = new Rectangle(
+            explosionTexture = Texture2DStorage.GetEnemiesSpriteSheet();
+            explosionRectangle = new Rectangle(
                 EXPLOSION_COL * TILE_SIZE,
                 EXPLOSION_ROW * TILE_SIZE,
                 TILE_SIZE,
@@ -43,10 +33,10 @@ namespace sprint0.Sprites
             );
         }
 
-        public bool ShouldDestroy => shouldDestroy;
-
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
+            
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             timer += elapsed;
 
@@ -63,7 +53,7 @@ namespace sprint0.Sprites
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 drawPosition)
+        public override void Draw(SpriteBatch spriteBatch, Vector2 drawPosition)
         {
             if (shouldDestroy) return;
             
@@ -72,7 +62,7 @@ namespace sprint0.Sprites
                 if (explosionTexture != null && explosionRectangle.Width > 0 && explosionRectangle.Height > 0)
                 {
                     spriteBatch.Draw(explosionTexture, drawPosition, explosionRectangle, 
-                                   Color.White, 0f, Vector2.Zero, scale, 
+                                   Color.White, 0f, Vector2.Zero, scale * 2, 
                                    SpriteEffects.None, 0f);
                 }
             }
@@ -82,37 +72,34 @@ namespace sprint0.Sprites
                 {
                     spriteBatch.Draw(texture, drawPosition, sourceRectangle, 
                                    Color.White, 0f, Vector2.Zero, scale, 
-                                   SpriteEffects.None, 0f);
+                                   spriteEffects, 0f);
                 }
             }
         }
 
-        public Rectangle GetBounds()
+        public override Rectangle GetBounds()
         {
+            if (hasExploded)
+            {
+                int explosionSize = (int)(PROJECTILE_WIDTH * scale * 2);
+                int offset = (int)(PROJECTILE_WIDTH * scale / 2);
+                return new Rectangle(
+                    (int)position.X - offset, 
+                    (int)position.Y - offset, 
+                    explosionSize, 
+                    explosionSize
+                );
+            }
+            
             return new Rectangle(
                 (int)position.X, 
                 (int)position.Y, 
-                (int)(BOMB_WIDTH * scale), 
-                (int)(BOMB_HEIGHT * scale)
+                (int)(PROJECTILE_WIDTH * scale), 
+                (int)(PROJECTILE_HEIGHT * scale)
             );
         }
 
-        public bool BlocksMovement()
-        {
-            return false;
-        }
-        
-        public bool BlocksProjectiles()
-        {
-            return false;
-        }
-
-        public Vector2 GetPosition()
-        {
-            return position;
-        }
-
-        public void OnCollision(ICollidable other, CollisionDirection direction)
+        public override void OnCollision(ICollidable other, CollisionDirection direction)
         {
             switch (other)
             {
@@ -148,7 +135,7 @@ namespace sprint0.Sprites
             }
         }
 
-        public void Destroy()
+        public override void Destroy()
         {
             shouldDestroy = true;
             hasExploded = true;

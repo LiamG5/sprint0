@@ -197,7 +197,7 @@ namespace sprint0.Sprites
                     }
                     break;
 
-                case Projectile projectile when !projectile.IsEnemyProjectile:
+                case Projectile projectile when !projectile.IsEnemyProjectile && projectile.damage != 0:
                     if (!Classes.Inventory.AreEnemiesFrozen()) {
                         TakeKnockback(direction);
                     } else {

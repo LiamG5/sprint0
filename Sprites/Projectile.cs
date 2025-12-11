@@ -9,19 +9,19 @@ namespace sprint0.Sprites
 
     public class Projectile : ISprite, ICollidable
     {
-        private Vector2 position;
-        private Vector2 velocity;
-        private Texture2D texture;
-        private Rectangle sourceRectangle;
-        private int damage;
-        private bool isEnemyProjectile;
-        private bool shouldDestroy;
-        private SpriteEffects spriteEffects;
-        private const int PROJECTILE_WIDTH = 16;
-        private const int PROJECTILE_HEIGHT = 16;
-        private float scale = 3.0f;
-        private int collisionWidth;
-        private int collisionHeight;
+        protected Vector2 position;
+        protected Vector2 velocity;
+        protected Texture2D texture;
+        protected Rectangle sourceRectangle;
+        public int damage;
+        protected bool isEnemyProjectile;
+        protected bool shouldDestroy;
+        protected SpriteEffects spriteEffects;
+        protected const int PROJECTILE_WIDTH = 16;
+        protected const int PROJECTILE_HEIGHT = 16;
+        protected float scale = 3.0f;
+        protected int collisionWidth;
+        protected int collisionHeight;
 
         public Projectile(Texture2D texture, Rectangle sourceRect, Vector2 startPosition, 
                          Vector2 velocity, int damage, bool isEnemyProjectile)
@@ -54,12 +54,12 @@ namespace sprint0.Sprites
         public bool IsEnemyProjectile => isEnemyProjectile;
         public bool ShouldDestroy => shouldDestroy;
 
-        public void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime)
         {
             position += velocity;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 drawPosition)
+        public virtual void Draw(SpriteBatch spriteBatch, Vector2 drawPosition)
         {
             if (!shouldDestroy && texture != null && sourceRectangle.Width > 0 && sourceRectangle.Height > 0)
             {
@@ -69,7 +69,7 @@ namespace sprint0.Sprites
             }
         }
 
-        public Rectangle GetBounds()
+        public virtual Rectangle GetBounds()
         {
             int xOffset = (int)((PROJECTILE_WIDTH - collisionWidth) * scale / 2);
             int yOffset = (int)((PROJECTILE_HEIGHT - collisionHeight) * scale / 2);
@@ -97,7 +97,7 @@ namespace sprint0.Sprites
             return position;
         }
 
-        public void OnCollision(ICollidable other, CollisionDirection direction)
+        public virtual void OnCollision(ICollidable other, CollisionDirection direction)
         {
             switch (other)
             {
@@ -124,7 +124,7 @@ namespace sprint0.Sprites
             }
         }
  
-        public void Destroy()
+        public virtual void Destroy()
         {
             shouldDestroy = true;
         }
