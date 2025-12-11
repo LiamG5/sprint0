@@ -278,6 +278,25 @@ namespace sprint0.Classes
 		{
 			ChangeState(new ItemState(this, linkAnimation, 3));
 		}
+
+		public void UseItemInSlot(int slot)
+		{
+			switch (slot)
+			{
+				case 1:
+					UseItem1();
+					break;
+				case 2:
+					UseItem2();
+					break;
+				case 3:
+					UseItem3();
+					break;
+				default:
+					// Ignore invalid slots
+					break;
+			}
+		}
 		public void TakeDamage(int damage)
 		{
 			Inventory.TakeDamage(damage);

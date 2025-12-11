@@ -6,20 +6,15 @@ namespace sprint0.Commands
     public sealed class UseItemCommand : ICommand
     {
         private readonly Link link;
-        private readonly int itemNumber;
-        public UseItemCommand(Link link, int itemNumber) 
+        private readonly int itemSlot;
+        public UseItemCommand(Link link, int itemSlot) 
         { 
             this.link = link;
-            this.itemNumber = itemNumber;
+            this.itemSlot = itemSlot;
         }
         public void Execute() 
         {
-            switch (itemNumber)
-            {
-                case 1: link.UseItem1(); break;
-                case 2: link.UseItem2(); break;
-                case 3: link.UseItem3(); break;
-            }
+            link.UseItemInSlot(itemSlot);
         }
     }
 }

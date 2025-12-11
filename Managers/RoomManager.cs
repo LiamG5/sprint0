@@ -184,15 +184,19 @@ namespace sprint0.Managers
             return result;
         }
         
-        public void TransitionToRoom(int newRoomId, TransitionDirection direction)
+        public void TransitionToRoom(TransitionDirection direction)
         {
-            if (newRoomId < 1 || newRoomId > 17)
-                return;
+            int newRoomId = GetConnectedRoom(currentRoomId, direction);
             
-            int expectedRoomId = GetConnectedRoom(currentRoomId, direction);
-            if (expectedRoomId != newRoomId)
+            if (newRoomId == -1)
             {
-                System.Console.WriteLine($"[RoomManager] Invalid transition: Room {currentRoomId} -> {newRoomId} via {direction}. Expected: {expectedRoomId}");
+                System.Console.WriteLine($"[RoomManager] No connection from Room {currentRoomId} in direction {direction}");
+                return;
+            }
+            
+            if (newRoomId < 1 || newRoomId > 18)
+            {
+                System.Console.WriteLine($"[RoomManager] Invalid room ID: {newRoomId}");
                 return;
             }
             
@@ -224,26 +228,7 @@ namespace sprint0.Managers
             int oldRoomId = currentRoomId;
             currentRoomId = pendingRoomId;
             
-            switch (currentRoomId)
-            {
-                case 1: game.GoToRoom1(); break;
-                case 2: game.GoToRoom2(); break;
-                case 3: game.GoToRoom3(); break;
-                case 4: game.GoToRoom4(); break;
-                case 5: game.GoToRoom5(); break;
-                case 6: game.GoToRoom6(); break;
-                case 7: game.GoToRoom7(); break;
-                case 8: game.GoToRoom8(); break;
-                case 9: game.GoToRoom9(); break;
-                case 10: game.GoToRoom10(); break;
-                case 11: game.GoToRoom11(); break;
-                case 12: game.GoToRoom12(); break;
-                case 13: game.GoToRoom13(); break;
-                case 14: game.GoToRoom14(); break;
-                case 15: game.GoToRoom15(); break;
-                case 16: game.GoToRoom16(); break;
-                case 17: game.GoToRoom17(); break;
-            }
+            game.GoToRoom(currentRoomId);
             
             RepositionLink(pendingDirection);
             

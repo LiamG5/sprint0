@@ -69,13 +69,12 @@ namespace sprint0.Sprites
             }
 
             int currentRoom = roomManager.CurrentRoomId;
-            int targetRoomId = roomManager.GetConnectedRoom(currentRoom, direction);
-
-            if (targetRoomId != -1)
+            
+            if (roomManager.HasConnection(currentRoom, direction))
             {
-                System.Console.WriteLine($"[TransitionZone] Triggering transition from Room {currentRoom} to Room {targetRoomId} via {direction}");
+                System.Console.WriteLine($"[TransitionZone] Triggering transition from Room {currentRoom} via {direction}");
                 hasTriggered = true;
-                roomManager.TransitionToRoom(targetRoomId, direction);
+                roomManager.TransitionToRoom(direction);
             }
             else
             {

@@ -284,23 +284,23 @@ public class Game1 : Game
 
         mapCellCommands = new Dictionary<int, ICommand>
         {
-            {  0, new GoToRoom1Command(this)  },
-            {  1, new GoToRoom2Command(this)  },
-            {  2, new GoToRoom3Command(this)  },
-            {  3, new GoToRoom4Command(this)  },
-            {  4, new GoToRoom5Command(this)  },
-            {  5, new GoToRoom6Command(this)  },
-            {  6, new GoToRoom7Command(this)  },
-            {  7, new GoToRoom8Command(this)  },
-            {  8, new GoToRoom9Command(this)  },
-            {  9, new GoToRoom10Command(this) },
-            { 10, new GoToRoom11Command(this) },
-            { 11, new GoToRoom12Command(this) },
-            { 12, new GoToRoom13Command(this) },
-            { 13, new GoToRoom14Command(this) },
-            { 14, new GoToRoom15Command(this) },
-            { 15, new GoToRoom16Command(this) },
-            { 16, new GoToRoom17Command(this) },
+            {  0, new GoToRoomCommand(this, 1)  },
+            {  1, new GoToRoomCommand(this, 2)  },
+            {  2, new GoToRoomCommand(this, 3)  },
+            {  3, new GoToRoomCommand(this, 4)  },
+            {  4, new GoToRoomCommand(this, 5)  },
+            {  5, new GoToRoomCommand(this, 6)  },
+            {  6, new GoToRoomCommand(this, 7)  },
+            {  7, new GoToRoomCommand(this, 8)  },
+            {  8, new GoToRoomCommand(this, 9)  },
+            {  9, new GoToRoomCommand(this, 10) },
+            { 10, new GoToRoomCommand(this, 11) },
+            { 11, new GoToRoomCommand(this, 12) },
+            { 12, new GoToRoomCommand(this, 13) },
+            { 13, new GoToRoomCommand(this, 14) },
+            { 14, new GoToRoomCommand(this, 15) },
+            { 15, new GoToRoomCommand(this, 16) },
+            { 16, new GoToRoomCommand(this, 17) },
             { 17, new GoToSecretRoomCommand(this) },
         };
 
@@ -607,6 +607,33 @@ public class Game1 : Game
         base.Draw(gameTime);
     }
 
+    public void GoToRoom(int roomId)
+    {
+        switch (roomId)
+        {
+            case 1: GoToRoom1(); break;
+            case 2: GoToRoom2(); break;
+            case 3: GoToRoom3(); break;
+            case 4: GoToRoom4(); break;
+            case 5: GoToRoom5(); break;
+            case 6: GoToRoom6(); break;
+            case 7: GoToRoom7(); break;
+            case 8: GoToRoom8(); break;
+            case 9: GoToRoom9(); break;
+            case 10: GoToRoom10(); break;
+            case 11: GoToRoom11(); break;
+            case 12: GoToRoom12(); break;
+            case 13: GoToRoom13(); break;
+            case 14: GoToRoom14(); break;
+            case 15: GoToRoom15(); break;
+            case 16: GoToRoom16(); break;
+            case 17: GoToRoom17(); break;
+            case 18: GoToSecretRoom(); break;
+            default:
+                break;
+        }
+    }
+
     public void GoToRoom1() => LoadRoom(1);
     public void GoToRoom2() => LoadRoom(2);
     public void GoToRoom3() => LoadRoom(3);
@@ -761,23 +788,23 @@ public class Game1 : Game
 
         mapCellCommands = new Dictionary<int, ICommand>
         {
-            {  0, new GoToRoom1Command(this)  },
-            {  1, new GoToRoom2Command(this)  },
-            {  2, new GoToRoom3Command(this)  },
-            {  3, new GoToRoom4Command(this)  },
-            {  4, new GoToRoom5Command(this)  },
-            {  5, new GoToRoom6Command(this)  },
-            {  6, new GoToRoom7Command(this)  },
-            {  7, new GoToRoom8Command(this)  },
-            {  8, new GoToRoom9Command(this)  },
-            {  9, new GoToRoom10Command(this) },
-            { 10, new GoToRoom11Command(this) },
-            { 11, new GoToRoom12Command(this) },
-            { 12, new GoToRoom13Command(this) },
-            { 13, new GoToRoom14Command(this) },
-            { 14, new GoToRoom15Command(this) },
-            { 15, new GoToRoom16Command(this) },
-            { 16, new GoToRoom17Command(this) },
+            {  0, new GoToRoomCommand(this, 1)  },
+            {  1, new GoToRoomCommand(this, 2)  },
+            {  2, new GoToRoomCommand(this, 3)  },
+            {  3, new GoToRoomCommand(this, 4)  },
+            {  4, new GoToRoomCommand(this, 5)  },
+            {  5, new GoToRoomCommand(this, 6)  },
+            {  6, new GoToRoomCommand(this, 7)  },
+            {  7, new GoToRoomCommand(this, 8)  },
+            {  8, new GoToRoomCommand(this, 9)  },
+            {  9, new GoToRoomCommand(this, 10) },
+            { 10, new GoToRoomCommand(this, 11) },
+            { 11, new GoToRoomCommand(this, 12) },
+            { 12, new GoToRoomCommand(this, 13) },
+            { 13, new GoToRoomCommand(this, 14) },
+            { 14, new GoToRoomCommand(this, 15) },
+            { 15, new GoToRoomCommand(this, 16) },
+            { 16, new GoToRoomCommand(this, 17) },
             { 17, new GoToSecretRoomCommand(this) },
         };
 
