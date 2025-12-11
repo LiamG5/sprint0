@@ -19,6 +19,8 @@ namespace sprint0.Classes
         private LinkObjectSprite linkObjSprite;
         private Link player;
 
+        private float superLinkStartTime;
+
 
 
         public LinkAnimation()
@@ -26,6 +28,7 @@ namespace sprint0.Classes
             this.linkSprite = new LinkSprite();
             this.linkObjSprite = new LinkObjectSprite();
             this.superColors = new List<Color>();
+            this.superLinkStartTime = 0f;
             AddSuperColors();
         }
         private void AddSuperColors()
@@ -420,22 +423,45 @@ namespace sprint0.Classes
         }
         private void SuperLink(GameTime gameTime)
         {
+            if(superLinkStartTime == 0f)
+            {
+                superLinkStartTime = (float)gameTime.TotalGameTime.TotalSeconds;
+                superColorsIndex = 0;
+            }
             if (superColorsIndex >= superColors.Count)
             {
                 superColorsIndex = 0;
             }
             color = superColors[superColorsIndex];
-            superColorsIndex++;    
+            superColorsIndex++;   
+
+            float currentTime = (float)gameTime.TotalGameTime.TotalSeconds;
+        if (superLinkStartTime + 30f < currentTime)
+        {
+        // End SuperLink
+        Inventory.SetSuperLink(false);
+        color = Color.White;
+        superLinkStartTime = 0f;
+        superColorsIndex = 0;
+         }
+
         }
 
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime )
         {
             linkSprite.Update(gameTime);
             if (Inventory.GetSuperLink())
             {
                 SuperLink(gameTime);
-            }
+            }else{
+                if (superLinkStartTime != 0f)
+        {
+            superLinkStartTime = 0f;
+            superColorsIndex = 0;
+            color = Color.White;
+        }
+        }
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position)

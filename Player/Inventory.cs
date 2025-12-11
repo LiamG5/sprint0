@@ -86,9 +86,9 @@ namespace sprint0.Classes
             return enemiesFrozen;
         }
 
-        public static void SetSuperLink()
+        public static void SetSuperLink(bool value)
         {
-            superLink = true;
+            superLink = value;
         }
         public static bool GetSuperLink()
         {

@@ -3,8 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 using sprint0.Classes;
 using sprint0.Interfaces;
 using sprint0.Managers;
+using sprint0.Sprites.Enemies;
 using System;
 using System.Collections.Generic;
+
 
 namespace sprint0.Sprites
 {
@@ -28,10 +30,12 @@ namespace sprint0.Sprites
         private Func<Vector2> playerPositionProvider;
         private Link link;
 
+        private bool keySpawned = false;
+
     
         public EnemyLoader(EnemySpriteFactory enemies, ItemDroper itemDroper)
         {
-            roomId = 1;
+            roomId = 2;
             this.enemies = enemies;
             this.enemyList = new List<IEnemy>();
             this.LoadedEnemies = new Dictionary<int, List<IEnemy>>();
@@ -46,6 +50,10 @@ namespace sprint0.Sprites
             if (LoadedEnemies.ContainsKey(this.roomId))
             {   
                 LoadedEnemies[this.roomId] = this.enemyList;
+                if (enemyList.Count == 0)
+                {
+                    keySpawned = true;
+                }
             }
             else
             {
@@ -142,7 +150,7 @@ namespace sprint0.Sprites
             enemyList.Add(enemies.SpawnStalfos(new Vector2(ColStart + ColMult * 10, RowStart + RowMult * 5)));
             enemyList.Add(enemies.SpawnStalfos(new Vector2(ColStart + ColMult * 7, RowStart + RowMult *4 )));
             enemyList.Add(enemies.SpawnStalfos(new Vector2(ColStart + ColMult * 6, RowStart + RowMult *1 )));
-            enemyList.Add(enemies.SpawnStalfos(new Vector2(ColStart + ColMult * 9, RowStart + RowMult *1 )));
+            enemyList.Add(enemies.SpawnStalfosKey(new Vector2(ColStart + ColMult * 9, RowStart + RowMult *1 )));
             
         }
 
@@ -243,7 +251,7 @@ namespace sprint0.Sprites
         {
             enemyList.Add(enemies.SpawnStalfos(new Vector2(ColStart + ColMult * 1, RowStart + RowMult *2 )));
             enemyList.Add(enemies.SpawnStalfos(new Vector2(ColStart + ColMult * 3, RowStart + RowMult *3 )));
-            enemyList.Add(enemies.SpawnStalfos(new Vector2(ColStart + ColMult *10, RowStart + RowMult *3 )));
+            enemyList.Add(enemies.SpawnStalfosKey(new Vector2(ColStart + ColMult *10, RowStart + RowMult *3 )));
         }
 
         private void Room14Enemies()
@@ -282,15 +290,28 @@ namespace sprint0.Sprites
         
         public void Update()
         {
+            
         for (int i = enemyList.Count - 1; i >= 0; i--){
                 if (enemyList[i].IsDead())
                 {
+                if(enemyList[i] is EnemyStalfosKey){
+                    itemDroper.dropKey(enemyList[i].GetPosition());
+                    enemyList.RemoveAt(i);
+                }
+                else{
                 itemDroper.LoadItem(enemyList[i].GetPosition());
                 enemyList.RemoveAt(i);
                 }
-            }   
+
+            if (enemyList.Count == 0){
+                keySpawned = true;
+                itemDroper.Dropkey(this.roomId);
+            }
+
+
         } 
-        
+        }
+        }
 
 
         public List<IEnemy> GetEnemies()

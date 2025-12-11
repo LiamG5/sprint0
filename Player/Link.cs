@@ -323,8 +323,16 @@ namespace sprint0.Classes
 		{
 			switch (other)
 			{
-			case EnemyWallmaster wallmaster:
-				game.GoToRoom2();
+			case EnemyWallmaster enemy:
+                    if (!Inventory.GetSuperLink())
+                    {
+                     game.GoToRoom2();
+                    }
+                    else
+                    {
+                        enemy.TakeDamage(100);
+                    }
+				
 				break;
 			case EnemyFlame flame:
 				HandleBlockCollision(flame, direction);

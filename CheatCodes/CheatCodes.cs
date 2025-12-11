@@ -1,9 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using Microsoft.Xna.Framework.Input;
 using sprint0.Classes;
+using sprint0.Sounds;
 
 namespace sprint0.Cheats
 {
@@ -15,6 +17,10 @@ namespace sprint0.Cheats
         private  List<Keys> cheat3 = new List<Keys>();
         private  List<Keys> cheat4 = new List<Keys>();
         private  List<Keys> cheat5 = new List<Keys>();
+        private  List<Keys> cheat6 = new List<Keys>();
+        private  List<Keys> cheat7 = new List<Keys>();
+        private  List<Keys> cheat8 = new List<Keys>();
+      
 
         public int CheatCodeCheck = 0;
         private  int maxLength;
@@ -56,6 +62,18 @@ namespace sprint0.Cheats
                 {
                     CheatCodeCheck = 5;
                 }
+                else if (buffer.SequenceEqual(cheat6))
+                {
+                    CheatCodeCheck = 6;
+                }
+                else if (buffer.SequenceEqual(cheat7))
+                {
+                    CheatCodeCheck = 7;
+                }
+                else if (buffer.SequenceEqual(cheat8))
+                {
+                    CheatCodeCheck = 8;
+                }
                 buffer.Clear();
 
             }
@@ -68,6 +86,9 @@ namespace sprint0.Cheats
             CheatCreate3();
             CheatCreate4();
             CheatCreate5();
+            CheatCreate6();
+            CheatCreate7();
+            CheatCreate8();
         }
         private void CheatCreate1()
         {
@@ -151,28 +172,113 @@ namespace sprint0.Cheats
             cheat5.Add(Keys.C);
 
         }
+       
+        private void CheatCreate6()
+        {
+            // A1 S1 D1 W1 1C 
+            cheat6.Add(Keys.A);
+            cheat6.Add(Keys.D1);
+
+            cheat6.Add(Keys.S);
+            cheat6.Add(Keys.D1);
+
+            cheat6.Add(Keys.D);
+            cheat6.Add(Keys.D1);
+
+            cheat6.Add(Keys.W);
+            cheat6.Add(Keys.D1);
+
+            cheat6.Add(Keys.D1);
+            cheat6.Add(Keys.C);
+
+        }
+        private void CheatCreate7()
+        {
+            // AD AD WS WS 1C 
+            cheat7.Add(Keys.A);
+            cheat7.Add(Keys.D);
+
+            cheat7.Add(Keys.A);
+            cheat7.Add(Keys.D);
+
+            cheat7.Add(Keys.W);
+            cheat7.Add(Keys.S);
+
+            cheat7.Add(Keys.W);
+            cheat7.Add(Keys.S);
+
+            cheat7.Add(Keys.D1);
+            cheat7.Add(Keys.C);
+
+        }
+        private void CheatCreate8()
+        {
+            // AD WS DA 11 2C 
+            cheat8.Add(Keys.A);
+            cheat8.Add(Keys.D);
+
+            cheat8.Add(Keys.W);
+            cheat8.Add(Keys.S);
+
+            cheat8.Add(Keys.D);
+            cheat8.Add(Keys.A);
+
+            cheat8.Add(Keys.D1);
+            cheat8.Add(Keys.D1);
+
+            cheat8.Add(Keys.D2);
+            cheat8.Add(Keys.C);
+
+
+        }
     public void Update(){
-        
-            if(CheatCodeCheck == 1){
-                Inventory.AddRupees(100);
-                Inventory.AddBombs(100);
-                            }
-            else if(CheatCodeCheck == 2){
-                Inventory.GetClock();
-                            }
-            else if(CheatCodeCheck == 3){
-                Inventory.GetHeartContainer();
-                            }
-            else if(CheatCodeCheck == 4){
-                Inventory.SetSuperLink();
-            }              
-            else if(CheatCodeCheck == 5){
-                
-                }
-        
+
+        switch(CheatCodeCheck){
+            case 1: Inventory.AddRupees(100); Inventory.AddBombs(100); break;
+            case 2: Inventory.GetClock(); break;
+            case 3: Inventory.GetHeartContainer(); break;      
+            case 4: Inventory.AcquireMap(); break;
+            case 5: Inventory.GetFairy(); break;
+            case 6: 
             
-            CheatCodeCheck = 0;
+                    Inventory.SetRupees(0);
+                    Inventory.SetBombs(0);
+                    Inventory.SetKeys(0);
+                    Inventory.SetBoomerang(false);
+                    Inventory.SetBow(false);
+                    Inventory.SetCompass(false); 
+                    Inventory.SetMap(false);
+                    Inventory.SetHealth(1);
+                    SoundStorage.PlayLaugh();
+
+            break;
+            case 7:
+                    
+                    Inventory.AddRupees(100); 
+                    Inventory.AddBombs(100);
+                    
+                    Inventory.GetKeys();
+                    Inventory.GetKeys();
+                    Inventory.GetKeys();
+                    Inventory.GetKeys();
+                    Inventory.GetKeys();
+                    Inventory.GetKeys();
+                    Inventory.GetKeys();
+                    Inventory.GetKeys();
+                    Inventory.GetKeys();
+                    Inventory.GetKeys();
+
+                    Inventory.GetFairy();
+                    
+                    Inventory.SetBoomerang(true);
+                    Inventory.SetBow(true);
+                    Inventory.SetCompass(true);
+                    Inventory.SetMap(true);
+                     break;
+            case 8: SoundStorage.PlaySuperLink(); Inventory.SetSuperLink(true); break;
+    }
+        CheatCodeCheck = 0;
 }
-}
+    }
 }
     

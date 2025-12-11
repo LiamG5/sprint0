@@ -15,7 +15,7 @@ namespace sprint0.Sprites
     { 
         public enum EnemyType
         {
-            BladeTrap, Gel, RedGoriya, Keese, Stalfos, Wallmaster, Aquamentus, Flame
+            BladeTrap, Gel, RedGoriya, Keese, Stalfos, StalfosKey, Wallmaster, Aquamentus, Flame
         }
 
         private EnemyType currEnemy = EnemyType.BladeTrap;
@@ -93,6 +93,16 @@ namespace sprint0.Sprites
         {
             currEnemy = EnemyType.Stalfos;
             return new EnemyStalfos(enemySpritesheet, position);
+        }
+        public IEnemy SpawnStalfosKey()
+        {
+            currEnemy = EnemyType.StalfosKey;
+            return new EnemyStalfosKey(enemySpritesheet);
+        }
+        public IEnemy SpawnStalfosKey(Vector2 position)
+        {
+            currEnemy = EnemyType.StalfosKey;
+            return new EnemyStalfosKey(enemySpritesheet, position);
         }
         
         public IEnemy SpawnWallmaster()

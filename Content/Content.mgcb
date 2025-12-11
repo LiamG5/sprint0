@@ -38,6 +38,12 @@
 /processorParam:TextureFormat=Color
 /build:Room2Border.png
 
+#begin Sounds/Cod_Laugh.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Cod_Laugh.wav
+
 #begin Sounds/LOZ_Arrow_Boomerang.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

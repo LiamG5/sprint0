@@ -15,7 +15,7 @@ namespace sprint0.Sprites
         public Texture2D border;
         public List<IItem> itemList;
         private Dictionary<int, List<IItem>> LoadedItems;
-        private int roomId = 1;
+        private int roomId = 2;
         private ItemDroper itemDroper;
 
 
@@ -31,33 +31,23 @@ namespace sprint0.Sprites
 
         public void LoadItems(int roomId)
         {
-            if (this.itemList.Count > 0)
-            {
-                var uncollectedItems = new List<IItem>();
-                foreach (var item in this.itemList)
-                {
-                    if (!item.IsCollected())
-                    {
-                        uncollectedItems.Add(item);
-                    }
-                }
-                
-                if (LoadedItems.ContainsKey(this.roomId))
-                {
-                    LoadedItems[this.roomId] = uncollectedItems;
-                }
-                else
-                {
-                    LoadedItems.Add(this.roomId, uncollectedItems);
-                }
+           if (LoadedItems.ContainsKey(this.roomId))
+            {   
+                LoadedItems[this.roomId] = this.itemList;
+
             }
+            else
+            {
+                LoadedItems.Add(this.roomId, this.itemList);
+            }
+            this.roomId = roomId;
 
             this.itemList = new List<IItem>();
 
             if (LoadedItems.ContainsKey(roomId))
             {
                 this.itemList = new List<IItem>(LoadedItems[roomId]);
-                this.roomId = roomId;
+                
                 return;
             }
 
@@ -128,13 +118,13 @@ namespace sprint0.Sprites
 
         private void Room1Items()
         {
-            itemList.Add(items.BuildRecoveryHeart(new Vector2(420, 240)));
-            itemList.Add(items.BuildSmallKey(new Vector2(478, 384)));
+            //itemList.Add(items.BuildRecoveryHeart(new Vector2(420, 240)));
+            //itemList.Add(items.BuildSmallKey(new Vector2(478, 384)));
         }
 
         private void Room2Items()
         {
-            itemList.Add(items.BuildBow(new Vector2(400, 300)));
+           // itemList.Add(items.BuildBow(new Vector2(400, 300)));
         }
 
         private void Room3Items()
@@ -157,7 +147,7 @@ namespace sprint0.Sprites
         private void Room6Items()
         {
 
-            itemList.Add(items.BuildSmallKey(new Vector2(388, 144)));
+            //itemList.Add(items.BuildSmallKey(new Vector2(388, 144)));
         }
         
          private void Room7Items()
@@ -198,7 +188,8 @@ namespace sprint0.Sprites
 
         private void Room12Items()
         {
-            itemList.Add(items.BuildSmallKey(new Vector2(478, 384)));   
+            //drops now
+            //itemList.Add(items.BuildSmallKey(new Vector2(478, 384)));   
         }
 
         private void Room13Items()
@@ -227,15 +218,11 @@ namespace sprint0.Sprites
         private void Room17Items()
         {
 
-            itemList.Add(items.BuildSmallKey(new Vector2(388, 144)));
+           // itemList.Add(items.BuildSmallKey(new Vector2(388, 144)));
             
         }
 
-        public void Dropkey()
-        {
-            
-            
-        }
+        
 
         public void Draw(SpriteBatch spriteBatch)
         {
@@ -255,19 +242,29 @@ namespace sprint0.Sprites
         {
             item.Update(gameTime);
         }
+        for(int i = itemList.Count -1 ; i >= 0; i--)
+            {
+                if (itemList[i].IsCollected())
+                {
+                    itemList.RemoveAt(i);
+                }
+            }
 
-        } 
+
+        }
         public List<IItem> GetItems()
         {
             return itemList;
         }
+
+        
                 
 
         public void Reset()
         {
             LoadedItems.Clear();
             itemList.Clear();
-            this.roomId = 1;
+            this.roomId = 2;
         }
         
 

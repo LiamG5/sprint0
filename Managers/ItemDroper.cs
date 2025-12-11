@@ -77,6 +77,36 @@ namespace sprint0.Sprites
             
         }
         
+        public void Dropkey(int roomNum)
+        {
+            switch (roomNum)
+            {
+                case 1:
+                    item = items.BuildSmallKey(new Vector2(478, 384));
+                    spawnItem = true;
+                    break;
+                case 6:
+                    item = items.BuildSmallKey(new Vector2(388, 144));
+                    spawnItem = true;
+                    break;
+                case 12:
+                    item = items.BuildSmallKey(new Vector2(478, 384));
+                    spawnItem = true;
+                    break;
+                case 17:
+                    item = items.BuildSmallKey(new Vector2(388, 144));
+                    spawnItem = true;
+                    break;
+            
+        }
+        }
+        public void dropKey(Vector2 position)
+        {
+            item = items.BuildSmallKey(position);
+            spawnItem = true;
+        }
+
+
         public bool HasItem()
         {
             return spawnItem;
