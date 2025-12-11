@@ -26,6 +26,7 @@ namespace sprint0.Sprites
         private const float EXPLODE_TIME = 1.0f;
         private const float EXPLOSION_DURATION = 0.3f;
         private bool hasExploded = false;
+        private bool hasDamagedLink = false;
 
         public BombProjectile(Texture2D texture, Rectangle sourceRect, Vector2 startPosition)
         {
@@ -52,6 +53,7 @@ namespace sprint0.Sprites
             if (timer >= EXPLODE_TIME && !hasExploded)
             {
                 hasExploded = true;
+                hasDamagedLink = false;
                 sprint0.Sounds.SoundStorage.LOZ_Bomb_Blow.Play();
             }
             
@@ -115,6 +117,11 @@ namespace sprint0.Sprites
             switch (other)
             {
                 case Link link:
+                    if (hasExploded && !hasDamagedLink)
+                    {
+                        link.TakeDamage(2);
+                        hasDamagedLink = true;
+                    }
                     break;
 
                 case IEnemy enemy:

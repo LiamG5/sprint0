@@ -332,6 +332,7 @@ public class Game1 : Game
     protected override void Update(GameTime gameTime)
     {
         transitionManager?.Update(gameTime);
+        esp32?.SendOn();
 
         if (transitionManager == null || !transitionManager.IsTransitioning)
         {

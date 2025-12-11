@@ -171,8 +171,7 @@ namespace sprint0.Classes
 
 	private void FireArrow()
 	{
-		Vector2 startPosition = position + new Vector2(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2);
-		var arrow = sprint0.Sprites.Projectiles.ProjectileArrow.Create(startPosition, direction);
+		var arrow = sprint0.Sprites.Projectiles.ProjectileArrow.Create(position, direction);
 		game.AddProjectile(arrow);
 		sprint0.Sounds.SoundStorage.LOZ_Arrow_Boomerang.Play();
 	}
