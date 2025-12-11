@@ -28,6 +28,26 @@ Cycle current enempy/NPC forward: P
 Other Controls:
 Quit: Q
 Reset to initial state: R
+Muisc: m
+Inventory: b
+
+Cheat codes
+WW AA DD 12 22 -- +100 rupees + 100 bombs
+
+12 WS AD WD S2 -- free clock item
+
+AA DD AD DA W2 --free heart container
+         
+WS WS WS WS WC-- get map
+            
+AD AD AD DA SC --full health
+            
+A1 S1 D1 W1 1C -- surprise
+            
+AD AD WS WS 1C -- get everything
+            
+AD WS DA 11 2C -- Super Link (30 secs)
+            
 Mute/Unmute music: M
 Activate portal: K
 

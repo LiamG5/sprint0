@@ -167,6 +167,7 @@ namespace sprint0.Classes
 	{
 		var swordBeam = sprint0.Sprites.Projectiles.ProjectileSwordBeam.Create(position, direction);
 		game.AddProjectile(swordBeam);
+		sprint0.Sounds.SoundStorage.LOZ_Sword_Shoot.Play();
 	}
 
 	private void FireArrow()
@@ -331,8 +332,16 @@ namespace sprint0.Classes
 		{
 			switch (other)
 			{
-			case EnemyWallmaster wallmaster:
-				game.GoToRoom2();
+			case EnemyWallmaster enemy:
+                    if (!Inventory.GetSuperLink())
+                    {
+                     game.GoToRoom2();
+                    }
+                    else
+                    {
+                        enemy.TakeDamage(100);
+                    }
+				
 				break;
 			case EnemyFlame flame:
 				HandleBlockCollision(flame, direction);
@@ -372,8 +381,14 @@ namespace sprint0.Classes
 			velocity = newVelocity;
 		}
 		
-		private void HandleEnemyCollision(ICollidable enemy, Collisions.CollisionDirection direction)
+		private void HandleEnemyCollision(IEnemy enemy, Collisions.CollisionDirection direction)
 		{
+            if (Inventory.GetSuperLink())
+            {
+				enemy.TakeDamage(100);
+                return;
+            }
+
 			TakeDamage(1);
 
 			switch (direction)
