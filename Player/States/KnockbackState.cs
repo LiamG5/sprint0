@@ -40,7 +40,6 @@ namespace sprint0.PlayerStates
 
         public void UseState()
         {
-            linkAnimation.ChangeColor(Color.Red);
         }
 
         public void Exit() { 
