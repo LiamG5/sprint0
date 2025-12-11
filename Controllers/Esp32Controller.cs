@@ -174,8 +174,7 @@ namespace sprint0.Classes
             prevRight = right;
             return;
         }
-
-
+        
         public void SendWin()
         {
             SendCommand("WIN");
@@ -186,6 +185,11 @@ namespace sprint0.Classes
             SendCommand("LOSE");
         }
 
+        public void SendOn()
+        {
+            SendCommand("ON");
+        }
+        
         private void SendCommand(string cmd)
         {
             if (IsConnected)

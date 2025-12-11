@@ -130,11 +130,11 @@ namespace sprint0.Sprites
         {
             itemList.Add(items.BuildRecoveryHeart(new Vector2(420, 240)));
             itemList.Add(items.BuildSmallKey(new Vector2(478, 384)));
+            itemList.Add(items.BuildBow(new Vector2(400, 300)));
         }
 
         private void Room2Items()
         {
-            itemList.Add(items.BuildBow(new Vector2(400, 300)));
         }
 
         private void Room3Items()

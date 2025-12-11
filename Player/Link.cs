@@ -21,9 +21,12 @@ namespace sprint0.Classes
 
 		private LinkAnimation linkAnimation = new LinkAnimation();
 
-		private GameTime time;
-		
-		private System.Collections.Generic.List<string> replayData;
+	private GameTime time;
+	
+	private System.Collections.Generic.List<string> replayData;
+	
+	private float lastArrowTime = 0;
+	private const float ARROW_COOLDOWN = 500f; // milliseconds
 	
 
 		public enum Direction { Up, Down, Left, Right };
@@ -47,22 +50,23 @@ namespace sprint0.Classes
 			replayData = new List<string>();
 		}
 
-		public void Update(GameTime gameTime)
+	public void Update(GameTime gameTime)
+	{
+		state.Update(gameTime);
+		state.UseState();
+		position += velocity;
+		linkAnimation.Update(gameTime);
+		time = gameTime;
+		
+		try
 		{
-			state.Update(gameTime);
-			state.UseState();
-			position += velocity;
-			linkAnimation.Update(gameTime);
-			
-			try
-			{
-				int roomNumber = game.GetCurrentRoomIndex();
-				string stateName = state.GetType().Name;
-				replayData.Add($"{position.X},{position.Y},{(int)direction},{roomNumber},{stateName}");
+			int roomNumber = game.GetCurrentRoomIndex();
+			string stateName = state.GetType().Name;
+			replayData.Add($"{position.X},{position.Y},{(int)direction},{roomNumber},{stateName}");
 
-			}
-			catch (System.Exception ex) {}
 		}
+		catch (System.Exception ex) {}
+	}
 		
 		
 		public void SaveReplay()
@@ -167,8 +171,7 @@ namespace sprint0.Classes
 
 	private void FireArrow()
 	{
-		Vector2 startPosition = position + new Vector2(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2);
-		var arrow = sprint0.Sprites.Projectiles.ProjectileArrow.Create(startPosition, direction);
+		var arrow = sprint0.Sprites.Projectiles.ProjectileArrow.Create(position, direction);
 		game.AddProjectile(arrow);
 		sprint0.Sounds.SoundStorage.LOZ_Arrow_Boomerang.Play();
 	}
@@ -201,11 +204,17 @@ namespace sprint0.Classes
 				else if (itemInSlotB.Value == sprint0.Sprites.ItemFactory.ItemType.Bow
 				      || itemInSlotB.Value == sprint0.Sprites.ItemFactory.ItemType.SilverArrow)
 				{
-					if (Inventory.HasBow() && Inventory.SpendRupees(1))
+					// Check cooldown before firing
+					float currentTime = (float)(time?.TotalGameTime.TotalMilliseconds ?? 0);
+					if (currentTime - lastArrowTime >= ARROW_COOLDOWN)
 					{
-						FireArrow();
-						ChangeState(new ItemState(this, linkAnimation, 2));
-						return;
+						if (Inventory.HasBow() && Inventory.SpendRupees(1))
+						{
+							FireArrow();
+							lastArrowTime = currentTime;
+							ChangeState(new ItemState(this, linkAnimation, 2));
+							return;
+						}
 					}
 				}
 			}
