@@ -224,11 +224,25 @@ namespace sprint0.Sprites
                     break;
 
                 case LinkAttackHitbox hitbox when hitbox.BlocksMovement():
-                    TakeKnockback(direction);
+                    if (!Classes.Inventory.AreEnemiesFrozen()) {
+                        TakeKnockback(hitbox.GetKnockbackDirection());
+                    } else {
+                        if (currentState == EnemyState.Normal && !isDead) {
+                            currentState = EnemyState.Invulnerable;
+                            invulnerabilityTimer = 0f;
+                        }
+                    }
                     break;
 
                 case Projectile projectile when !projectile.IsEnemyProjectile:
-                    TakeKnockback(direction);
+                    if (!Classes.Inventory.AreEnemiesFrozen()) {
+                        TakeKnockback(direction);
+                    } else {
+                        if (currentState == EnemyState.Normal && !isDead) {
+                            currentState = EnemyState.Invulnerable;
+                            invulnerabilityTimer = 0f;
+                        }
+                    }
                     break;
 
                 case DungeonLongWall wall when wall.BlocksMovement():

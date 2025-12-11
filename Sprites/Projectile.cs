@@ -20,6 +20,8 @@ namespace sprint0.Sprites
         private const int PROJECTILE_WIDTH = 16;
         private const int PROJECTILE_HEIGHT = 16;
         private float scale = 3.0f;
+        private int collisionWidth;
+        private int collisionHeight;
 
         public Projectile(Texture2D texture, Rectangle sourceRect, Vector2 startPosition, 
                          Vector2 velocity, int damage, bool isEnemyProjectile)
@@ -29,6 +31,13 @@ namespace sprint0.Sprites
 
         public Projectile(Texture2D texture, Rectangle sourceRect, Vector2 startPosition, 
                          Vector2 velocity, int damage, bool isEnemyProjectile, SpriteEffects spriteEffects)
+            : this(texture, sourceRect, startPosition, velocity, damage, isEnemyProjectile, spriteEffects, PROJECTILE_WIDTH, PROJECTILE_HEIGHT)
+        {
+        }
+
+        public Projectile(Texture2D texture, Rectangle sourceRect, Vector2 startPosition, 
+                         Vector2 velocity, int damage, bool isEnemyProjectile, SpriteEffects spriteEffects,
+                         int collisionWidth, int collisionHeight)
         {
             this.texture = texture;
             this.sourceRectangle = sourceRect;
@@ -38,6 +47,8 @@ namespace sprint0.Sprites
             this.isEnemyProjectile = isEnemyProjectile;
             this.shouldDestroy = false;
             this.spriteEffects = spriteEffects;
+            this.collisionWidth = collisionWidth;
+            this.collisionHeight = collisionHeight;
         }
 
         public bool IsEnemyProjectile => isEnemyProjectile;
@@ -60,11 +71,14 @@ namespace sprint0.Sprites
 
         public Rectangle GetBounds()
         {
+            int xOffset = (int)((PROJECTILE_WIDTH - collisionWidth) * scale / 2);
+            int yOffset = (int)((PROJECTILE_HEIGHT - collisionHeight) * scale / 2);
+            
             return new Rectangle(
-                (int)position.X, 
-                (int)position.Y, 
-                (int)(PROJECTILE_WIDTH * scale), 
-                (int)(PROJECTILE_HEIGHT * scale)
+                (int)position.X + xOffset, 
+                (int)position.Y + yOffset, 
+                (int)(collisionWidth * scale), 
+                (int)(collisionHeight * scale)
             );
         }
 

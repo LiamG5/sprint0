@@ -4,6 +4,7 @@ using sprint0.Interfaces;
 using sprint0.Classes;
 using System;
 using Microsoft.Xna.Framework.Content;
+using sprint0.Commands;
 
 namespace sprint0.Sprites
 {
@@ -48,9 +49,15 @@ namespace sprint0.Sprites
         {
             return position;
         }
-        
+
         public void OnCollision(sprint0.Interfaces.ICollidable other, sprint0.Collisions.CollisionDirection direction)
         {
+            switch (other)
+            {
+                case Link link:
+                    // GoToSecretRoomCommand
+                    break;
+            }
         }
     }
 }

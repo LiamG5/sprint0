@@ -60,26 +60,24 @@ namespace sprint0.PlayerStates
             }
 
 
+            linkAttackHitbox.Attack(player.direction, player.position);
+
             switch (player.direction)
             {
                 case Link.Direction.Up:
                     linkAnimation.LinkAttackingUp(duration, currentTime);
-                    linkAttackHitbox.AttackUp(player.position);
                     break;
 
                 case Link.Direction.Down:
                     linkAnimation.LinkAttackingDown(duration, currentTime);
-                    linkAttackHitbox.AttackDown(player.position);
                     break;
 
                 case Link.Direction.Left:
                     linkAnimation.LinkAttackingLeft(duration, currentTime);
-                    linkAttackHitbox.AttackLeft(player.position);
                     break;
 
                 case Link.Direction.Right:
                     linkAnimation.LinkAttackingRight(duration, currentTime);
-                    linkAttackHitbox.AttackRight(player.position);
                     break;
             }
         }

@@ -301,6 +301,7 @@ public class Game1 : Game
             { 14, new GoToRoom15Command(this) },
             { 15, new GoToRoom16Command(this) },
             { 16, new GoToRoom17Command(this) },
+            { 17, new GoToSecretRoomCommand(this) },
         };
 
         Classes.Inventory.Reset();
@@ -448,6 +449,8 @@ public class Game1 : Game
             }
         }
 
+        sprint0.Classes.Portal.HandleInput(Keyboard.GetState(), null, this, _spriteBatch);
+
         if (currentState != previousState)
         {
             if (currentState == GameState.Win)
@@ -511,7 +514,7 @@ public class Game1 : Game
                 }
             }
         }
-
+        sprint0.Classes.Portal.DrawAll(_spriteBatch);
         itemLoader.Draw(spriteBatch);
         HandleRoomSpecifics(spriteBatch);
     }
@@ -621,6 +624,7 @@ public class Game1 : Game
     public void GoToRoom15() => LoadRoom(15);
     public void GoToRoom16() => LoadRoom(16);
     public void GoToRoom17() => LoadRoom(17);
+    public void GoToSecretRoom() => LoadRoom(18);
 
     public int GetCurrentRoomIndex() => roomIndex;
 
@@ -774,6 +778,7 @@ public class Game1 : Game
             { 14, new GoToRoom15Command(this) },
             { 15, new GoToRoom16Command(this) },
             { 16, new GoToRoom17Command(this) },
+            { 17, new GoToSecretRoomCommand(this) },
         };
 
         if (transitionManager == null)
