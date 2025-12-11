@@ -37,7 +37,8 @@ namespace sprint0.PlayerStates
                 player.Idle();
             }
 
-            if (sfx.State != SoundState.Playing)
+
+            if (itemNum != 2 && sfx.State != SoundState.Playing)
             {
                 sfx.Play();
             }
