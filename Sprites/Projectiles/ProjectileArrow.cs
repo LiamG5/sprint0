@@ -26,25 +26,31 @@ namespace sprint0.Sprites.Projectiles
         {
             Rectangle sourceRect = ArrowRightRect;
             Vector2 velocity = new Vector2(0, 0);
+            int collisionWidth = 16;
+            int collisionHeight = 16;
 
             switch (direction)
             {
                 case Link.Direction.Up:
                     sourceRect = ArrowUpRect;
                     velocity = new Vector2(0, -speed);
+                    collisionWidth = 8;
                     break;
                 case Link.Direction.Down:
                     sourceRect = ArrowDownRect;
                     velocity = new Vector2(0, speed);
+                    collisionWidth = 8;
                     break;
                 case Link.Direction.Left:
                     sourceRect = ArrowLeftRect;
                     velocity = new Vector2(-speed, 0);
+                    collisionHeight = 8;
                     break;
                 case Link.Direction.Right:
                 default:
                     sourceRect = ArrowRightRect;
                     velocity = new Vector2(speed, 0);
+                    collisionHeight = 8;
                     break;
             }
 
@@ -54,7 +60,10 @@ namespace sprint0.Sprites.Projectiles
                 position,
                 velocity,
                 damage,
-                isEnemyProjectile: false
+                isEnemyProjectile: false,
+                SpriteEffects.None,
+                collisionWidth,
+                collisionHeight
             );
         }
     }
