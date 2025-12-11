@@ -1,33 +1,25 @@
-using sprint0.Interfaces;
 using sprint0;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
-using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using sprint0.Classes;
-using sprint0.Sprites;
 using sprint0.Commands;
+using sprint0.Interfaces;
 using sprint0.PlayerStates;
-
 
 namespace sprint0.Classes
 {
-
-    public class KeyboardController : IController
+    public class KeyboardController : BaseController
     {
         private KeyboardState previousState;
-        private Game1 game;
         private Dictionary<Keys, ICommand> pressOnceCommands;
         private Dictionary<Keys, ICommand> holdCommands;
-        private Func<bool> isInventoryOpen;
-        
 
         public KeyboardController(Game1 game, ISprite linkSprite, Func<bool> isInventoryOpen = null)
+            : base(game, isInventoryOpen)
         {
-            this.game = game;
-            this.isInventoryOpen = isInventoryOpen ?? (() => false);
-            this.previousState = Keyboard.GetState();
+            previousState = Keyboard.GetState();
             InitializeKeyMappings();
         }
 
@@ -43,7 +35,6 @@ namespace sprint0.Classes
             
             pressOnceCommands[Keys.Z] = new AttackCommand(game.link);
             pressOnceCommands[Keys.N] = new AttackCommand(game.link);
-            pressOnceCommands[Keys.D3] = new UseItemCommand(game.link, 3);
             pressOnceCommands[Keys.E] = new DamageCommand(game.link, 1);
             pressOnceCommands[Keys.T] = new PrevCommand(game.blockCarousel);
             pressOnceCommands[Keys.Y] = new NextCommand(game.blockCarousel);
@@ -65,102 +56,97 @@ namespace sprint0.Classes
             holdCommands[Keys.S] = new MoveDownCommand(game.link);
         }
 
-        public void Update()
+        public override void Update()
         {
             KeyboardState currentState = Keyboard.GetState();
-            bool inventoryOpen = isInventoryOpen();
-
-            if (game.currentState == Game1.GameState.GameOver || game.currentState == Game1.GameState.Win)
-            {
-                if (currentState.IsKeyDown(Keys.R) && previousState.IsKeyUp(Keys.R))
-                {
-                    new ResetCommand(game).Execute();
-                }
-                previousState = currentState;
-                return;
-            }
-
-            if (inventoryOpen)
-            {
-                // Handle inventory navigation
-                if (currentState.IsKeyDown(Keys.Up) && previousState.IsKeyUp(Keys.Up))
-                {
-                    game.NavigateInventory(InventoryNavigateCommand.Direction.Up);
-                }
-                if (currentState.IsKeyDown(Keys.Down) && previousState.IsKeyUp(Keys.Down))
-                {
-                    game.NavigateInventory(InventoryNavigateCommand.Direction.Down);
-                }
-                if (currentState.IsKeyDown(Keys.Left) && previousState.IsKeyUp(Keys.Left))
-                {
-                    game.NavigateInventory(InventoryNavigateCommand.Direction.Left);
-                }
-                if (currentState.IsKeyDown(Keys.Right) && previousState.IsKeyUp(Keys.Right))
-                {
-                    game.NavigateInventory(InventoryNavigateCommand.Direction.Right);
-                }
-                if (currentState.IsKeyDown(Keys.Enter) && previousState.IsKeyUp(Keys.Enter))
-                {
-                    game.SelectInventoryItem();
-                }
-                
-                if (currentState.IsKeyDown(Keys.B) && previousState.IsKeyUp(Keys.B))
-                {
-                    game.currentState = Game1.GameState.Gameplay;
-                }
-            }
-            else
-            {
-                foreach (var kvp in pressOnceCommands)
-                {
-                    Keys key = kvp.Key;
-                    ICommand command = kvp.Value;
-                    
-                    if (currentState.IsKeyDown(key) && previousState.IsKeyUp(key))
-                    {
-                        command.Execute();
-                        
-                        if (key == Keys.T || key == Keys.Y)
-                        {
-                            game.tile = game.blockCarousel.GetCurrentBlock();
-                        }
-                        /*
-                        else if (key == Keys.O || key == Keys.P)
-                        {
-                            game.enemy = game.enemyCarousel.GetCurrentEnemy();
-                        }else if(key == Keys.U || key == Keys.I)
-                        {
-                            game.item = game.itemCarousel.GetCurrentItem();
-                        }
-                        */
-                    }
-                }
-
-                bool anyMovementKeyPressed = false;
-
-                foreach (var kvp in holdCommands)
-                {
-                    Keys key = kvp.Key;
-                    ICommand command = kvp.Value;
-                    
-                    if (currentState.IsKeyDown(key))
-                    {
-                        command.Execute();
-                        anyMovementKeyPressed = true;
-                    }
-                }
-                game.KeyboardMovementActive = anyMovementKeyPressed;
-
-                if (!anyMovementKeyPressed)
-                {
-                    if (game.link.GetCurrentState() is IdleState || game.link.GetCurrentState() is MoveState)
-                    {
-                        new IdleCommand(game.link).Execute();
-                    }
-                }
-            }
-
+            
+            base.Update();
+            
             previousState = currentState;
+        }
+
+        protected override void HandleGameOverOrWinState()
+        {
+            KeyboardState currentState = Keyboard.GetState();
+            if (currentState.IsKeyDown(Keys.R) && previousState.IsKeyUp(Keys.R))
+            {
+                new ResetCommand(game).Execute();
+            }
+        }
+
+        protected override void HandleInventoryNavigation()
+        {
+            KeyboardState currentState = Keyboard.GetState();
+            
+            if (currentState.IsKeyDown(Keys.Up) && previousState.IsKeyUp(Keys.Up))
+            {
+                NavigateInventory(InventoryNavigateCommand.Direction.Up);
+            }
+            if (currentState.IsKeyDown(Keys.Down) && previousState.IsKeyUp(Keys.Down))
+            {
+                NavigateInventory(InventoryNavigateCommand.Direction.Down);
+            }
+            if (currentState.IsKeyDown(Keys.Left) && previousState.IsKeyUp(Keys.Left))
+            {
+                NavigateInventory(InventoryNavigateCommand.Direction.Left);
+            }
+            if (currentState.IsKeyDown(Keys.Right) && previousState.IsKeyUp(Keys.Right))
+            {
+                NavigateInventory(InventoryNavigateCommand.Direction.Right);
+            }
+            if (currentState.IsKeyDown(Keys.Enter) && previousState.IsKeyUp(Keys.Enter))
+            {
+                SelectInventoryItem();
+            }
+            
+            if (currentState.IsKeyDown(Keys.B) && previousState.IsKeyUp(Keys.B))
+            {
+                CloseInventory();
+            }
+        }
+
+        protected override void HandleGameplayInput()
+        {
+            KeyboardState currentState = Keyboard.GetState();
+            
+            foreach (var kvp in pressOnceCommands)
+            {
+                Keys key = kvp.Key;
+                ICommand command = kvp.Value;
+                
+                if (currentState.IsKeyDown(key) && previousState.IsKeyUp(key))
+                {
+                    command.Execute();
+                    
+                    if (key == Keys.T || key == Keys.Y)
+                    {
+                        game.tile = game.blockCarousel.GetCurrentBlock();
+                    }
+                }
+            }
+
+            bool anyMovementKeyPressed = false;
+
+            foreach (var kvp in holdCommands)
+            {
+                Keys key = kvp.Key;
+                ICommand command = kvp.Value;
+                
+                if (currentState.IsKeyDown(key))
+                {
+                    command.Execute();
+                    anyMovementKeyPressed = true;
+                }
+            }
+            game.KeyboardMovementActive = anyMovementKeyPressed;
+
+            if (!anyMovementKeyPressed)
+            {
+                if (game.link.GetCurrentState() is IdleState || game.link.GetCurrentState() is MoveState)
+                {
+                    new IdleCommand(game.link).Execute();
+                }
+            }
         }
     }
 
