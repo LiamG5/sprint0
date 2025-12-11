@@ -333,6 +333,7 @@ public class Game1 : Game
     protected override void Update(GameTime gameTime)
     {
         transitionManager?.Update(gameTime);
+        esp32?.SendOn();
 
         if (transitionManager == null || !transitionManager.IsTransitioning)
         {
@@ -448,7 +449,7 @@ public class Game1 : Game
             }
         }
 
-        Portal.HandleInput(Keyboard.GetState(), null, this, _spriteBatch);
+        sprint0.Classes.Portal.HandleInput(Keyboard.GetState(), null, this, _spriteBatch);
 
         if (currentState != previousState)
         {
@@ -513,7 +514,7 @@ public class Game1 : Game
                 }
             }
         }
-        Portal.DrawAll(_spriteBatch);
+        sprint0.Classes.Portal.DrawAll(_spriteBatch);
         itemLoader.Draw(spriteBatch);
         HandleRoomSpecifics(spriteBatch);
     }

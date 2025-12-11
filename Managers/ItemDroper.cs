@@ -42,7 +42,7 @@ namespace sprint0.Sprites
             // random item
             if(itemType == 0)
             {
-                itemType = rand.Next(0, 6); 
+                itemType = rand.Next(0, 100); 
                 spawnItem = true;
             }
             else
@@ -51,30 +51,22 @@ namespace sprint0.Sprites
                 return;
             }
 
-            switch (itemType)
-            {
-                case 0:
-                    item = items.BuildRupee(position);
-                    break;
-                case 1:
-                    item = items.BuildFairy(position, playerPositionProvider);
-                    break;
-                case 2:
-                    item = items.BuildBomb(position);
-                    break;
-                case 3:
-                    item = items.BuildRupeeBlue(position);
-                    break;
-                case 4:
-                    item = items.BuildRecoveryHeart(position);
-                    break;
-                case 5:
-                    item = items.BuildClock(position);
-                    break;
-
+            if(itemType <= 25) {
+                item = items.BuildRupeeBlue(position);
+            } else if(itemType <= 50) {
+                item = items.BuildBomb(position);
+            } else if(itemType <= 75) {
+                item = items.BuildRecoveryHeart(position);
+            } else if(itemType <= 90) {
+                item = items.BuildRupee(position);
+            } else if(itemType <= 95) {
+                item = items.BuildFairy(position, playerPositionProvider);
+            } else {
+                item = items.BuildClock(position);
             }
-            this.position = position;
             
+            this.position = position;
+
         }
         
         public void Dropkey(int roomNum)

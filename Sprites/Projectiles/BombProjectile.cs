@@ -10,15 +10,23 @@ namespace sprint0.Sprites
     {
         private Vector2 position;
         private Texture2D texture;
+        private Texture2D explosionTexture;
         private Rectangle sourceRectangle;
+        private Rectangle explosionRectangle;
         private bool shouldDestroy;
         private const int BOMB_WIDTH = 16;
         private const int BOMB_HEIGHT = 16;
         private float scale = 3.0f;
         
+        private const int TILE_SIZE = 16;
+        private const int EXPLOSION_ROW = 23;
+        private const int EXPLOSION_COL = 0;
+        
         private float timer = 0f;
-        private const float EXPLODE_TIME = 2.0f;
+        private const float EXPLODE_TIME = 1.0f;
+        private const float EXPLOSION_DURATION = 0.3f;
         private bool hasExploded = false;
+        private bool hasDamagedLink = false;
 
         public BombProjectile(Texture2D texture, Rectangle sourceRect, Vector2 startPosition)
         {
@@ -26,6 +34,13 @@ namespace sprint0.Sprites
             this.sourceRectangle = sourceRect;
             this.position = startPosition;
             this.shouldDestroy = false;
+            this.explosionTexture = Texture2DStorage.GetEnemiesSpriteSheet();
+            this.explosionRectangle = new Rectangle(
+                EXPLOSION_COL * TILE_SIZE,
+                EXPLOSION_ROW * TILE_SIZE,
+                TILE_SIZE,
+                TILE_SIZE
+            );
         }
 
         public bool ShouldDestroy => shouldDestroy;
@@ -38,17 +53,37 @@ namespace sprint0.Sprites
             if (timer >= EXPLODE_TIME && !hasExploded)
             {
                 hasExploded = true;
+                hasDamagedLink = false;
+                sprint0.Sounds.SoundStorage.LOZ_Bomb_Blow.Play();
+            }
+            
+            if (hasExploded && timer >= EXPLODE_TIME + EXPLOSION_DURATION)
+            {
                 shouldDestroy = true;
             }
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 drawPosition)
         {
-            if (!shouldDestroy && texture != null && sourceRectangle.Width > 0 && sourceRectangle.Height > 0)
+            if (shouldDestroy) return;
+            
+            if (hasExploded)
             {
-                spriteBatch.Draw(texture, drawPosition, sourceRectangle, 
-                               Color.White, 0f, Vector2.Zero, scale, 
-                               SpriteEffects.None, 0f);
+                if (explosionTexture != null && explosionRectangle.Width > 0 && explosionRectangle.Height > 0)
+                {
+                    spriteBatch.Draw(explosionTexture, drawPosition, explosionRectangle, 
+                                   Color.White, 0f, Vector2.Zero, scale, 
+                                   SpriteEffects.None, 0f);
+                }
+            }
+            else
+            {
+                if (texture != null && sourceRectangle.Width > 0 && sourceRectangle.Height > 0)
+                {
+                    spriteBatch.Draw(texture, drawPosition, sourceRectangle, 
+                                   Color.White, 0f, Vector2.Zero, scale, 
+                                   SpriteEffects.None, 0f);
+                }
             }
         }
 
@@ -82,13 +117,18 @@ namespace sprint0.Sprites
             switch (other)
             {
                 case Link link:
+                    if (hasExploded && !hasDamagedLink)
+                    {
+                        link.TakeDamage(2);
+                        hasDamagedLink = true;
+                    }
                     break;
 
                 case IEnemy enemy:
                     if (hasExploded)
                     {
                         sprint0.Sounds.SoundStorage.LOZ_Enemy_Hit.Play();
-                        enemy.TakeDamage(2);
+                        enemy.TakeDamage(1);
                     }
                     break;
 
