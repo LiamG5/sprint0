@@ -21,12 +21,7 @@ namespace sprint0.Sprites
         private int invulnerabilityTimer = 0;
         private const int invulnerabilityDuration = 30;
         
-        private enum EnemyState { Normal, Knockback, Invulnerable }
-        private EnemyState currentState = EnemyState.Normal;
-        private float knockbackTimer = 0f;
-        private const float KNOCKBACK_DURATION = 200f;
-        private Vector2 knockbackVelocity = Vector2.Zero;
-        private const float KNOCKBACK_SPEED = 2f;
+        private EnemyStateMachine stateMachine;
         private const int BOSS_WIDTH = 72;
         private const int BOSS_HEIGHT = 96;
         private int attackTimer = 0;
@@ -56,6 +51,12 @@ namespace sprint0.Sprites
             this.dungeonLoader = dungeonLoader;
             this.playerPositionProvider = playerPositionProvider;
             animation = new EnemyAnimationHelper(frame1, frame2);
+            stateMachine = new EnemyStateMachine
+            {
+                KnockbackDuration = 200f,
+                InvulnerabilityDuration = 500f,  // Will use invulnerabilityTimer instead
+                KnockbackSpeed = 2f
+            };
             
             // Start moving immediately in a random direction
             moveDuration = maxMoveDuration;
@@ -68,52 +69,37 @@ namespace sprint0.Sprites
             
             float elapsedMs = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             
-            switch (currentState)
+            Vector2 knockbackDelta = stateMachine.UpdateKnockback(elapsedMs);
+            
+            if (stateMachine.GetCurrentState() == EnemyStateMachine.State.Knockback)
             {
-                case EnemyState.Knockback:
-                    float knockbackDistance = KNOCKBACK_SPEED * (elapsedMs / 16.67f);
-                    Vector2 knockbackDirection = knockbackVelocity;
-                    if (knockbackDirection.LengthSquared() > 0)
-                    {
-                        knockbackDirection.Normalize();
-                        position += knockbackDirection * knockbackDistance;
-                    }
-                    knockbackTimer += elapsedMs;
-                    if (knockbackTimer >= KNOCKBACK_DURATION)
-                    {
-                        knockbackTimer = 0f;
-                        knockbackVelocity = Vector2.Zero;
-                        currentState = EnemyState.Invulnerable;
-                        invulnerabilityTimer = invulnerabilityDuration;
-                    }
-                    if (invulnerabilityTimer > 0)
-                    {
-                        invulnerabilityTimer--;
-                    }
-                    break;
-
-                case EnemyState.Invulnerable:
-                    if (invulnerabilityTimer > 0)
-                    {
-                        invulnerabilityTimer--;
-                    }
-                    else
-                    {
-                        currentState = EnemyState.Normal;
-                    }
-                    break;
-
-                case EnemyState.Normal:
-                default:
-                    if (invulnerabilityTimer > 0)
-                    {
-                        invulnerabilityTimer--;
-                    }
-                    break;
+                position += knockbackDelta;
+                if (invulnerabilityTimer > 0)
+                {
+                    invulnerabilityTimer--;
+                }
+            }
+            else if (stateMachine.GetCurrentState() == EnemyStateMachine.State.Invulnerable)
+            {
+                if (invulnerabilityTimer > 0)
+                {
+                    invulnerabilityTimer--;
+                }
+                else
+                {
+                    stateMachine.Reset();
+                }
+            }
+            else
+            {
+                if (invulnerabilityTimer > 0)
+                {
+                    invulnerabilityTimer--;
+                }
             }
             
             // Only do normal movement if not in knockback
-            if (currentState != EnemyState.Knockback)
+            if (stateMachine.GetCurrentState() != EnemyStateMachine.State.Knockback)
             {
                 // Check if boss is stuck (hasn't moved)
                 if (Vector2.Distance(position, lastPosition) < 0.5f)
@@ -300,7 +286,7 @@ namespace sprint0.Sprites
             if (!isDead && bossSpriteSheet != null)
             {
                 Color drawColor = Color.White;
-                if (currentState == EnemyState.Invulnerable || currentState == EnemyState.Knockback)
+                if (stateMachine.IsInvulnerable())
                 {
                     drawColor = (invulnerabilityTimer % 6 < 3) ? Color.Red : Color.White;
                 }
@@ -310,7 +296,7 @@ namespace sprint0.Sprites
 
         public void TakeDamage(int damage)
         {
-            if (!(currentState == EnemyState.Invulnerable || currentState == EnemyState.Knockback))
+            if (!stateMachine.IsInvulnerable())
             {
                 health -= damage;
                 sprint0.Sounds.SoundStorage.LOZ_Enemy_Hit.Play();
@@ -327,29 +313,10 @@ namespace sprint0.Sprites
 
         public void TakeKnockback(CollisionDirection direction)
         {
-            if (currentState == EnemyState.Normal && !isDead)
+            if (!isDead)
             {
-                switch (direction)
-                {
-                    case CollisionDirection.Left:
-                        knockbackVelocity = new Vector2(KNOCKBACK_SPEED, 0f);
-                        break;
-                    case CollisionDirection.Right:
-                        knockbackVelocity = new Vector2(-KNOCKBACK_SPEED, 0f);
-                        break;
-                    case CollisionDirection.Up:
-                        knockbackVelocity = new Vector2(0f, KNOCKBACK_SPEED);
-                        break;
-                    case CollisionDirection.Down:
-                        knockbackVelocity = new Vector2(0f, -KNOCKBACK_SPEED);
-                        break;
-                    default:
-                        knockbackVelocity = new Vector2(KNOCKBACK_SPEED, 0f);
-                        break;
-                }
-
-                currentState = EnemyState.Knockback;
-                knockbackTimer = 0f;
+                stateMachine.StartKnockback(direction);
+                invulnerabilityTimer = invulnerabilityDuration;
             }
         }
 
@@ -409,9 +376,9 @@ namespace sprint0.Sprites
 
         private void HandleBlockCollision(ICollidable block, CollisionDirection direction)
         {
-            if (currentState == EnemyState.Knockback)
+            if (stateMachine.GetCurrentState() == EnemyStateMachine.State.Knockback)
             {
-                knockbackVelocity = Vector2.Zero;
+                stateMachine.CancelKnockback();
                 var collisionResponse = new CollisionResponse();
                 Vector2 resolvedPosition = collisionResponse.ResolveCollisionDirection(
                     this.GetBounds(), block.GetBounds(), direction);

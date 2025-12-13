@@ -155,109 +155,109 @@ namespace sprint0.Classes
 			}
 		}
 		
-	public void FireSwordBeam()
-	{
-		var swordBeam = sprint0.Sprites.Projectiles.ProjectileSwordBeam.Create(position, direction);
-		game.AddProjectile(swordBeam);
-		sprint0.Sounds.SoundStorage.LOZ_Sword_Shoot.Play();
-	}
+		public void FireSwordBeam()
+		{
+			var swordBeam = sprint0.Sprites.Projectiles.ProjectileSwordBeam.Create(position, direction);
+			game.AddProjectile(swordBeam);
+			sprint0.Sounds.SoundStorage.LOZ_Sword_Shoot.Play();
+		}
 
-	public void UseItem1()
+		public void UseItem1()
 		{
 			ChangeState(new ItemState(this, linkAnimation, 1));
 		}
-	public void UseItem2()
-	{
-		itemHandler.HandleItemUsage(currentGameTime);
-		ChangeState(new ItemState(this, linkAnimation, 2));
-	}
-
-	public void UseItem3()
+		public void UseItem2()
 		{
-			ChangeState(new ItemState(this, linkAnimation, 3));
+			itemHandler.HandleItemUsage(currentGameTime);
+			ChangeState(new ItemState(this, linkAnimation, 2));
 		}
 
-	public void UseItemInSlot(int itemSlot)
-	{
-		switch (itemSlot)
-		{
-			case 1:
-				UseItem1();
-				break;
-			case 2:
-				UseItem2();
-				break;
-			case 3:
-				UseItem3();
-				break;
-		}
-	}
-	public void TakeDamage(int damage)
-	{
-		if (!invulnerabilityHandler.IsInvulnerable) {
-
-			Inventory.TakeDamage(damage);
-			invulnerabilityHandler.Activate();
-
-			if (Inventory.IsDead())
+		public void UseItem3()
 			{
-				sprint0.Sounds.SoundStorage.LOZ_Link_Die.Play();
-				game.currentState = Game1.GameState.GameOver;
+				ChangeState(new ItemState(this, linkAnimation, 3));
 			}
-			else
+
+		public void UseItemInSlot(int itemSlot)
+		{
+			switch (itemSlot)
 			{
-				ChangeState(new KnockbackState(this, linkAnimation));
+				case 1:
+					UseItem1();
+					break;
+				case 2:
+					UseItem2();
+					break;
+				case 3:
+					UseItem3();
+					break;
+			}
 		}
+		public void TakeDamage(int damage)
+		{
+			if (!invulnerabilityHandler.IsInvulnerable) {
+
+				Inventory.TakeDamage(damage);
+				invulnerabilityHandler.Activate();
+
+				if (Inventory.IsDead())
+				{
+					sprint0.Sounds.SoundStorage.LOZ_Link_Die.Play();
+					game.currentState = Game1.GameState.GameOver;
+				}
+				else
+				{
+					ChangeState(new KnockbackState(this, linkAnimation));
+			}
+			}
 		}
-	}
-	public void UseMagic()
-	{
-		ChangeState(new MagicState(this, linkAnimation));
-	}
+		public void UseMagic()
+		{
+			ChangeState(new MagicState(this, linkAnimation));
+		}
 
-	public void Win()
-	{
-		ChangeState(new WinState(this, linkAnimation));
-	}
+		public void Win()
+		{
+			ChangeState(new WinState(this, linkAnimation));
+		}
 
-	public Rectangle GetBounds()
-	{
-		return new Rectangle((int)position.X, (int)position.Y, PLAYER_WIDTH, PLAYER_HEIGHT);
-	}
+		public Rectangle GetBounds()
+		{
+			return new Rectangle((int)position.X, (int)position.Y, PLAYER_WIDTH, PLAYER_HEIGHT);
+		}
 
-	public bool BlocksMovement()
-	{
-		return true;
-	}
-	
-	public bool BlocksProjectiles()
-	{
-		return true;
-	}
+		public bool BlocksMovement()
+		{
+			return true;
+		}
+		
+		public bool BlocksProjectiles()
+		{
+			return true;
+		}
 
-	public Vector2 GetPosition()
-	{
-		return position;
-	}
-	
-	public void HandleCollisionResponse(Vector2 newPosition)
-	{
-		position = newPosition;
-	}
+		public Vector2 GetPosition()
+		{
+			return position;
+		}
+		
+		public void HandleCollisionResponse(Vector2 newPosition)
+		{
+			position = newPosition;
+		}
 
-	public bool IsInvulnerable()
-	{
-		return invulnerabilityHandler.IsInvulnerable;
-	}
+		public bool IsInvulnerable()
+		{
+			return invulnerabilityHandler.IsInvulnerable;
+		}
 
-	public bool IsInKnockbackPhase()
-	{
-		return invulnerabilityHandler.IsInKnockbackPhase();
-	}
-	
-	public void OnCollision(ICollidable other, Collisions.CollisionDirection direction)
-	{
-		collisionHandler.HandleCollision(other, direction);
-	}
+		public bool IsInKnockbackPhase()
+		{
+			return invulnerabilityHandler.IsInKnockbackPhase();
+		}
+		
+		public void OnCollision(ICollidable other, Collisions.CollisionDirection direction)
+		{
+			collisionHandler.HandleCollision(other, direction);
+		}
 	}
 }
