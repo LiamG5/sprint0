@@ -38,10 +38,7 @@ namespace sprint0.Collisions
             allCollidables.AddRange(dungeonLoader.GetEnemies());
             allCollidables.AddRange(dungeonLoader.GetItems());
             
-            if (itemLoader != null)
-            {
-                allCollidables.AddRange(itemLoader.GetItems());
-            }
+            
 
             if (sprint0.Classes.Portal.StartPortalInstance != null)
             {
@@ -71,10 +68,7 @@ namespace sprint0.Collisions
             allCollidables.AddRange(dungeonLoader.GetItems());
             allCollidables.AddRange(dungeonLoader.GetTransitionZones());
             
-            if (itemLoader != null)
-            {
-                allCollidables.AddRange(itemLoader.GetItems());
-            }
+        
 
             if (sprint0.Classes.Portal.StartPortalInstance != null)
             {

@@ -234,15 +234,17 @@ namespace sprint0.Sprites
 
         public void Update(GameTime gameTime)
         {       
-        
-        if(itemDroper.HasItem())
-        itemList.Add(itemDroper.GetItem());
-        
 
         foreach (IItem item in itemList)
         {
             item.Update(gameTime);
         }
+
+        if(itemDroper.HasItem())
+        itemList.Add(itemDroper.GetItem());
+        
+
+        
         for(int i = itemList.Count -1 ; i >= 0; i--)
             {
                 if (itemList[i].IsCollected())
