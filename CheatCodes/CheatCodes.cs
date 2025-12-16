@@ -257,16 +257,7 @@ namespace sprint0.Cheats
                     Inventory.AddRupees(100); 
                     Inventory.AddBombs(100);
                     
-                    Inventory.GetKeys();
-                    Inventory.GetKeys();
-                    Inventory.GetKeys();
-                    Inventory.GetKeys();
-                    Inventory.GetKeys();
-                    Inventory.GetKeys();
-                    Inventory.GetKeys();
-                    Inventory.GetKeys();
-                    Inventory.GetKeys();
-                    Inventory.GetKeys();
+                    Inventory.SetKeys(10);
 
                     Inventory.GetFairy();
 
