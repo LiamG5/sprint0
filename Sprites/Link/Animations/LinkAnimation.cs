@@ -451,6 +451,7 @@ namespace sprint0.Classes
         public void Update(GameTime gameTime )
         {
             linkSprite.Update(gameTime);
+
             if (Inventory.GetSuperLink())
             {
                 SuperLink(gameTime);
@@ -459,7 +460,6 @@ namespace sprint0.Classes
         {
             superLinkStartTime = 0f;
             superColorsIndex = 0;
-            color = Color.White;
         }
         }
         }

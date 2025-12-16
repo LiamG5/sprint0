@@ -54,11 +54,16 @@ namespace sprint0.Classes
 		state.Update(gameTime);
 		state.UseState();
 		position += velocity;
+		invulnerabilityHandler.Update(gameTime);
+		Color invColor = invulnerabilityHandler.GetFlashColor();
+
 		linkAnimation.Update(gameTime);
 		currentGameTime = gameTime;
-		
-		invulnerabilityHandler.Update(gameTime);
-		linkAnimation.ChangeColor(invulnerabilityHandler.GetFlashColor());
+
+		if (!Inventory.GetSuperLink())
+		{
+			linkAnimation.ChangeColor(invColor);
+		}
 		
 		int roomNumber = game.GetCurrentRoomIndex();
 		string stateName = state.GetType().Name;

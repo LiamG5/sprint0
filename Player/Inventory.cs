@@ -149,7 +149,6 @@ namespace sprint0.Classes
 
         public static void AddKeys(int count)
         {
-            
             keys += count;
         }
 

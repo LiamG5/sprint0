@@ -30,7 +30,7 @@ namespace sprint0.Sprites
         private Func<Vector2> playerPositionProvider;
         private Link link;
 
-        private bool keySpawned = false;
+
 
     
         public EnemyLoader(EnemySpriteFactory enemies, ItemDroper itemDroper)
@@ -50,10 +50,6 @@ namespace sprint0.Sprites
             if (LoadedEnemies.ContainsKey(this.roomId))
             {   
                 LoadedEnemies[this.roomId] = this.enemyList;
-                if (enemyList.Count == 0)
-                {
-                    keySpawned = true;
-                }
             }
             else
             {
@@ -295,7 +291,7 @@ namespace sprint0.Sprites
                 if (enemyList[i].IsDead())
                 {
                 if(enemyList[i] is EnemyStalfosKey){
-                    itemDroper.dropKey(enemyList[i].GetPosition());
+                    itemDroper.DropKey(enemyList[i].GetPosition());
                     enemyList.RemoveAt(i);
                 }
                 else{
@@ -304,7 +300,7 @@ namespace sprint0.Sprites
                 }
 
             if (enemyList.Count == 0){
-                keySpawned = true;
+                
                 itemDroper.Dropkey(this.roomId);
             }
 

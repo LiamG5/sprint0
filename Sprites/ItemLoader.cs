@@ -237,6 +237,7 @@ namespace sprint0.Sprites
         
         if(itemDroper.HasItem())
         itemList.Add(itemDroper.GetItem());
+        
 
         foreach (IItem item in itemList)
         {

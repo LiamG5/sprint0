@@ -17,6 +17,7 @@ namespace sprint0.Classes
         private KeyboardState previousState;
         private Dictionary<Keys, ICommand> pressOnceCommands;
         private Dictionary<Keys, ICommand> holdCommands;
+        private CheatCodes cheatCodes;
 
         public KeyboardController(Game1 game, ISprite linkSprite, Func<bool> isInventoryOpen = null)
             : base(game, isInventoryOpen)
@@ -29,7 +30,7 @@ namespace sprint0.Classes
         {
             pressOnceCommands = new Dictionary<Keys, ICommand>();
             holdCommands = new Dictionary<Keys, ICommand>();
-            
+            cheatCodes = new CheatCodes();
             pressOnceCommands[Keys.B] = new OpenInventoryCommand(game);
             
             pressOnceCommands[Keys.D1] = new AttackCommand(game.link);
@@ -64,6 +65,9 @@ namespace sprint0.Classes
             KeyboardState currentState = Keyboard.GetState();
             
             base.Update();
+
+            if(cheatCodes.CheatCodeCheck != 0)
+            cheatCodes.Update();
             
             previousState = currentState;
         }
@@ -112,15 +116,27 @@ namespace sprint0.Classes
         {
             KeyboardState currentState = Keyboard.GetState();
             
+            Keys[] pressedKeys = currentState.GetPressedKeys();
+                foreach (Keys keys in pressedKeys){
+                    if (previousState.IsKeyUp(keys)){
+                            cheatCodes.AddKeyPress(keys);
+                    }
+                }
+
             foreach (var kvp in pressOnceCommands)
             {
+
+            
+
                 Keys key = kvp.Key;
                 ICommand command = kvp.Value;
+
+                
                 
                 if (currentState.IsKeyDown(key) && previousState.IsKeyUp(key))
                 {
                     command.Execute();
-                    
+
                     if (key == Keys.T || key == Keys.Y)
                     {
                         game.tile = game.blockCarousel.GetCurrentBlock();

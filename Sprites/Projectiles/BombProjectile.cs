@@ -104,7 +104,7 @@ namespace sprint0.Sprites
             switch (other)
             {
                 case Link link:
-                    if (hasExploded && !hasDamagedLink)
+                    if (hasExploded && !hasDamagedLink && !Inventory.GetSuperLink())
                     {
                         link.TakeDamage(2);
                         hasDamagedLink = true;

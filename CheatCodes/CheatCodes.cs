@@ -92,7 +92,7 @@ namespace sprint0.Cheats
         }
         private void CheatCreate1()
         {
-            // WW AA DD 12 22 
+            // WW AA DD 12 2C 
             cheat1.Add(Keys.W);
             cheat1.Add(Keys.W);
             cheat1.Add(Keys.A);
@@ -106,7 +106,7 @@ namespace sprint0.Cheats
         }
         private void CheatCreate2()
         {
-            // 12 WS AD WD S2 
+            // 12 WS AD WD SC 
             cheat2.Add(Keys.D1);
             cheat2.Add(Keys.D2);
             cheat2.Add(Keys.W);
@@ -269,13 +269,18 @@ namespace sprint0.Cheats
                     Inventory.GetKeys();
 
                     Inventory.GetFairy();
-                    
+
                     Inventory.SetBoomerang(true);
                     Inventory.SetBow(true);
                     Inventory.SetCompass(true);
                     Inventory.SetMap(true);
                      break;
-            case 8: SoundStorage.PlaySuperLink(); Inventory.SetSuperLink(true); break;
+            case 8: 
+                if(!Inventory.GetSuperLink()){
+                    SoundStorage.PlaySuperLink();
+                    Inventory.SetSuperLink(true);
+                }
+                    break;
     }
         CheatCodeCheck = 0;
 }
