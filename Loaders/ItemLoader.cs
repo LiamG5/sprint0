@@ -4,11 +4,12 @@ using sprint0.Classes;
 using sprint0.Factories;
 using sprint0.Interfaces;
 using sprint0.Managers;
+using sprint0.Sprites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace sprint0.Sprites
+namespace sprint0.Loaders
 {
     public class ItemLoader
     {
@@ -24,8 +25,8 @@ namespace sprint0.Sprites
         public ItemLoader(ItemFactory items , ItemDroper itemDroper)
         {
             this.items = items;
-            this.itemList = new List<IItem>();
-            this.LoadedItems = new Dictionary<int, List<IItem>>();
+            itemList = new List<IItem>();
+            LoadedItems = new Dictionary<int, List<IItem>>();
             this.itemDroper = itemDroper;
             
         }
@@ -34,20 +35,20 @@ namespace sprint0.Sprites
         {
            if (LoadedItems.ContainsKey(this.roomId))
             {   
-                LoadedItems[this.roomId] = this.itemList;
+                LoadedItems[this.roomId] = itemList;
 
             }
             else
             {
-                LoadedItems.Add(this.roomId, this.itemList);
+                LoadedItems.Add(this.roomId, itemList);
             }
             this.roomId = roomId;
 
-            this.itemList = new List<IItem>();
+            itemList = new List<IItem>();
 
             if (LoadedItems.ContainsKey(roomId))
             {
-                this.itemList = new List<IItem>(LoadedItems[roomId]);
+                itemList = new List<IItem>(LoadedItems[roomId]);
                 
                 return;
             }
@@ -268,7 +269,7 @@ namespace sprint0.Sprites
         {
             LoadedItems.Clear();
             itemList.Clear();
-            this.roomId = 2;
+            roomId = 2;
         }
         
 

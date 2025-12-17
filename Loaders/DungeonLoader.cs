@@ -3,16 +3,19 @@ using Microsoft.Xna.Framework.Graphics;
 using sprint0.Factories;
 using sprint0.Interfaces;
 using sprint0.Managers;
+using sprint0.Sprites;
+using sprint0.Sprites.Dungeon;
+using sprint0.Sprites.Projectiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace sprint0.Sprites
+namespace sprint0.Loaders
 {
     public class DungeonLoader
     {
         private ISprite[] storage;
-        private String path;
+        private string path;
         private int storageIdx = 0;
         private BlockFactory blocks = BlockFactory.Instance;
         private ItemDroper itemDroper;
@@ -35,24 +38,24 @@ namespace sprint0.Sprites
         public DungeonLoader(BlockFactory blocks, ItemLoader itemLoader, EnemyLoader enemyLoader, string csvContent)
         {
             this.blocks = blocks;
-            this.path = csvContent;
+            path = csvContent;
             this.itemLoader = itemLoader;
             this.enemyLoader = enemyLoader;
             int totalCells = 84;
             storage = new ISprite[totalCells];
             storageIdx = 0;
-            this.rectangles = new List<Rectangle>();
-            this.blockObjects = new List<IBlock>();
-            this.enemies = new List<IEnemy>();
-            this.projectiles = new List<Projectile>();
-            this.boomerangProjectiles = new List<BoomerangProjectile>();
-            this.bombProjectiles = new List<BombProjectile>();
-            this.items = new List<IItem>();
-            this.border = Texture2DStorage.GetDungeonBorder();
-            this.boarders = new List<ICollidable>();
-            this.transitionZones = new List<TransitionZone>();
-            this.roomId = 8;
-            this.itemDroper = new ItemDroper();
+            rectangles = new List<Rectangle>();
+            blockObjects = new List<IBlock>();
+            enemies = new List<IEnemy>();
+            projectiles = new List<Projectile>();
+            boomerangProjectiles = new List<BoomerangProjectile>();
+            bombProjectiles = new List<BombProjectile>();
+            items = new List<IItem>();
+            border = Texture2DStorage.GetDungeonBorder();
+            boarders = new List<ICollidable>();
+            transitionZones = new List<TransitionZone>();
+            roomId = 8;
+            itemDroper = new ItemDroper();
             
         }
 
@@ -60,8 +63,8 @@ namespace sprint0.Sprites
 
         public void SetRoomManager(RoomManager manager, int currentRoomId)
         {
-            this.roomManager = manager;
-            this.roomId = currentRoomId;
+            roomManager = manager;
+            roomId = currentRoomId;
 
             CreateTransitionZones();
         }
@@ -223,44 +226,44 @@ namespace sprint0.Sprites
                 if (roomManager.GetConnectedRoom(roomId, TransitionDirection.North) == -1)
                 {
                     boarders.Add(new SolidWallBlock(new Vector2(336, 24), 96, 48));
-                    System.Console.WriteLine($"[DungeonLoader] Added North wall for Room {roomId} (no connection)");
+                    Console.WriteLine($"[DungeonLoader] Added North wall for Room {roomId} (no connection)");
                 }
                 else
                 {
-                    System.Console.WriteLine($"[DungeonLoader] North doorway open for Room {roomId}");
+                    Console.WriteLine($"[DungeonLoader] North doorway open for Room {roomId}");
                 }
                 
                 // South door/wall
                 if (roomManager.GetConnectedRoom(roomId, TransitionDirection.South) == -1)
                 {
                     boarders.Add(new SolidWallBlock(new Vector2(336, 432), 96, 48));
-                    System.Console.WriteLine($"[DungeonLoader] Added South wall for Room {roomId} (no connection)");
+                    Console.WriteLine($"[DungeonLoader] Added South wall for Room {roomId} (no connection)");
                 }
                 else
                 {
-                    System.Console.WriteLine($"[DungeonLoader] South doorway open for Room {roomId}");
+                    Console.WriteLine($"[DungeonLoader] South doorway open for Room {roomId}");
                 }
                 
                 // West door/wall
                 if (roomManager.GetConnectedRoom(roomId, TransitionDirection.West) == -1)
                 {
                     boarders.Add(new SolidWallBlock(new Vector2(24, 192), 48, 96));
-                    System.Console.WriteLine($"[DungeonLoader] Added West wall for Room {roomId} (no connection)");
+                    Console.WriteLine($"[DungeonLoader] Added West wall for Room {roomId} (no connection)");
                 }
                 else
                 {
-                    System.Console.WriteLine($"[DungeonLoader] West doorway open for Room {roomId}");
+                    Console.WriteLine($"[DungeonLoader] West doorway open for Room {roomId}");
                 }
                 
                 // East door/wall
                 if (roomManager.GetConnectedRoom(roomId, TransitionDirection.East) == -1)
                 {
                     boarders.Add(new SolidWallBlock(new Vector2(682, 192), 48, 96));
-                    System.Console.WriteLine($"[DungeonLoader] Added East wall for Room {roomId} (no connection)");
+                    Console.WriteLine($"[DungeonLoader] Added East wall for Room {roomId} (no connection)");
                 }
                 else
                 {
-                    System.Console.WriteLine($"[DungeonLoader] East doorway open for Room {roomId}");
+                    Console.WriteLine($"[DungeonLoader] East doorway open for Room {roomId}");
                 }
             }
         }
@@ -298,7 +301,7 @@ namespace sprint0.Sprites
             if (border != null)
             {
                 // Calculate game world height (viewport height minus HUD height)
-                int gameWorldHeight = graphics.Viewport.Height - sprint0.HUD.HudConstants.HudHeight;
+                int gameWorldHeight = graphics.Viewport.Height - HUD.HudConstants.HudHeight;
                 sprite.Draw(border, new Vector2(0, 0), new Rectangle(0, 0, graphics.Viewport.Width, gameWorldHeight), Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
             }
 

@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using sprint0.Classes;
 using sprint0.Interfaces;
-using sprint0.Sprites;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Microsoft.Xna.Framework;
+using sprint0.Loaders;
 
 
 namespace sprint0.Collisions

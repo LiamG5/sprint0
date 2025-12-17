@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using sprint0.Interfaces;
 using sprint0.Collisions;
 
-namespace sprint0.Sprites
+namespace sprint0.Sprites.Blocks
 {
     public class SolidWallBlock : ICollidable
     {
@@ -12,7 +12,7 @@ namespace sprint0.Sprites
         public SolidWallBlock(Vector2 position, int width, int height)
         {
             this.position = position;
-            this.bounds = new Rectangle((int)position.X, (int)position.Y, width, height);
+            bounds = new Rectangle((int)position.X, (int)position.Y, width, height);
         }
 
         public Rectangle GetBounds()

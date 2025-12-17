@@ -4,12 +4,13 @@ using sprint0.Classes;
 using sprint0.Factories;
 using sprint0.Interfaces;
 using sprint0.Managers;
+using sprint0.Sprites;
 using sprint0.Sprites.Enemies;
 using System;
 using System.Collections.Generic;
 
 
-namespace sprint0.Sprites
+namespace sprint0.Loaders
 {
     public class EnemyLoader
     {
@@ -38,8 +39,8 @@ namespace sprint0.Sprites
         {
             roomId = 2;
             this.enemies = enemies;
-            this.enemyList = new List<IEnemy>();
-            this.LoadedEnemies = new Dictionary<int, List<IEnemy>>();
+            enemyList = new List<IEnemy>();
+            LoadedEnemies = new Dictionary<int, List<IEnemy>>();
             this.itemDroper = itemDroper;
             
 
@@ -50,19 +51,19 @@ namespace sprint0.Sprites
             //when new room loaded save last room's enemies if needed
             if (LoadedEnemies.ContainsKey(this.roomId))
             {   
-                LoadedEnemies[this.roomId] = this.enemyList;
+                LoadedEnemies[this.roomId] = enemyList;
             }
             else
             {
-                LoadedEnemies.Add(this.roomId, this.enemyList);
+                LoadedEnemies.Add(this.roomId, enemyList);
             }
 
-            this.enemyList = new List<IEnemy>();
+            enemyList = new List<IEnemy>();
 
             //load enemies if already loaded
             if (LoadedEnemies.ContainsKey(roomId))
             {   
-                this.enemyList = LoadedEnemies[roomId];
+                enemyList = LoadedEnemies[roomId];
                 this.roomId = roomId;
                 return;
             }
@@ -302,7 +303,7 @@ namespace sprint0.Sprites
 
             if (enemyList.Count == 0){
                 
-                itemDroper.Dropkey(this.roomId);
+                itemDroper.Dropkey(roomId);
             }
 
 
@@ -319,12 +320,12 @@ namespace sprint0.Sprites
         // NEW: Methods to set references needed for boss spawning
         public void SetDungeonLoader(DungeonLoader loader)
         {
-            this.dungeonLoader = loader;
+            dungeonLoader = loader;
         }
 
         public void SetPlayerPositionProvider(Func<Vector2> provider)
         {
-            this.playerPositionProvider = provider;
+            playerPositionProvider = provider;
         }
 
         public void SetLink(Link link)

@@ -6,6 +6,8 @@ using sprint0.Interfaces;
 using sprint0.Sprites.Enemies;
 using sprint0.Collisions;
 using System;
+using sprint0.Sprites.Dungeon;
+using sprint0.Sprites.Projectiles;
 
 namespace sprint0.Sprites
 {

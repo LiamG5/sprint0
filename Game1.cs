@@ -11,13 +11,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using static sprint0.Factories.BlockFactory;
-using static sprint0.Sprites.DungeonCarousel;
+using static sprint0.Sprites.Dungeon.DungeonCarousel;
 using static sprint0.Factories.EnemySpriteFactory;
 using sprint0.Collisions;
 using sprint0.HUD;
 using static sprint0.Factories.ItemFactory;
 using Microsoft.Xna.Framework.Media;
 using sprint0.Factories;
+using sprint0.Loaders;
+using sprint0.Sprites.Projectiles;
 
 namespace sprint0;
 
@@ -671,7 +673,7 @@ public class Game1 : Game
 
     public int GetCurrentRoomIndex() => roomIndex;
 
-    public void AddProjectile(Sprites.Projectile projectile)
+    public void AddProjectile(Projectile projectile)
     {
         if (dungeon != null)
         {

@@ -4,7 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 using sprint0.Classes;
 using sprint0.Collisions;
 using sprint0.Interfaces;
+using sprint0.Sprites.Dungeon;
 using sprint0.Sprites.Enemies;
+using sprint0.Sprites.Projectiles;
 using System;
 using static sprint0.Factories.EnemySpriteFactory;
 

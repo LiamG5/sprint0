@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Classes;
 using sprint0.Interfaces;
+using sprint0.Loaders;
 using sprint0.Sprites;
 using System;
 using System.Collections.Generic;

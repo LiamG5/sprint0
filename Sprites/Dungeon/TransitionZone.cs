@@ -4,7 +4,7 @@ using sprint0.Collisions;
 using sprint0.Interfaces;
 using sprint0.Managers;
 
-namespace sprint0.Sprites
+namespace sprint0.Sprites.Dungeon
 {
     public class TransitionZone : ICollidable
     {
@@ -20,20 +20,20 @@ namespace sprint0.Sprites
         {
             this.bounds = bounds;
             this.direction = direction;
-            this.roomManager = manager;
-            this.isLocked = false;
-            this.isBlocking = false;
-            this.hasTriggered = false;
+            roomManager = manager;
+            isLocked = false;
+            isBlocking = false;
+            hasTriggered = false;
         }
 
         public TransitionZone(Rectangle bounds, TransitionDirection direction, RoomManager manager, bool isBlocking)
         {
             this.bounds = bounds;
             this.direction = direction;
-            this.roomManager = manager;
-            this.isLocked = false;
+            roomManager = manager;
+            isLocked = false;
             this.isBlocking = isBlocking;
-            this.hasTriggered = false;
+            hasTriggered = false;
         }
 
         public Rectangle GetBounds()

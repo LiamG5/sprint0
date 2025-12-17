@@ -5,25 +5,26 @@ using sprint0.Classes;
 using System;
 using Microsoft.Xna.Framework.Content;
 
-namespace sprint0.Sprites
+namespace sprint0.Sprites.Dungeon
 {
-    public class DungeonDoor : ICollidable 
-    {
+    public class DungeonLongWall : ICollidable {
+
+
         private Vector2 position;
         private Rectangle rectangle;
-        private bool doorThere = false;
-        private bool doorOpen = false;
 
-        public DungeonDoor(Vector2 pos)
+        public DungeonLongWall(Vector2 pos)
         {
             position = pos;
-            rectangle = new Rectangle((int)position.X, (int)position.Y, 48, 48);
+            rectangle = new Rectangle((int)position.X, (int)position.Y, 352, 24);
+            
         }
         
         public Rectangle GetBounds()
         {
             return rectangle;
         }
+        
         public bool BlocksMovement()
         {
             return true;
@@ -39,7 +40,7 @@ namespace sprint0.Sprites
             return position;
         }
         
-        public void OnCollision(sprint0.Interfaces.ICollidable other, sprint0.Collisions.CollisionDirection direction)
+        public void OnCollision(ICollidable other, Collisions.CollisionDirection direction)
         {
         }
     }
