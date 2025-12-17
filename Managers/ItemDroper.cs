@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Classes;
+using sprint0.Factories;
 using sprint0.Interfaces;
 using sprint0.Managers;
 using System;
@@ -92,8 +93,9 @@ namespace sprint0.Sprites
             
         }
         }
-        public void dropKey(Vector2 position)
+        public void DropKey(Vector2 position)
         {
+            System.Console.WriteLine("new key");
             item = items.BuildSmallKey(position);
             spawnItem = true;
         }
@@ -108,7 +110,6 @@ namespace sprint0.Sprites
         {
             spawnItem = false;
             return item;
-
         }
         
 

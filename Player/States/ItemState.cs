@@ -37,7 +37,10 @@ namespace sprint0.PlayerStates
                 player.Idle();
             }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 446bfa037c225b1b7a0341d109af49cc2cb96b6e
             if (itemNum != 2 && sfx.State != SoundState.Playing)
             {
                 sfx.Play();

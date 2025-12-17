@@ -1,6 +1,5 @@
 using Microsoft.Xna.Framework;
 using sprint0.Classes;
-using sprint0.Sprites;
 
 namespace sprint0.Sprites.Projectiles
 {

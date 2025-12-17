@@ -36,25 +36,9 @@ namespace sprint0.PlayerStates
 
         public void UseState()
         {
-            switch (player.direction)
-            {
-                case Link.Direction.Up:
-                    linkAnimation.LinkDamagedUp(duration, currentTime);
-                    break;
-                case Link.Direction.Down:
-                    linkAnimation.LinkDamagedDown(duration, currentTime);
-                    break;
-                case Link.Direction.Left:
-                    linkAnimation.LinkDamagedLeft(duration, currentTime);
-                    break;
-                case Link.Direction.Right:
-                    linkAnimation.LinkDamagedRight(duration, currentTime);
-                    break;
-            }
         }
 
         public void Exit() { 
-            linkAnimation.ChangeColor(Color.White);
         }
     }
 

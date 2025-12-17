@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Classes;
 using sprint0.Interfaces;
+using sprint0.Sprites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace sprint0.Sprites
+namespace sprint0.Factories
 {
     public class ItemFactory 
     {
@@ -42,7 +43,7 @@ namespace sprint0.Sprites
         
         private ItemFactory() 
         { 
-            itemSpritesheet = sprint0.Sprites.Texture2DStorage.GetItemSpriteSheet(); 
+            itemSpritesheet = Texture2DStorage.GetItemSpriteSheet(); 
         } 
         
         public static ItemFactory Instance 

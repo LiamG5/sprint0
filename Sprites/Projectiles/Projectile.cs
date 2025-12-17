@@ -4,7 +4,7 @@ using sprint0.Interfaces;
 using sprint0.Collisions;
 using sprint0.Classes;
 
-namespace sprint0.Sprites
+namespace sprint0.Sprites.Projectiles
 {
 
     public class Projectile : ISprite, ICollidable
@@ -40,12 +40,12 @@ namespace sprint0.Sprites
                          int collisionWidth, int collisionHeight)
         {
             this.texture = texture;
-            this.sourceRectangle = sourceRect;
-            this.position = startPosition;
+            sourceRectangle = sourceRect;
+            position = startPosition;
             this.velocity = velocity;
             this.damage = damage;
             this.isEnemyProjectile = isEnemyProjectile;
-            this.shouldDestroy = false;
+            shouldDestroy = false;
             this.spriteEffects = spriteEffects;
             this.collisionWidth = collisionWidth;
             this.collisionHeight = collisionHeight;

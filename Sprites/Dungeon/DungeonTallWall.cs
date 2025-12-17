@@ -5,7 +5,7 @@ using sprint0.Classes;
 using System;
 using Microsoft.Xna.Framework.Content;
 
-namespace sprint0.Sprites
+namespace sprint0.Sprites.Dungeon
 {
     public class DungeonTallWall : ICollidable {
 
@@ -40,7 +40,7 @@ namespace sprint0.Sprites
             return position;
         }
         
-        public void OnCollision(sprint0.Interfaces.ICollidable other, sprint0.Collisions.CollisionDirection direction)
+        public void OnCollision(ICollidable other, Collisions.CollisionDirection direction)
         {
         }
     }

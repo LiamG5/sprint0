@@ -10,13 +10,16 @@ using sprint0.Sprites;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using static sprint0.Sprites.BlockFactory;
-using static sprint0.Sprites.DungeonCarousel;
-using static sprint0.Sprites.EnemySpriteFactory;
+using static sprint0.Factories.BlockFactory;
+using static sprint0.Sprites.Dungeon.DungeonCarousel;
+using static sprint0.Factories.EnemySpriteFactory;
 using sprint0.Collisions;
 using sprint0.HUD;
-using static sprint0.Sprites.ItemFactory;
+using static sprint0.Factories.ItemFactory;
 using Microsoft.Xna.Framework.Media;
+using sprint0.Factories;
+using sprint0.Loaders;
+using sprint0.Sprites.Projectiles;
 
 namespace sprint0;
 
@@ -243,7 +246,8 @@ public class Game1 : Game
         enemyCarousel = new EnemyCarousel(enemies, _spriteBatch);
         itemCarousel = new ItemCarousel(items, _spriteBatch);
 
-        string dungeonPath = Path.Combine(Content.RootDirectory, "Dungeon/Room2.csv");
+        //string dungeonPath = Path.Combine(Content.RootDirectory, "Dungeon/Room2.csv");
+        string dungeonPath = "C:\\Users\\Rei\\Source\\Repos\\sprint0\\Content\\Dungeon\\dungeon.csv";
         itemDroper = new ItemDroper();
         itemLoader = new ItemLoader(items, itemDroper);
         enemyLoader = new EnemyLoader(enemies, itemDroper);
@@ -318,7 +322,7 @@ public class Game1 : Game
         itemLoader.LoadItems(2);
         enemyLoader.LoadEnemies(2);
 
-        collisionUpdater = new CollisionUpdater(dungeon, link);
+        collisionUpdater = new CollisionUpdater(dungeon, link, itemLoader);
         collisionUpdater.getList();
 
         previousKeyboardState = Keyboard.GetState();
@@ -365,12 +369,6 @@ public class Game1 : Game
                     ghostLink.Update(gameTime, roomIndex);
                 }
                 collisionUpdater.Update();
-                dungeon.Update(gameTime);
-
-                if (Classes.Inventory.IsDead())
-                {
-                    new Commands.GameOverCommand(this).Execute();
-                }
 
                 if (dungeon != null)
                 {
@@ -382,6 +380,26 @@ public class Game1 : Game
                             break;
                         }
                     }
+                }
+
+                if (itemLoader != null)
+                {
+                    var items = itemLoader.GetItems();
+                    foreach (var item in items)
+                    {
+                        if (item is Sprites.ItemTriforceFragment triforce && triforce.IsCollected())
+                        {
+                            new Commands.WinCommand(this).Execute();
+                            break;
+                        }
+                    }
+                }
+
+                dungeon.Update(gameTime);
+
+                if (Classes.Inventory.IsDead())
+                {
+                    new Commands.GameOverCommand(this).Execute();
                 }
 
                 foreach (var controller in controllers)
@@ -655,7 +673,7 @@ public class Game1 : Game
 
     public int GetCurrentRoomIndex() => roomIndex;
 
-    public void AddProjectile(Sprites.Projectile projectile)
+    public void AddProjectile(Projectile projectile)
     {
         if (dungeon != null)
         {
@@ -734,7 +752,7 @@ public class Game1 : Game
             dungeon.SetRoomManager(roomManager, roomIndex);
         }
 
-        collisionUpdater = new CollisionUpdater(dungeon, link);
+        collisionUpdater = new CollisionUpdater(dungeon, link, itemLoader);
         System.Console.WriteLine($"[LoadRoom] Loaded Room {roomIndex}");
         this.roomIndex = roomIndex;
     }
@@ -847,7 +865,7 @@ public class Game1 : Game
         itemLoader.LoadItems(2);
         enemyLoader.LoadEnemies(2);
 
-        collisionUpdater = new CollisionUpdater(dungeon, link);
+        collisionUpdater = new CollisionUpdater(dungeon, link, itemLoader);
         collisionUpdater.getList();
 
         previousKeyboardState = Keyboard.GetState();

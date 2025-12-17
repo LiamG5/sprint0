@@ -5,7 +5,9 @@ using sprint0.Classes;
 using sprint0.Collisions;
 using sprint0.Commands;
 using sprint0.Interfaces;
+using sprint0.Sprites.Dungeon;
 using sprint0.Sprites.Enemies;
+using sprint0.Sprites.Projectiles;
 using System;
 
 namespace sprint0.Sprites
@@ -25,14 +27,7 @@ namespace sprint0.Sprites
 
         int health = 5;
 
-        private enum EnemyState { Normal, Knockback, Invulnerable }
-        private EnemyState currentState = EnemyState.Normal;
-        private float knockbackTimer = 0f;
-        private float invulnerabilityTimer = 0f;
-        private const float KNOCKBACK_DURATION = 250f;
-        private const float INVULNERABILITY_DURATION = 500f;
-        private Vector2 knockbackVelocity = Vector2.Zero;
-        private const float KNOCKBACK_SPEED = 5f;
+        private EnemyStateMachine stateMachine;
         
         public EnemyStalfosKey(Texture2D sheet, Vector2 startPosition, Func<Vector2> targetProvider)
         {
@@ -40,6 +35,12 @@ namespace sprint0.Sprites
             enemySS = sheet;
             movement = new EnemyMovementCycle(startPosition, targetProvider);
             animation = new EnemyAnimationHelper(frame1, frame2);
+            stateMachine = new EnemyStateMachine
+            {
+                KnockbackDuration = 250f,
+                InvulnerabilityDuration = 500f,
+                KnockbackSpeed = 5f
+            };
         }
 
         public EnemyStalfosKey(Texture2D sheet, Vector2 startPosition)
@@ -58,45 +59,18 @@ namespace sprint0.Sprites
 
             float elapsedMs = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            switch (currentState)
+            Vector2 knockbackDelta = stateMachine.UpdateKnockback(elapsedMs);
+            
+            if (stateMachine.GetCurrentState() == EnemyStateMachine.State.Knockback)
             {
-                case EnemyState.Knockback:
-                    Vector2 currentPos = movement.GetPosition();
-                    float knockbackDistance = KNOCKBACK_SPEED * (elapsedMs / 16.67f);
-                    Vector2 knockbackDirection = knockbackVelocity;
-                    if (knockbackDirection.LengthSquared() > 0)
-                    {
-                        knockbackDirection.Normalize();
-                        currentPos += knockbackDirection * knockbackDistance;
-                    }
-                    movement.SetPosition(currentPos);
-                    knockbackTimer += elapsedMs;
-                    if (knockbackTimer >= KNOCKBACK_DURATION)
-                    {
-                        knockbackTimer = 0f;
-                        knockbackVelocity = Vector2.Zero;
-                        currentState = EnemyState.Invulnerable;
-                        invulnerabilityTimer = 0f;
-                    }
-                    animation.Update(gameTime);
-                    break;
-
-                case EnemyState.Invulnerable:
-                    movement.Move();
-                    animation.Update(gameTime);
-                    invulnerabilityTimer += elapsedMs;
-                    if (invulnerabilityTimer >= INVULNERABILITY_DURATION)
-                    {
-                        invulnerabilityTimer = 0f;
-                        currentState = EnemyState.Normal;
-                    }
-                    break;
-
-                case EnemyState.Normal:
-                default:
-                    movement.Move();
-                    animation.Update(gameTime);
-                    break;
+                Vector2 currentPos = movement.GetPosition();
+                movement.SetPosition(currentPos + knockbackDelta);
+                animation.Update(gameTime);
+            }
+            else
+            {
+                movement.Move();
+                animation.Update(gameTime);
             }
         }
 
@@ -104,12 +78,7 @@ namespace sprint0.Sprites
         {
             if (!isDead)
             {
-                Color drawColor = Color.White;
-                if (currentState == EnemyState.Invulnerable || currentState == EnemyState.Knockback)
-                {
-                    int flashFrame = (int)(invulnerabilityTimer / 50f) % 2;
-                    drawColor = flashFrame == 0 ? Color.Red : Color.White;
-                }
+                Color drawColor = stateMachine.GetDrawColor();
                 spriteBatch.Draw(itemSheet, movement.GetPosition(), new Rectangle(280, 40, 15, 16), Color.White, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
                 spriteBatch.Draw(enemySS, movement.GetPosition(), animation.GetFrame(), drawColor, 0f, Vector2.Zero, 3.0f, SpriteEffects.None, 0f);
                 
@@ -118,7 +87,7 @@ namespace sprint0.Sprites
 
         public void TakeDamage(int damage)
         {
-            if (!(currentState == EnemyState.Invulnerable || currentState == EnemyState.Knockback))
+            if (!stateMachine.IsInvulnerable())
             {
                 sprint0.Sounds.SoundStorage.LOZ_Enemy_Hit.Play();
                 health -= damage;
@@ -133,29 +102,9 @@ namespace sprint0.Sprites
 
         public void TakeKnockback(CollisionDirection direction)
         {
-            if (currentState == EnemyState.Normal && !isDead)
+            if (!isDead)
             {
-                switch (direction)
-                {
-                    case CollisionDirection.Left:
-                        knockbackVelocity = new Vector2(KNOCKBACK_SPEED, 0f);
-                        break;
-                    case CollisionDirection.Right:
-                        knockbackVelocity = new Vector2(-KNOCKBACK_SPEED, 0f);
-                        break;
-                    case CollisionDirection.Up:
-                        knockbackVelocity = new Vector2(0f, KNOCKBACK_SPEED);
-                        break;
-                    case CollisionDirection.Down:
-                        knockbackVelocity = new Vector2(0f, -KNOCKBACK_SPEED);
-                        break;
-                    default:
-                        knockbackVelocity = new Vector2(KNOCKBACK_SPEED, 0f);
-                        break;
-                }
-
-                currentState = EnemyState.Knockback;
-                knockbackTimer = 0f;
+                stateMachine.StartKnockback(direction);
             }
         }
 
@@ -218,9 +167,9 @@ namespace sprint0.Sprites
 
         private void HandleBlockCollision(ICollidable block, CollisionDirection direction)
         {
-            if (currentState == EnemyState.Knockback)
+            if (stateMachine.GetCurrentState() == EnemyStateMachine.State.Knockback)
             {
-                knockbackVelocity = Vector2.Zero;
+                stateMachine.CancelKnockback();
                 var collisionResponse = new CollisionResponse();
                 Vector2 resolvedPosition = collisionResponse.ResolveCollisionDirection(
                     this.GetBounds(), block.GetBounds(), direction);

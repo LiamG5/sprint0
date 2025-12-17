@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Classes;
 using sprint0.Interfaces;
+using sprint0.Loaders;
+using sprint0.Sprites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +11,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace sprint0.Sprites
+namespace sprint0.Factories
 {
     public class EnemySpriteFactory 
     { 
@@ -30,8 +32,8 @@ namespace sprint0.Sprites
         private static EnemySpriteFactory instance = new EnemySpriteFactory(); 
         private EnemySpriteFactory() 
         { 
-            enemySpritesheet = sprint0.Sprites.Texture2DStorage.GetEnemiesSpriteSheet();
-            bossSpritesheet = sprint0.Sprites.Texture2DStorage.GetBossSpriteSheet();
+            enemySpritesheet = Texture2DStorage.GetEnemiesSpriteSheet();
+            bossSpritesheet = Texture2DStorage.GetBossSpriteSheet();
         } 
         public static EnemySpriteFactory Instance 
         { 

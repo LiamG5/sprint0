@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using sprint0.Factories;
 using sprint0.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace sprint0.Sprites
+namespace sprint0.Sprites.Dungeon
 {
     public class DungeonCarousel : ICarousel
     {

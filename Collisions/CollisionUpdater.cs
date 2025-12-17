@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using sprint0.Classes;
 using sprint0.Interfaces;
-using sprint0.Sprites;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Microsoft.Xna.Framework;
+using sprint0.Loaders;
 
 
 namespace sprint0.Collisions
@@ -13,14 +13,16 @@ namespace sprint0.Collisions
     {
         private readonly CollisionDetection collisionDetection;
         private DungeonLoader dungeonLoader;
+        private ItemLoader itemLoader;
         private Link link;
         private List<ICollidable> allCollidables;
 
-        public CollisionUpdater(DungeonLoader dungeonLoader, Link link)
+        public CollisionUpdater(DungeonLoader dungeonLoader, Link link, ItemLoader itemLoader = null)
         {
             collisionDetection = new CollisionDetection();
             this.link = link;
             this.dungeonLoader = dungeonLoader;
+            this.itemLoader = itemLoader;
             allCollidables = new List<ICollidable>();
         }
 
@@ -35,6 +37,8 @@ namespace sprint0.Collisions
             allCollidables.AddRange(dungeonLoader.GetBombProjectiles());
             allCollidables.AddRange(dungeonLoader.GetEnemies());
             allCollidables.AddRange(dungeonLoader.GetItems());
+            
+            
 
             if (sprint0.Classes.Portal.StartPortalInstance != null)
             {
@@ -63,6 +67,8 @@ namespace sprint0.Collisions
             allCollidables.AddRange(dungeonLoader.GetEnemies());
             allCollidables.AddRange(dungeonLoader.GetItems());
             allCollidables.AddRange(dungeonLoader.GetTransitionZones());
+            
+        
 
             if (sprint0.Classes.Portal.StartPortalInstance != null)
             {

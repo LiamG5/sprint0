@@ -64,7 +64,7 @@ namespace sprint0.Managers
 
             roomConnections[8] = new RoomConnections { North = -1, South = -1, East = 9, West = -1 };
             roomConnections[9] = new RoomConnections { North = -1, South = 5, East = 10, West = 8 };
-            roomConnections[10] = new RoomConnections { North = 13, South = 4, East = 11, West = 9 };
+            roomConnections[10] = new RoomConnections { North = 13, South = 6, East = 11, West = 9 };
             roomConnections[11] = new RoomConnections { North = -1, South = 7, East = 12, West = 10 };
             roomConnections[12] = new RoomConnections { North = 14, South = -1, East = -1, West = 11 };
 

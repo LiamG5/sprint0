@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using sprint0.Interfaces;
 using sprint0.Collisions;
 using sprint0.Classes;
+using sprint0.Sprites.Projectiles;
 
 namespace sprint0.Sprites
 {
@@ -104,7 +105,7 @@ namespace sprint0.Sprites
             switch (other)
             {
                 case Link link:
-                    if (hasExploded && !hasDamagedLink)
+                    if (hasExploded && !hasDamagedLink && !Inventory.GetSuperLink())
                     {
                         link.TakeDamage(2);
                         hasDamagedLink = true;
