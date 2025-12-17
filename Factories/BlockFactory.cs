@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using sprint0.Classes;
 using sprint0.Interfaces;
+using sprint0.Sprites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace sprint0.Sprites
+namespace sprint0.Factories
 {
     public class BlockFactory 
     { 
@@ -40,7 +41,7 @@ namespace sprint0.Sprites
         {
             if (blockSpritesheet == null)
             {
-                blockSpritesheet = sprint0.Sprites.Texture2DStorage.GetBlockSpriteSheet();
+                blockSpritesheet = Texture2DStorage.GetBlockSpriteSheet();
                 if (blockSpritesheet == null)
                 {
                     throw new InvalidOperationException("Block sprite sheet not loaded. Make sure Texture2DStorage.LoadAllTextures() is called before using BlockFactory.");

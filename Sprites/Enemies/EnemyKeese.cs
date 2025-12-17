@@ -6,7 +6,7 @@ using sprint0.Collisions;
 using sprint0.Interfaces;
 using sprint0.Sprites.Enemies;
 using System;
-using static sprint0.Sprites.EnemySpriteFactory;
+using static sprint0.Factories.EnemySpriteFactory;
 
 namespace sprint0.Sprites
 {

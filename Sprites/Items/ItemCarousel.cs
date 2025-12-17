@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using sprint0.Interfaces;
-using sprint0.Sprites;
+using sprint0.Factories;
 
 namespace sprint0.Sprites
 {

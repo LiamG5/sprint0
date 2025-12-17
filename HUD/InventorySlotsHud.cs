@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using sprint0.Sprites;
 using sprint0.Interfaces;
 using static sprint0.HUD.HudConstants;
-using static sprint0.Sprites.ItemFactory;
+using static sprint0.Factories.ItemFactory;
 
 namespace sprint0.HUD
 {

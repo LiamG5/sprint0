@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using sprint0.Factories;
 using sprint0.Sprites;
 
 namespace sprint0.Classes
